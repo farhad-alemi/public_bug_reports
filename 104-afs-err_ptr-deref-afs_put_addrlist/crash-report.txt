@@ -115,4 +115,4 @@ R13: 00007fda2be36038 R14: 00007fda2be35fa0 R15: 00007ffc31157d00
 Modules linked in:
 CR2: ffffffffffffff9f
 ---[ end trace 0000000000000000 ]---
-
+Kernel panic - not syncing: Fatal exception

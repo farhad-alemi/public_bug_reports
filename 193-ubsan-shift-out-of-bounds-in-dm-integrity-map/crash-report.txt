@@ -52,4 +52,4 @@ R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
 R13: 00007f3504036038 R14: 00007f3504035fa0 R15: 00007ffd86e17e00
  </TASK>
 ---[ end trace ]---
-
+Kernel panic - not syncing: UBSAN: panic_on_warn set ...

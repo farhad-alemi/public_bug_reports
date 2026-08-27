@@ -50,4 +50,4 @@ R13: 00007efe6be36128 R14: 00007efe6be36090 R15: 00007ffc421af450
  </TASK>
 Modules linked in:
 ---[ end trace 0000000000000000 ]---
-
+Kernel panic - not syncing: Fatal exception
