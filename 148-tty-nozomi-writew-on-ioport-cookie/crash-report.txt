@@ -1,5 +1,92 @@
-Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
-KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+Recovered console capture for 148-tty-nozomi-writew-on-ioport-cookie
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: same crash class (page/bug); no function to compare.
+Source log: console_try-148-tty-nozomi-writew-on-ioport-cookie-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
 
-BUG: unable to handle page fault for address: 000000000001d044
-RIP: nozomi_card_init+0xa0a/0x14f0
+[   50.041295][ T9499] nozrepro: candidate 0000:00:02.0: BAR0 io len=32
+[   50.043511][ T9499] nozrepro: binding nozomi to 0000:00:02.0 class=0x020000 0x1af4:0x1000
+[   50.196408][ T9499] nozomi 0000:00:02.0: Card type is: 8192
+[   50.197317][ T9499] BUG: unable to handle page fault for address: 000000000001d044
+[   50.198330][ T9499] #PF: supervisor write access in kernel mode
+[   50.199129][ T9499] #PF: error_code(0x0002) - not-present page
+[   50.199933][ T9499] PGD 10d6ad067 P4D 10d6ad067 PUD 10fbf3067 PMD 0 
+[   50.200792][ T9499] Oops: Oops: 0002 [#1] SMP KASAN NOPTI
+[   50.201511][ T9499] CPU: 0 UID: 0 PID: 9499 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   50.203006][ T9499] Tainted: [W]=WARN
+[   50.203495][ T9499] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   50.204874][ T9499] RIP: 0010:nozomi_card_init+0x9fe/0x14c0
+[   50.205742][ T9499] Code: 09 00 00 48 8b 04 24 66 c7 00 00 00 43 80 3c 3c 00 74 08 48 89 df e8 31 1c dd fc 4c 89 64 24 60 48 89 5c 24 78 48 8b 03 31 c9 <66> 89 08 49 8d 9d 9c 05 00 00 48 89 d8 48 c1 e8 03 48 89 44 24 58
+[   50.208169][ T9499] RSP: 0018:ffffc900036d7728 EFLAGS: 00010246
+[   50.208942][ T9499] RAX: 000000000001d044 RBX: ffff888022f74020 RCX: 0000000000000000
+[   50.209920][ T9499] RDX: ffffffff9aa6db60 RSI: ffffffff8c5b1680 RDI: ffff888022f751c8
+[   50.210901][ T9499] RBP: ffff888022f74000 R08: 0000000000000003 R09: 0000000000000000
+[   50.211893][ T9499] R10: dffffc0000000000 R11: fffffbfff20aba40 R12: 1ffff110045ee804
+[   50.212888][ T9499] R13: ffff88801b786000 R14: fffffbfff354db1b R15: dffffc0000000000
+[   50.213905][ T9499] FS:  000000001176e400(0000) GS:ffff8880d73a6000(0000) knlGS:0000000000000000
+[   50.215064][ T9499] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.216020][ T9499] CR2: 000000000001d044 CR3: 000000010da92000 CR4: 0000000000752ef0
+[   50.217050][ T9499] PKRU: 55555554
+[   50.217497][ T9499] Call Trace:
+[   50.217906][ T9499]  <TASK>
+[   50.218274][ T9499]  pci_device_probe+0x436/0xc90
+[   50.218888][ T9499]  ? __pfx_pci_device_probe+0x10/0x10
+[   50.219545][ T9499]  ? kernfs_put+0x77b/0x7e0
+[   50.220116][ T9499]  ? kernfs_create_link+0x187/0x200
+[   50.220761][ T9499]  ? driver_sysfs_add+0x1fe/0x210
+[   50.221403][ T9499]  ? __pfx_pci_device_probe+0x10/0x10
+[   50.222057][ T9499]  really_probe+0x267/0xaf0
+[   50.222609][ T9499]  __driver_probe_device+0x1e2/0x350
+[   50.223277][ T9499]  driver_probe_device+0x4f/0x240
+[   50.223934][ T9499]  __device_attach_driver+0x270/0x410
+[   50.224637][ T9499]  bus_for_each_drv+0x258/0x2f0
+[   50.225307][ T9499]  ? __pfx___device_attach_driver+0x10/0x10
+[   50.226149][ T9499]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   50.226862][ T9499]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   50.227603][ T9499]  __device_attach+0x2c5/0x450
+[   50.228218][ T9499]  ? __pfx___device_attach+0x10/0x10
+[   50.228883][ T9499]  ? sysfs_file_kobj+0x1a/0x230
+[   50.229504][ T9499]  drivers_probe_store+0x11c/0x220
+[   50.230146][ T9499]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   50.230800][ T9499]  kernfs_fop_write_iter+0x3af/0x540
+[   50.231468][ T9499]  vfs_write+0x61d/0xb90
+[   50.232011][ T9499]  ? __pfx_vfs_write+0x10/0x10
+[   50.232619][ T9499]  ? do_sys_openat2+0x14e/0x200
+[   50.233219][ T9499]  ? kmem_cache_free+0x182/0x650
+[   50.233872][ T9499]  ksys_write+0x150/0x270
+[   50.234426][ T9499]  ? __pfx_ksys_write+0x10/0x10
+[   50.235096][ T9499]  do_syscall_64+0x155/0x510
+[   50.235794][ T9499]  ? trace_irq_disable+0x3b/0x140
+[   50.236434][ T9499]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.237209][ T9499]  ? clear_bhb_loop+0x30/0x80
+[   50.237789][ T9499]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.238514][ T9499] RIP: 0033:0x46d9d6
+[   50.239011][ T9499] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   50.241483][ T9499] RSP: 002b:00007ffc893eab60 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   50.242579][ T9499] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000046d9d6
+[   50.243603][ T9499] RDX: 000000000000000c RSI: 000000001176f823 RDI: 0000000000000005
+[   50.244635][ T9499] RBP: 00007ffc893eab70 R08: 0000000000000000 R09: 0000000000000000
+[   50.245767][ T9499] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffc893eb278
+[   50.246808][ T9499] R13: 00007ffc893eb288 R14: 0000000000000002 R15: 00000000004d2100
+[   50.247833][ T9499]  </TASK>
+[   50.248240][ T9499] Modules linked in:
+[   50.248780][ T9499] CR2: 000000000001d044
+[   50.249298][ T9499] ---[ end trace 0000000000000000 ]---
+[   50.250003][ T9499] RIP: 0010:nozomi_card_init+0x9fe/0x14c0
+[   50.250750][ T9499] Code: 09 00 00 48 8b 04 24 66 c7 00 00 00 43 80 3c 3c 00 74 08 48 89 df e8 31 1c dd fc 4c 89 64 24 60 48 89 5c 24 78 48 8b 03 31 c9 <66> 89 08 49 8d 9d 9c 05 00 00 48 89 d8 48 c1 e8 03 48 89 44 24 58
+[   50.253213][ T9499] RSP: 0018:ffffc900036d7728 EFLAGS: 00010246
+[   50.253992][ T9499] RAX: 000000000001d044 RBX: ffff888022f74020 RCX: 0000000000000000
+[   50.255032][ T9499] RDX: ffffffff9aa6db60 RSI: ffffffff8c5b1680 RDI: ffff888022f751c8
+[   50.256141][ T9499] RBP: ffff888022f74000 R08: 0000000000000003 R09: 0000000000000000
+[   50.257226][ T9499] R10: dffffc0000000000 R11: fffffbfff20aba40 R12: 1ffff110045ee804
+[   50.258260][ T9499] R13: ffff88801b786000 R14: fffffbfff354db1b R15: dffffc0000000000
+[   50.259311][ T9499] FS:  000000001176e400(0000) GS:ffff8880d73a6000(0000) knlGS:0000000000000000
+[   50.260419][ T9499] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.261210][ T9499] CR2: 000000000001d044 CR3: 000000010da92000 CR4: 0000000000752ef0
+[   50.262195][ T9499] PKRU: 55555554
+[   50.262650][ T9499] Kernel panic - not syncing: Fatal exception
+[   50.263738][ T9499] Kernel Offset: disabled
+[   50.264291][ T9499] Rebooting in 86400 seconds..

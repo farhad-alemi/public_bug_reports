@@ -1,8 +1,114 @@
-Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
-KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+Recovered console capture for 141-gspca-ov534_9-strlen-null-sd_init
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: log names range, a crash site of the entry.
+Source log: console_try-141-gspca-ov534_9-strlen-null-sd_init-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
 
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-RIP: 0010:strlen+0x29/0x70
-CPU: 1 PID: 25 Comm: kworker/1:0
-Workqueue: usb_hub_wq hub_event
-Kernel panic - not syncing: Fatal exception
+[   51.158281][   T10] usb 3-1: new high-speed USB device number 2 using dummy_hcd
+[   51.320052][   T10] usb 3-1: New USB device found, idVendor=05a9, idProduct=8065, bcdDevice= 1.00
+[   51.332108][   T10] usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   51.337851][   T10] usb 3-1: Product: gspca-repro
+[   51.338412][   T10] usb 3-1: Manufacturer: gspca-repro
+[   51.339007][   T10] usb 3-1: SerialNumber: gspca-repro
+[   51.359207][   T10] gspca_main: ov534_9-2.14.0 probing 05a9:8065
+[   53.429277][   T10] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+[   53.431937][   T10] KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+[   53.434103][   T10] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   53.437281][   T10] Tainted: [W]=WARN
+[   53.438310][   T10] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   53.441063][   T10] Workqueue: usb_hub_wq hub_event
+[   53.442329][   T10] RIP: 0010:strlen+0x29/0x70
+[   53.442880][   T10] Code: 90 f3 0f 1e fa 41 57 41 56 41 54 53 48 c7 c0 ff ff ff ff 49 be 00 00 00 00 00 fc ff df 48 89 fb 49 89 c7 48 89 d8 48 c1 e8 03 <42> 0f b6 04 30 84 c0 75 11 48 ff c3 49 8d 47 01 42 80 7c 3f 01 00
+[   53.445408][   T10] RSP: 0018:ffffc900000d6cb8 EFLAGS: 00010246
+[   53.446210][   T10] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88801da82640
+[   53.447237][   T10] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+[   53.448251][   T10] RBP: 0000000000000001 R08: ffffffff9055d1ff R09: 1ffffffff20aba3f
+[   53.449287][   T10] R10: dffffc0000000000 R11: fffffbfff20aba40 R12: ffff888027977000
+[   53.450289][   T10] R13: dffffc0000000000 R14: dffffc0000000000 R15: ffffffffffffffff
+[   53.451347][   T10] FS:  0000000000000000(0000) GS:ffff8880d73a6000(0000) knlGS:0000000000000000
+[   53.452476][   T10] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   53.453387][   T10] CR2: 00005588802942c8 CR3: 0000000026f3e000 CR4: 0000000000752ef0
+[   53.454459][   T10] PKRU: 55555554
+[   53.454929][   T10] Call Trace:
+[   53.455394][   T10]  <TASK>
+[   53.455782][   T10]  sd_init+0x1dda/0x2e10
+[   53.456367][   T10]  ? __raw_spin_lock_init+0x45/0x100
+[   53.457098][   T10]  gspca_dev_probe2+0x855/0x1440
+[   53.457731][   T10]  ? gspca_dev_probe+0x18e/0x250
+[   53.458372][   T10]  usb_probe_interface+0x659/0xc70
+[   53.459032][   T10]  ? __pfx_usb_probe_interface+0x10/0x10
+[   53.459751][   T10]  really_probe+0x267/0xaf0
+[   53.460334][   T10]  __driver_probe_device+0x1e2/0x350
+[   53.461007][   T10]  driver_probe_device+0x4f/0x240
+[   53.461648][   T10]  __device_attach_driver+0x270/0x410
+[   53.462342][   T10]  bus_for_each_drv+0x258/0x2f0
+[   53.462965][   T10]  ? __pfx___device_attach_driver+0x10/0x10
+[   53.463783][   T10]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   53.464488][   T10]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   53.465233][   T10]  __device_attach+0x2c5/0x450
+[   53.465845][   T10]  ? __pfx___device_attach+0x10/0x10
+[   53.466528][   T10]  ? _raw_spin_unlock+0x28/0x50
+[   53.467147][   T10]  device_initial_probe+0xa1/0xd0
+[   53.467788][   T10]  bus_probe_device+0x12a/0x220
+[   53.468426][   T10]  device_add+0x7ec/0xb90
+[   53.468969][   T10]  usb_set_configuration+0x1a87/0x2110
+[   53.469674][   T10]  usb_generic_driver_probe+0x8d/0x150
+[   53.470355][   T10]  usb_probe_device+0x1c4/0x3b0
+[   53.470969][   T10]  ? __pfx_usb_probe_device+0x10/0x10
+[   53.471652][   T10]  really_probe+0x267/0xaf0
+[   53.472248][   T10]  __driver_probe_device+0x1e2/0x350
+[   53.472927][   T10]  driver_probe_device+0x4f/0x240
+[   53.473647][   T10]  __device_attach_driver+0x270/0x410
+[   53.474339][   T10]  bus_for_each_drv+0x258/0x2f0
+[   53.474967][   T10]  ? __pfx___device_attach_driver+0x10/0x10
+[   53.475700][   T10]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   53.476402][   T10]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   53.477162][   T10]  __device_attach+0x2c5/0x450
+[   53.477784][   T10]  ? __pfx___device_attach+0x10/0x10
+[   53.478464][   T10]  ? _raw_spin_unlock+0x28/0x50
+[   53.479101][   T10]  device_initial_probe+0xa1/0xd0
+[   53.479752][   T10]  bus_probe_device+0x12a/0x220
+[   53.480382][   T10]  device_add+0x7ec/0xb90
+[   53.480936][   T10]  usb_new_device+0xa14/0x1720
+[   53.481543][   T10]  ? __pfx_usb_new_device+0x10/0x10
+[   53.482256][   T10]  ? _raw_spin_unlock_irq+0x23/0x50
+[   53.482919][   T10]  hub_event+0x2a1c/0x4f30
+[   53.483559][   T10]  ? do_raw_spin_unlock+0xf5/0x200
+[   53.484224][   T10]  ? __pfx_hub_event+0x10/0x10
+[   53.484843][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   53.485573][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   53.486304][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   53.487027][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   53.487755][   T10]  process_scheduled_works+0xc99/0x1900
+[   53.488473][   T10]  ? __pfx_process_scheduled_works+0x10/0x10
+[   53.489223][   T10]  ? assign_work+0x3d5/0x5e0
+[   53.489795][   T10]  worker_thread+0xa53/0xfc0
+[   53.490380][   T10]  kthread+0x38b/0x480
+[   53.490898][   T10]  ? __pfx_worker_thread+0x10/0x10
+[   53.491553][   T10]  ? __pfx_kthread+0x10/0x10
+[   53.492153][   T10]  ret_from_fork+0x514/0xb70
+[   53.492742][   T10]  ? __pfx_ret_from_fork+0x10/0x10
+[   53.493476][   T10]  ? __switch_to+0xc79/0x1410
+[   53.494077][   T10]  ? __pfx_kthread+0x10/0x10
+[   53.496274][   T10]  ret_from_fork_asm+0x1a/0x30
+[   53.496892][   T10]  </TASK>
+[   53.497296][   T10] Modules linked in:
+[   53.498841][   T10] ---[ end trace 0000000000000000 ]---
+[   53.502163][   T10] RIP: 0010:strlen+0x29/0x70
+[   53.502784][   T10] Code: 90 f3 0f 1e fa 41 57 41 56 41 54 53 48 c7 c0 ff ff ff ff 49 be 00 00 00 00 00 fc ff df 48 89 fb 49 89 c7 48 89 d8 48 c1 e8 03 <42> 0f b6 04 30 84 c0 75 11 48 ff c3 49 8d 47 01 42 80 7c 3f 01 00
+[   53.505402][   T10] RSP: 0018:ffffc900000d6cb8 EFLAGS: 00010246
+[   53.506171][   T10] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88801da82640
+[   53.507180][   T10] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+[   53.508489][   T10] RBP: 0000000000000001 R08: ffffffff9055d1ff R09: 1ffffffff20aba3f
+[   53.509796][   T10] R10: dffffc0000000000 R11: fffffbfff20aba40 R12: ffff888027977000
+[   53.510898][   T10] R13: dffffc0000000000 R14: dffffc0000000000 R15: ffffffffffffffff
+[   53.512022][   T10] FS:  0000000000000000(0000) GS:ffff8880d73a6000(0000) knlGS:0000000000000000
+[   53.513332][   T10] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   53.514168][   T10] CR2: 00005588802942c8 CR3: 000000000e946000 CR4: 0000000000752ef0
+[   53.515197][   T10] PKRU: 55555554
+[   53.515661][   T10] Kernel panic - not syncing: Fatal exception
+[   53.516800][   T10] Kernel Offset: disabled
+[   53.517472][   T10] Rebooting in 86400 seconds..

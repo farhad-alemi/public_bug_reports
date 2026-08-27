@@ -1,8 +1,119 @@
-Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
-KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+Recovered console capture for 135-rtrs-warn-on-peer-supplied-completion
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: crash trace passes through the entry's own file drivers/infiniband/ulp/rtrs/rtrs-clt.c.
+Source log: console_try-135-rtrs-warn-on-peer-supplied-completio-cand5.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
 
-WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:673 at rtrs_clt_rdma_done...
--> Kernel panic - not syncing: kernel: panic_on_warn set
-Oops: general protection fault ... KASAN: null-ptr-deref in range [0x58-0x5f]
-RIP: 0010:rtrs_clt_rdma_done+0x737/0x1450   RBX = 0x0000000000000058
--> Kernel panic - not syncing: Fatal exception in interrupt
+[   50.900967][ T9501] infiniband syz0: set active
+[   50.902483][ T9501] infiniband syz0: added eth0
+[   50.912352][ T9501] smbdirect: ib_dev[syz0]: added: IB_CA max_fast_reg_page_list_len=512 device_cap_flags=0x1c001223c76 kernel_cap_flags=0x14 page_size_cap=0xfffff000
+[   50.914363][ T9501] smbdirect: ib_dev[syz0]: num_ports=1 max_qp_rd_atom=128 max_qp_init_rd_atom=128 max_sgl_rd=0 max_sge_rd=32 max_cqe=32767 max_qp_wr=1048576 max_send_sge=32 max_recv_sge=32
+[   50.916585][ T9501] smbdirect: ib_dev[syz0]PORT[1]: iwarp=0 ib=0 roce=1 v1=0 v2=1 core_cap_flags=0x803005
+[   50.935152][ T9501] RDS/IB: syz0: added
+[   50.937653][ T9501] smc: adding ib device syz0 with port count 1
+[   50.938538][ T9501] smc:    ib device syz0 port 1 has no pnetid
+[   51.003552][ T9509] rnbd_client L610: Mapping device /dev/loop0 on session syz0, (access_mode: rw, nr_poll_queues: 1)
+[   52.660776][    C1] ------------[ cut here ]------------
+[   52.664127][    C1] wc->opcode != IB_WC_RECV
+[   52.664165][    C1] WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:2509 at rtrs_clt_info_rsp_done+0xd6c/0xea0, CPU#1: ksoftirqd/1/23
+[   52.670689][    C1] Modules linked in:
+[   52.671890][    C1] CPU: 1 UID: 0 PID: 23 Comm: ksoftirqd/1 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   52.675453][    C1] Tainted: [W]=WARN
+[   52.676596][    C1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   52.678849][    C1] RIP: 0010:rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.679669][    C1] Code: 00 00 48 03 33 48 c7 c7 00 32 e3 8c e8 2d 3b 4e f8 e9 dc fe ff ff e8 13 7e ed f8 90 0f 0b 90 e9 4d f3 ff ff e8 05 7e ed f8 90 <0f> 0b 90 e9 c2 f3 ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 17 f3
+[   52.682172][    C1] RSP: 0018:ffffc900001b7b18 EFLAGS: 00010246
+[   52.682968][    C1] RAX: ffffffff88d977eb RBX: 0000000000000081 RCX: ffff8881000e8000
+[   52.684006][    C1] RDX: 8000000000000100 RSI: 0000000000000100 RDI: 0000000000000080
+[   52.685027][    C1] RBP: ffff88811aa3d000 R08: 0000000000000100 R09: 1ffffffff20aba3f
+[   52.686057][    C1] R10: dffffc0000000000 R11: ffffffff88d96a80 R12: ffff88811aa3d000
+[   52.687086][    C1] R13: dffffc0000000000 R14: ffff88802a178680 R15: dffffc0000000000
+[   52.688192][    C1] FS:  0000000000000000(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   52.689355][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   52.690202][    C1] CR2: 00005641af638b30 CR3: 000000010ffcf000 CR4: 0000000000752ef0
+[   52.691224][    C1] PKRU: 55555554
+[   52.691724][    C1] Call Trace:
+[   52.692178][    C1]  <TASK>
+[   52.692578][    C1]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   52.693388][    C1]  ? rxe_poll_cq+0x398/0x3b0
+[   52.694015][    C1]  __ib_process_cq+0x21d/0x5a0
+[   52.694643][    C1]  ib_poll_handler+0x73/0x310
+[   52.695289][    C1]  irq_poll_softirq+0x21b/0x580
+[   52.695958][    C1]  handle_softirqs+0x22c/0x860
+[   52.696599][    C1]  ? run_ksoftirqd+0x36/0x60
+[   52.697212][    C1]  run_ksoftirqd+0x36/0x60
+[   52.697875][    C1]  smpboot_thread_fn+0x562/0xa60
+[   52.698524][    C1]  ? smpboot_thread_fn+0x4d/0xa60
+[   52.699216][    C1]  kthread+0x38b/0x480
+[   52.699763][    C1]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[   52.700481][    C1]  ? __pfx_kthread+0x10/0x10
+[   52.701116][    C1]  ret_from_fork+0x514/0xb70
+[   52.701719][    C1]  ? __pfx_ret_from_fork+0x10/0x10
+[   52.702410][    C1]  ? __switch_to+0xc79/0x1410
+[   52.703053][    C1]  ? __pfx_kthread+0x10/0x10
+[   52.703667][    C1]  ret_from_fork_asm+0x1a/0x30
+[   52.704309][    C1]  </TASK>
+[   52.704736][    C1] Kernel panic - not syncing: kernel: panic_on_warn set ...
+[   52.705693][    C1] CPU: 1 UID: 0 PID: 23 Comm: ksoftirqd/1 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   52.707312][    C1] Tainted: [W]=WARN
+[   52.707887][    C1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   52.709302][    C1] Call Trace:
+[   52.709763][    C1]  <TASK>
+[   52.710150][    C1]  vpanic+0x56d/0xa60
+[   52.710686][    C1]  ? __pfx__printk+0x10/0x10
+[   52.711320][    C1]  ? __pfx_vpanic+0x10/0x10
+[   52.711941][    C1]  ? is_bpf_text_address+0x292/0x2b0
+[   52.712652][    C1]  ? is_bpf_text_address+0x26/0x2b0
+[   52.713350][    C1]  panic+0xc5/0xd0
+[   52.713858][    C1]  ? __pfx_panic+0x10/0x10
+[   52.714453][    C1]  ? ret_from_fork_asm+0x1a/0x30
+[   52.715123][    C1]  __warn+0x315/0x4c0
+[   52.715670][    C1]  ? rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.716422][    C1]  ? rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.717142][    C1]  __report_bug+0x273/0x580
+[   52.717823][    C1]  ? rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.718575][    C1]  ? __pfx___report_bug+0x10/0x10
+[   52.719225][    C1]  ? __lock_acquire+0x6b5/0x2d10
+[   52.719867][    C1]  ? trace_hrtimer_start+0x82/0x200
+[   52.720550][    C1]  ? rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.721270][    C1]  report_bug+0x16b/0x220
+[   52.721839][    C1]  ? rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.722565][    C1]  ? rtrs_clt_info_rsp_done+0xd6e/0xea0
+[   52.723293][    C1]  handle_bug+0x9c/0x200
+[   52.723846][    C1]  exc_invalid_op+0x1a/0x50
+[   52.724426][    C1]  asm_exc_invalid_op+0x1a/0x20
+[   52.725052][    C1] RIP: 0010:rtrs_clt_info_rsp_done+0xd6c/0xea0
+[   52.725837][    C1] Code: 00 00 48 03 33 48 c7 c7 00 32 e3 8c e8 2d 3b 4e f8 e9 dc fe ff ff e8 13 7e ed f8 90 0f 0b 90 e9 4d f3 ff ff e8 05 7e ed f8 90 <0f> 0b 90 e9 c2 f3 ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 17 f3
+[   52.728392][    C1] RSP: 0018:ffffc900001b7b18 EFLAGS: 00010246
+[   52.729178][    C1] RAX: ffffffff88d977eb RBX: 0000000000000081 RCX: ffff8881000e8000
+[   52.730191][    C1] RDX: 8000000000000100 RSI: 0000000000000100 RDI: 0000000000000080
+[   52.731225][    C1] RBP: ffff88811aa3d000 R08: 0000000000000100 R09: 1ffffffff20aba3f
+[   52.732287][    C1] R10: dffffc0000000000 R11: ffffffff88d96a80 R12: ffff88811aa3d000
+[   52.733322][    C1] R13: dffffc0000000000 R14: ffff88802a178680 R15: dffffc0000000000
+[   52.734374][    C1]  ? __pfx_rtrs_clt_info_rsp_done+0x10/0x10
+[   52.735160][    C1]  ? rtrs_clt_info_rsp_done+0xd6b/0xea0
+[   52.735899][    C1]  ? rtrs_clt_info_rsp_done+0xd6b/0xea0
+[   52.736664][    C1]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   52.737529][    C1]  ? rxe_poll_cq+0x398/0x3b0
+[   52.738167][    C1]  __ib_process_cq+0x21d/0x5a0
+[   52.738820][    C1]  ib_poll_handler+0x73/0x310
+[   52.739440][    C1]  irq_poll_softirq+0x21b/0x580
+[   52.740073][    C1]  handle_softirqs+0x22c/0x860
+[   52.740731][    C1]  ? run_ksoftirqd+0x36/0x60
+[   52.741371][    C1]  run_ksoftirqd+0x36/0x60
+[   52.741969][    C1]  smpboot_thread_fn+0x562/0xa60
+[   52.742626][    C1]  ? smpboot_thread_fn+0x4d/0xa60
+[   52.743296][    C1]  kthread+0x38b/0x480
+[   52.743849][    C1]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[   52.744563][    C1]  ? __pfx_kthread+0x10/0x10
+[   52.745187][    C1]  ret_from_fork+0x514/0xb70
+[   52.745818][    C1]  ? __pfx_ret_from_fork+0x10/0x10
+[   52.746497][    C1]  ? __switch_to+0xc79/0x1410
+[   52.747117][    C1]  ? __pfx_kthread+0x10/0x10
+[   52.747819][    C1]  ret_from_fork_asm+0x1a/0x30
+[   52.748475][    C1]  </TASK>
+[   52.749512][    C1] Kernel Offset: disabled
+[   52.750228][    C1] Rebooting in 86400 seconds..

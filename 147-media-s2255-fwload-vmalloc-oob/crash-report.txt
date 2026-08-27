@@ -1,9 +1,236 @@
-Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
-KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+Recovered console capture for 147-media-s2255-fwload-vmalloc-oob
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: log names s2255_fwload_start, a crash site of the entry.
+Source log: console_try-147-media-s2255-fwload-vmalloc-oob-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
 
-__asan_memcpy+0x29/0x70
-s2255_fwload_start+0x1ab/0x410
-s2255_probe+0xd14/0x11e0
-usb_probe_interface+0x65c/0xc80        (Workqueue: usb_hub_wq hub_event)
--> Kernel panic - not syncing: KASAN: panic_on_warn set ...
-BUG: KASAN: vmalloc-out-of-bounds in s2255_fwload_start+0x1ab/0x410
+[   50.909720][   T10] usb 3-1: new high-speed USB device number 2 using dummy_hcd
+[   51.072006][   T10] usb 3-1: New USB device found, idVendor=1943, idProduct=2255, bcdDevice= 1.00
+[   51.084106][   T10] usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   51.087549][   T10] usb 3-1: Product: 2255
+[   51.088801][   T10] usb 3-1: Manufacturer: Sensoray
+[   51.090368][   T10] usb 3-1: SerialNumber: 0001
+[   51.106518][   T10] s2255 dsp fw version ffff
+[   51.250504][   T10] usb 3-1: reset high-speed USB device number 2 using dummy_hcd
+[   51.417321][   T10] s2255: usb firmware version 0.0
+[   51.418444][   T10] s2255: newer USB firmware available
+[   52.100367][   T10] ==================================================================
+[   52.101427][   T10] BUG: KASAN: vmalloc-out-of-bounds in s2255_fwload_start+0x1a6/0x410
+[   52.102405][   T10] Read of size 512 at addr ffffc9000010e000 by task kworker/0:1/10
+[   52.103297][   T10] 
+[   52.103583][   T10] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   52.103595][   T10] Tainted: [W]=WARN
+[   52.103597][   T10] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   52.103603][   T10] Workqueue: usb_hub_wq hub_event
+[   52.104510][   T10] Call Trace:
+[   52.104516][   T10]  <TASK>
+[   52.104520][   T10]  dump_stack_lvl+0xe8/0x150
+[   52.104533][   T10]  print_address_description+0x55/0x1e0
+[   52.104542][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.104553][   T10]  print_report+0x58/0x70
+[   52.104560][   T10]  kasan_report+0x117/0x150
+[   52.104570][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.104581][   T10]  kasan_check_range+0x264/0x2c0
+[   52.104590][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.104600][   T10]  __asan_memcpy+0x29/0x70
+[   52.104611][   T10]  s2255_fwload_start+0x1a6/0x410
+[   52.104622][   T10]  s2255_probe+0xbd5/0x10a0
+[   52.104634][   T10]  ? __pfx_s2255_probe+0x10/0x10
+[   52.104645][   T10]  usb_probe_interface+0x659/0xc70
+[   52.104656][   T10]  ? __pfx_usb_probe_interface+0x10/0x10
+[   52.104664][   T10]  really_probe+0x267/0xaf0
+[   52.104673][   T10]  __driver_probe_device+0x1e2/0x350
+[   52.104685][   T10]  driver_probe_device+0x4f/0x240
+[   52.104702][   T10]  __device_attach_driver+0x270/0x410
+[   52.104710][   T10]  bus_for_each_drv+0x258/0x2f0
+[   52.104718][   T10]  ? __pfx___device_attach_driver+0x10/0x10
+[   52.104725][   T10]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   52.104734][   T10]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   52.104744][   T10]  __device_attach+0x2c5/0x450
+[   52.104754][   T10]  ? __pfx___device_attach+0x10/0x10
+[   52.104765][   T10]  ? _raw_spin_unlock+0x28/0x50
+[   52.104772][   T10]  device_initial_probe+0xa1/0xd0
+[   52.104782][   T10]  bus_probe_device+0x12a/0x220
+[   52.104791][   T10]  device_add+0x7ec/0xb90
+[   52.104801][   T10]  usb_set_configuration+0x1a87/0x2110
+[   52.104814][   T10]  usb_generic_driver_probe+0x8d/0x150
+[   52.104822][   T10]  usb_probe_device+0x1c4/0x3b0
+[   52.104830][   T10]  ? __pfx_usb_probe_device+0x10/0x10
+[   52.104838][   T10]  really_probe+0x267/0xaf0
+[   52.104845][   T10]  __driver_probe_device+0x1e2/0x350
+[   52.104856][   T10]  driver_probe_device+0x4f/0x240
+[   52.104863][   T10]  __device_attach_driver+0x270/0x410
+[   52.104870][   T10]  bus_for_each_drv+0x258/0x2f0
+[   52.104878][   T10]  ? __pfx___device_attach_driver+0x10/0x10
+[   52.104885][   T10]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   52.104894][   T10]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   52.104907][   T10]  __device_attach+0x2c5/0x450
+[   52.104917][   T10]  ? __pfx___device_attach+0x10/0x10
+[   52.104928][   T10]  ? _raw_spin_unlock+0x28/0x50
+[   52.104934][   T10]  device_initial_probe+0xa1/0xd0
+[   52.104945][   T10]  bus_probe_device+0x12a/0x220
+[   52.104954][   T10]  device_add+0x7ec/0xb90
+[   52.104963][   T10]  usb_new_device+0xa14/0x1720
+[   52.104975][   T10]  ? __pfx_usb_new_device+0x10/0x10
+[   52.104986][   T10]  ? _raw_spin_unlock_irq+0x23/0x50
+[   52.104993][   T10]  hub_event+0x2a1c/0x4f30
+[   52.105000][   T10]  ? do_raw_spin_unlock+0xf5/0x200
+[   52.105020][   T10]  ? __pfx_hub_event+0x10/0x10
+[   52.105027][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.105039][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.105048][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.105057][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.105067][   T10]  process_scheduled_works+0xc99/0x1900
+[   52.105081][   T10]  ? __pfx_process_scheduled_works+0x10/0x10
+[   52.105092][   T10]  ? assign_work+0x3d5/0x5e0
+[   52.105102][   T10]  worker_thread+0xa53/0xfc0
+[   52.105116][   T10]  kthread+0x38b/0x480
+[   52.105124][   T10]  ? __pfx_worker_thread+0x10/0x10
+[   52.105134][   T10]  ? __pfx_kthread+0x10/0x10
+[   52.105141][   T10]  ret_from_fork+0x514/0xb70
+[   52.105151][   T10]  ? __pfx_ret_from_fork+0x10/0x10
+[   52.105158][   T10]  ? __switch_to+0xc79/0x1410
+[   52.105169][   T10]  ? __pfx_kthread+0x10/0x10
+[   52.105177][   T10]  ret_from_fork_asm+0x1a/0x30
+[   52.105198][   T10]  </TASK>
+[   52.105200][   T10] 
+[   52.151282][   T10] The buggy address belongs to a 1-page vmalloc region starting at 0xffffc9000010e000 allocated at kernel_read_file+0x3f0/0x6a0
+[   52.152873][   T10] The buggy address belongs to the physical page:
+[   52.153677][   T10] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff8880210988c0 pfn:0x21098
+[   52.154894][   T10] flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+[   52.155737][   T10] raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
+[   52.156745][   T10] raw: ffff8880210988c0 0000000000000000 00000001ffffffff 0000000000000000
+[   52.157754][   T10] page dumped because: kasan: bad access detected
+[   52.158553][   T10] page_owner tracks the page as allocated
+[   52.159257][   T10] page last allocated via order 0, migratetype Unmovable, gfp_mask 0x2cc2(GFP_KERNEL|__GFP_HIGHMEM|__GFP_NOWARN), pid 10, tgid 10 (kworker/0:1), ts 51105850357
+[   52.161227][   T10]  post_alloc_hook+0x1f9/0x250
+[   52.161816][   T10]  get_page_from_freelist+0x235a/0x23e0
+[   52.162498][   T10]  __alloc_frozen_pages_noprof+0x217/0x5a0
+[   52.163221][   T10]  __alloc_pages_noprof+0x10/0x100
+[   52.163841][   T10]  alloc_pages_bulk_noprof+0x5fa/0x7c0
+[   52.164507][   T10]  alloc_pages_bulk_mempolicy_noprof+0x359/0x1690
+[   52.165296][   T10]  __vmalloc_node_range_noprof+0x9da/0x1560
+[   52.165997][   T10]  vmalloc_noprof+0xb2/0xe0
+[   52.166536][   T10]  kernel_read_file+0x3f0/0x6a0
+[   52.167117][   T10]  kernel_read_file_from_path_initns+0x19a/0x1e0
+[   52.167860][   T10]  _request_firmware+0xd0d/0x1780
+[   52.168491][   T10]  request_firmware+0x36/0x50
+[   52.169068][   T10]  s2255_probe+0x902/0x10a0
+[   52.169622][   T10]  usb_probe_interface+0x659/0xc70
+[   52.170249][   T10]  really_probe+0x267/0xaf0
+[   52.170849][   T10]  __driver_probe_device+0x1e2/0x350
+[   52.171497][   T10] page last free pid 10 tgid 10 ts 51105827075 stack trace:
+[   52.172383][   T10]  __free_frozen_pages+0xc9f/0xd90
+[   52.173011][   T10]  __kasan_populate_vmalloc+0x1b2/0x1d0
+[   52.173683][   T10]  alloc_vmap_area+0xd47/0x1480
+[   52.174291][   T10]  __get_vm_area_node+0x20e/0x320
+[   52.174920][   T10]  __vmalloc_node_range_noprof+0x337/0x1560
+[   52.175619][   T10]  vmalloc_noprof+0xb2/0xe0
+[   52.176179][   T10]  kernel_read_file+0x3f0/0x6a0
+[   52.176777][   T10]  kernel_read_file_from_path_initns+0x19a/0x1e0
+[   52.177592][   T10]  _request_firmware+0xd0d/0x1780
+[   52.178246][   T10]  request_firmware+0x36/0x50
+[   52.178854][   T10]  s2255_probe+0x902/0x10a0
+[   52.179437][   T10]  usb_probe_interface+0x659/0xc70
+[   52.180115][   T10]  really_probe+0x267/0xaf0
+[   52.180690][   T10]  __driver_probe_device+0x1e2/0x350
+[   52.181427][   T10]  driver_probe_device+0x4f/0x240
+[   52.182047][   T10]  __device_attach_driver+0x270/0x410
+[   52.182702][   T10] 
+[   52.182989][   T10] Memory state around the buggy address:
+[   52.183691][   T10]  ffffc9000010df00: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+[   52.184665][   T10]  ffffc9000010df80: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+[   52.185638][   T10] >ffffc9000010e000: 00 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+[   52.186584][   T10]                       ^
+[   52.187100][   T10]  ffffc9000010e080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+[   52.188054][   T10]  ffffc9000010e100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+[   52.189011][   T10] ==================================================================
+[   52.190176][   T10] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   52.191120][   T10] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   52.192604][   T10] Tainted: [W]=WARN
+[   52.193072][   T10] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   52.194373][   T10] Workqueue: usb_hub_wq hub_event
+[   52.194999][   T10] Call Trace:
+[   52.195409][   T10]  <TASK>
+[   52.195774][   T10]  vpanic+0x56d/0xa60
+[   52.196277][   T10]  ? __pfx_vpanic+0x10/0x10
+[   52.196845][   T10]  panic+0xc5/0xd0
+[   52.197309][   T10]  ? __pfx_panic+0x10/0x10
+[   52.197867][   T10]  ? preempt_schedule_thunk+0x16/0x40
+[   52.198537][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.199182][   T10]  ? preempt_schedule_thunk+0x16/0x40
+[   52.199839][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.200483][   T10]  check_panic_on_warn+0x89/0xb0
+[   52.201170][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.201811][   T10]  end_report+0x73/0x170
+[   52.202339][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.202984][   T10]  kasan_report+0x128/0x150
+[   52.203545][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.204180][   T10]  kasan_check_range+0x264/0x2c0
+[   52.204786][   T10]  ? s2255_fwload_start+0x1a6/0x410
+[   52.205428][   T10]  __asan_memcpy+0x29/0x70
+[   52.205986][   T10]  s2255_fwload_start+0x1a6/0x410
+[   52.206616][   T10]  s2255_probe+0xbd5/0x10a0
+[   52.207187][   T10]  ? __pfx_s2255_probe+0x10/0x10
+[   52.207803][   T10]  usb_probe_interface+0x659/0xc70
+[   52.208434][   T10]  ? __pfx_usb_probe_interface+0x10/0x10
+[   52.209124][   T10]  really_probe+0x267/0xaf0
+[   52.209686][   T10]  __driver_probe_device+0x1e2/0x350
+[   52.210336][   T10]  driver_probe_device+0x4f/0x240
+[   52.211007][   T10]  __device_attach_driver+0x270/0x410
+[   52.211659][   T10]  bus_for_each_drv+0x258/0x2f0
+[   52.212257][   T10]  ? __pfx___device_attach_driver+0x10/0x10
+[   52.213013][   T10]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   52.213671][   T10]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   52.214389][   T10]  __device_attach+0x2c5/0x450
+[   52.214983][   T10]  ? __pfx___device_attach+0x10/0x10
+[   52.215631][   T10]  ? _raw_spin_unlock+0x28/0x50
+[   52.216211][   T10]  device_initial_probe+0xa1/0xd0
+[   52.216812][   T10]  bus_probe_device+0x12a/0x220
+[   52.217397][   T10]  device_add+0x7ec/0xb90
+[   52.217918][   T10]  usb_set_configuration+0x1a87/0x2110
+[   52.218603][   T10]  usb_generic_driver_probe+0x8d/0x150
+[   52.219273][   T10]  usb_probe_device+0x1c4/0x3b0
+[   52.219873][   T10]  ? __pfx_usb_probe_device+0x10/0x10
+[   52.220537][   T10]  really_probe+0x267/0xaf0
+[   52.221153][   T10]  __driver_probe_device+0x1e2/0x350
+[   52.221800][   T10]  driver_probe_device+0x4f/0x240
+[   52.222423][   T10]  __device_attach_driver+0x270/0x410
+[   52.223086][   T10]  bus_for_each_drv+0x258/0x2f0
+[   52.223687][   T10]  ? __pfx___device_attach_driver+0x10/0x10
+[   52.224422][   T10]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   52.225075][   T10]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   52.225768][   T10]  __device_attach+0x2c5/0x450
+[   52.226363][   T10]  ? __pfx___device_attach+0x10/0x10
+[   52.227018][   T10]  ? _raw_spin_unlock+0x28/0x50
+[   52.227614][   T10]  device_initial_probe+0xa1/0xd0
+[   52.228236][   T10]  bus_probe_device+0x12a/0x220
+[   52.228833][   T10]  device_add+0x7ec/0xb90
+[   52.229367][   T10]  usb_new_device+0xa14/0x1720
+[   52.229955][   T10]  ? __pfx_usb_new_device+0x10/0x10
+[   52.230595][   T10]  ? _raw_spin_unlock_irq+0x23/0x50
+[   52.231290][   T10]  hub_event+0x2a1c/0x4f30
+[   52.231842][   T10]  ? do_raw_spin_unlock+0xf5/0x200
+[   52.232476][   T10]  ? __pfx_hub_event+0x10/0x10
+[   52.233053][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.233748][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.234449][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.235148][   T10]  ? process_scheduled_works+0x94e/0x1900
+[   52.235846][   T10]  process_scheduled_works+0xc99/0x1900
+[   52.236535][   T10]  ? __pfx_process_scheduled_works+0x10/0x10
+[   52.237273][   T10]  ? assign_work+0x3d5/0x5e0
+[   52.237844][   T10]  worker_thread+0xa53/0xfc0
+[   52.238437][   T10]  kthread+0x38b/0x480
+[   52.238968][   T10]  ? __pfx_worker_thread+0x10/0x10
+[   52.239625][   T10]  ? __pfx_kthread+0x10/0x10
+[   52.240260][   T10]  ret_from_fork+0x514/0xb70
+[   52.240905][   T10]  ? __pfx_ret_from_fork+0x10/0x10
+[   52.241523][   T10]  ? __switch_to+0xc79/0x1410
+[   52.242116][   T10]  ? __pfx_kthread+0x10/0x10
+[   52.242675][   T10]  ret_from_fork_asm+0x1a/0x30
+[   52.243267][   T10]  </TASK>
+[   52.243864][   T10] Kernel Offset: disabled
+[   52.244400][   T10] Rebooting in 86400 seconds..
