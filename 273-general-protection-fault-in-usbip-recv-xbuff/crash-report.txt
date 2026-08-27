@@ -1,0 +1,40 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000023: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
+CPU: 0 UID: 0 PID: 12708 Comm: vudc_rx Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:dev_driver_string drivers/base/core.c:2406 [inline]
+RIP: 0010:__dev_printk+0x6e/0x190 drivers/base/core.c:4954
+Code: 00 fc ff df 49 ff c7 4c 89 f8 48 c1 e8 03 42 0f b6 04 28 84 c0 0f 85 16 01 00 00 41 0f b6 2f 4d 8d 7e 68 4c 89 f8 48 c1 e8 03 <42> 80 3c 28 00 74 08 4c 89 ff e8 73 31 3e fc 4d 8b 3f 4d 85 ff 75
+RSP: 0018:ffffc9003398faa8 EFLAGS: 00010202
+RAX: 0000000000000023 RBX: ffffc9003398fb40 RCX: 000000008c0a0201
+RDX: 0000000000000000 RSI: 00000000000000b0 RDI: ffffffff8c0a02e0
+RBP: 0000000000000033 R08: ffffc9003398fb77 R09: 0000000000000000
+R10: ffffc9003398fb60 R11: fffff52006731f6f R12: ffffc9003398fb20
+R13: dffffc0000000000 R14: 00000000000000b0 R15: 0000000000000118
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f15711656c8 CR3: 0000000024fa6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ _dev_err+0x11e/0x180 drivers/base/core.c:4996
+ usbip_recv_xbuff+0x541/0x620 drivers/usb/usbip/usbip_common.c:894
+ v_recv_cmd_submit drivers/usb/usbip/vudc_rx.c:169 [inline]
+ v_rx_pdu drivers/usb/usbip/vudc_rx.c:218 [inline]
+ v_rx_loop+0x84a/0xd90 drivers/usb/usbip/vudc_rx.c:236
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

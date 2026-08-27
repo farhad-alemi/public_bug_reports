@@ -1,0 +1,178 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in gb_hid_set_report drivers/staging/greybus/hid.c:117 [inline]
+BUG: KASAN: slab-out-of-bounds in __gb_hid_output_raw_report drivers/staging/greybus/hid.c:255 [inline]
+BUG: KASAN: slab-out-of-bounds in gb_hid_raw_request+0x29a/0x830 drivers/staging/greybus/hid.c:272
+Write of size 2 at addr ffff88811d4376ca by task syz.3.1594/26678
+
+CPU: 1 UID: 0 PID: 26678 Comm: syz.3.1594 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
+ gb_hid_set_report drivers/staging/greybus/hid.c:117 [inline]
+ __gb_hid_output_raw_report drivers/staging/greybus/hid.c:255 [inline]
+ gb_hid_raw_request+0x29a/0x830 drivers/staging/greybus/hid.c:272
+ hidraw_send_report+0x268/0x4c0 drivers/hid/hidraw.c:161
+ hidraw_write+0x91/0xd0 drivers/hid/hidraw.c:178
+ vfs_write+0x32f/0xda0 fs/read_write.c:686
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdd32ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fdd30db4018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fdd32e36180 RCX: 00007fdd32ba778d
+RDX: 0000000000000002 RSI: 00002000000005c0 RDI: 0000000000000009
+RBP: 00007fdd32c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fdd32e36218 R14: 00007fdd32e36180 R15: 00007ffe00cdd9a0
+ </TASK>
+
+Allocated by task 26678 on cpu 1 at 187.687398s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __do_kmalloc_node mm/slub.c:5296 [inline]
+ __kmalloc_noprof+0x2a0/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ gb_operation_message_alloc+0x8c/0x280 drivers/greybus/operation.c:380
+ gb_operation_create_common+0xa9/0x610 drivers/greybus/operation.c:532
+ gb_operation_create_flags+0x9a/0x200 drivers/greybus/operation.c:591
+ gb_operation_create include/linux/greybus/operation.h:156 [inline]
+ gb_hid_set_report drivers/staging/greybus/hid.c:106 [inline]
+ __gb_hid_output_raw_report drivers/staging/greybus/hid.c:255 [inline]
+ gb_hid_raw_request+0x1e9/0x830 drivers/staging/greybus/hid.c:272
+ hidraw_send_report+0x268/0x4c0 drivers/hid/hidraw.c:161
+ hidraw_write+0x91/0xd0 drivers/hid/hidraw.c:178
+ vfs_write+0x32f/0xda0 fs/read_write.c:686
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88811d4376c0
+ which belongs to the cache kmalloc-16 of size 16
+The buggy address is located 10 bytes inside of
+ allocated 11-byte region [ffff88811d4376c0, ffff88811d4376cb)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x11d437
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000000 ffff888013041640 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800550055 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x1d2cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9714, tgid 9714 (kworker/1:3), ts 118447735837, free_ts 118446943996
+ create_dummy_stack mm/page_owner.c:103 [inline]
+ register_dummy_stack+0x98/0x100 mm/page_owner.c:109
+ init_page_owner+0x2e/0x5f0 mm/page_owner.c:127
+ invoke_init_callbacks mm/page_ext.c:152 [inline]
+ page_ext_init+0x3c7/0x400 mm/page_ext.c:490
+ mm_core_init+0x92/0xb0 mm/mm_init.c:2738
+page last free pid 39 tgid 39 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ ___free_pages_bulk mm/kasan/shadow.c:333 [inline]
+ __kasan_populate_vmalloc_do mm/kasan/shadow.c:385 [inline]
+ __kasan_populate_vmalloc+0x137/0x1d0 mm/kasan/shadow.c:424
+ kasan_populate_vmalloc include/linux/kasan.h:580 [inline]
+ alloc_vmap_area+0xc21/0x1330 mm/vmalloc.c:2123
+ __get_vm_area_node+0x1f8/0x300 mm/vmalloc.c:3226
+ __vmalloc_node_range_noprof+0x36a/0x1750 mm/vmalloc.c:4024
+ __vmalloc_node_noprof+0xc2/0x100 mm/vmalloc.c:4124
+ alloc_thread_stack_node kernel/fork.c:357 [inline]
+ dup_task_struct+0x298/0x840 kernel/fork.c:926
+ copy_process+0x797/0x3ba0 kernel/fork.c:2090
+ kernel_clone+0x269/0x880 kernel/fork.c:2721
+ user_mode_thread+0x110/0x180 kernel/fork.c:2797
+ call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88811d437580: fc fc fc fc 00 03 fc fc fc fc 00 03 fc fc fc fc
+ ffff88811d437600: 00 00 fc fc fc fc 00 00 fc fc fc fc 00 03 fc fc
+>ffff88811d437680: fc fc fa fb fc fc fc fc 00 03 fc fc fc fc 00 03
+                                              ^
+ ffff88811d437700: fc fc fc fc 00 00 fc fc fc fc 00 00 fc fc fc fc
+ ffff88811d437780: fa fb fc fc fc fc 00 03 fc fc fc fc 00 00 fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ gb_operation_create_flags+0x9a/0x200
+ gb_hid_raw_request+0x1e9/0x830
+ hidraw_send_report+0x268/0x4c0
+ hidraw_write+0x91/0xd0
+ vfs_write+0x32f/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The buggy address belongs to the object at ffff88811d4376c0
+ which belongs to the cache kmalloc-16 of size 16
+The buggy address is located 10 bytes inside of
+ allocated 11-byte region [ffff88811d4376c0, ffff88811d4376cb)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x11d437
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000000 ffff888013041640 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800550055 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x1d2cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9714, tgid 9714 (kworker/1:3), ts 118447735837, free_ts 118446943996
+ register_dummy_stack+0x98/0x100
+ init_page_owner+0x2e/0x5f0
+ page_ext_init+0x3c7/0x400
+ mm_core_init+0x92/0xb0
+page last free pid 39 tgid 39 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __kasan_populate_vmalloc+0x137/0x1d0
+ alloc_vmap_area+0xc21/0x1330
+ __get_vm_area_node+0x1f8/0x300
+ __vmalloc_node_range_noprof+0x36a/0x1750
+ __vmalloc_node_noprof+0xc2/0x100
+ dup_task_struct+0x298/0x840
+ copy_process+0x797/0x3ba0
+ kernel_clone+0x269/0x880
+ user_mode_thread+0x110/0x180
+ call_usermodehelper_exec_work+0x5c/0x230
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff88811d437580: fc fc fc fc 00 03 fc fc fc fc 00 03 fc fc fc fc
+ ffff88811d437600: 00 00 fc fc fc fc 00 00 fc fc fc fc 00 03 fc fc
+>ffff88811d437680: fc fc fa fb fc fc fc fc 00 03 fc fc fc fc 00 03
+                                              ^
+ ffff88811d437700: fc fc fc fc 00 00 fc fc fc fc 00 00 fc fc fc fc
+ ffff88811d437780: fa fb fc fc fc fc 00 03 fc fc fc fc 00 00 fc fc
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

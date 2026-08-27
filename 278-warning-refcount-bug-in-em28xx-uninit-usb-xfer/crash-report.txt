@@ -1,0 +1,132 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: lib/refcount.c:28 at refcount_warn_saturate+0xb2/0x110 lib/refcount.c:28, CPU#0: syz.1.3991/39174
+Modules linked in:
+CPU: 0 UID: 0 PID: 39174 Comm: syz.1.3991 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:refcount_warn_saturate+0xb2/0x110 lib/refcount.c:28
+Code: 04 03 1a 0b 67 48 0f b9 3a eb 4a e8 c8 45 27 fd 48 8d 3d 01 03 1a 0b 67 48 0f b9 3a eb 37 e8 b5 45 27 fd 48 8d 3d fe 02 1a 0b <67> 48 0f b9 3a eb 24 e8 a2 45 27 fd 48 8d 3d fb 02 1a 0b 67 48 0f
+RSP: 0018:ffffc900064976e0 EFLAGS: 00010293
+RAX: ffffffff8497820b RBX: 0000000000000003 RCX: ffff8880221fd100
+RDX: 0000000000000000 RSI: ffffffff8e9ec540 RDI: ffffffff8fb18510
+RBP: 0000000000000004 R08: ffff8880221fd100 R09: 0000000000000005
+R10: 0000000000000004 R11: 0000000000000000 R12: ffff8880328e1278
+R13: ffff888021ac8200 R14: ffff888021ac8200 R15: 0000000000000018
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555594d32808 CR3: 000000011dbe4000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ em28xx_uninit_usb_xfer+0x157/0x320 drivers/media/usb/em28xx/em28xx-core.c:964
+ em28xx_stop_streaming+0x257/0x560 drivers/media/usb/em28xx/em28xx-video.c:1296
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_streamoff drivers/media/common/videobuf2/videobuf2-core.c:2376 [inline]
+ __vb2_cleanup_fileio+0x4e/0x1f0 drivers/media/common/videobuf2/videobuf2-core.c:2974
+ vb2_core_queue_release+0x27/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2676
+ vb2_queue_release drivers/media/common/videobuf2/videobuf2-v4l2.c:956 [inline]
+ _vb2_fop_release drivers/media/common/videobuf2/videobuf2-v4l2.c:1159 [inline]
+ vb2_fop_release+0x16c/0x200 drivers/media/common/videobuf2/videobuf2-v4l2.c:1173
+ em28xx_v4l2_close+0xee/0x590 drivers/media/usb/em28xx/em28xx-video.c:2464
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4e52da734d
+Code: Unable to access opcode bytes at 0x7f4e52da7323.
+RSP: 002b:00007f4e53c93f30 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: fffffffffffffffc RBX: 0000000000000004 RCX: 00007f4e52da734d
+RDX: 00007f4e53c94fc0 RSI: 0000000080085502 RDI: 0000000000000004
+RBP: 00007f4e53c93f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000200000000980
+R13: 0000000000000000 R14: 00007f4e53036450 R15: 00007ffc22434a50
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	04 03                	add    $0x3,%al
+   2:	1a 0b                	sbb    (%rbx),%cl
+   4:	67 48 0f b9 3a       	ud1    (%edx),%rdi
+   9:	eb 4a                	jmp    0x55
+   b:	e8 c8 45 27 fd       	call   0xfd2745d8
+  10:	48 8d 3d 01 03 1a 0b 	lea    0xb1a0301(%rip),%rdi        # 0xb1a0318
+  17:	67 48 0f b9 3a       	ud1    (%edx),%rdi
+  1c:	eb 37                	jmp    0x55
+  1e:	e8 b5 45 27 fd       	call   0xfd2745d8
+  23:	48 8d 3d fe 02 1a 0b 	lea    0xb1a02fe(%rip),%rdi        # 0xb1a0328
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	eb 24                	jmp    0x55
+  31:	e8 a2 45 27 fd       	call   0xfd2745d8
+  36:	48 8d 3d fb 02 1a 0b 	lea    0xb1a02fb(%rip),%rdi        # 0xb1a0338
+  3d:	67                   	addr32
+  3e:	48                   	rex.W
+  3f:	0f                   	.byte 0xf
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 39174 Comm: syz.1.3991 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:refcount_warn_saturate+0xb2/0x110
+Code: 04 03 1a 0b 67 48 0f b9 3a eb 4a e8 c8 45 27 fd 48 8d 3d 01 03 1a 0b 67 48 0f b9 3a eb 37 e8 b5 45 27 fd 48 8d 3d fe 02 1a 0b <67> 48 0f b9 3a eb 24 e8 a2 45 27 fd 48 8d 3d fb 02 1a 0b 67 48 0f
+RSP: 0018:ffffc900064976e0 EFLAGS: 00010293
+RAX: ffffffff8497820b RBX: 0000000000000003 RCX: ffff8880221fd100
+RDX: 0000000000000000 RSI: ffffffff8e9ec540 RDI: ffffffff8fb18510
+RBP: 0000000000000004 R08: ffff8880221fd100 R09: 0000000000000005
+R10: 0000000000000004 R11: 0000000000000000 R12: ffff8880328e1278
+R13: ffff888021ac8200 R14: ffff888021ac8200 R15: 0000000000000018
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555594d32808 CR3: 000000011dbe4000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ em28xx_uninit_usb_xfer+0x157/0x320
+ em28xx_stop_streaming+0x257/0x560
+ __vb2_queue_cancel+0xba/0xdb0
+ __vb2_cleanup_fileio+0x4e/0x1f0
+ vb2_core_queue_release+0x27/0x150
+ vb2_fop_release+0x16c/0x200
+ em28xx_v4l2_close+0xee/0x590
+ v4l2_release+0x24e/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ do_exit+0x6ee/0x2360
+ do_group_exit+0x20c/0x2c0
+ get_signal+0x12b2/0x1410
+ arch_do_signal_or_restart+0xbc/0x840
+ exit_to_user_mode_loop+0x88/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4e52da734d
+Code: Unable to access opcode bytes at 0x7f4e52da7323.
+RSP: 002b:00007f4e53c93f30 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: fffffffffffffffc RBX: 0000000000000004 RCX: 00007f4e52da734d
+RDX: 00007f4e53c94fc0 RSI: 0000000080085502 RDI: 0000000000000004
+RBP: 00007f4e53c93f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000200000000980
+R13: 0000000000000000 R14: 00007f4e53036450 R15: 00007ffc22434a50
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

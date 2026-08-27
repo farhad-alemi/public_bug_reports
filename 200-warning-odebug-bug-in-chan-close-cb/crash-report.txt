@@ -1,0 +1,99 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: init active (active state 0) object: ffff888114db0d58 object type: work_struct hint: delete_netdev+0x0/0x40 net/bluetooth/6lowpan.c:252
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u11:2/9426
+WARNING: lib/debugobjects.c:632 at __debug_object_init+0x2a8/0x4a0 lib/debugobjects.c:790, CPU#1: kworker/u11:2/9426
+Modules linked in:
+CPU: 1 UID: 0 PID: 9426 Comm: kworker/u11:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: hci1 hci_rx_work
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_object_init+0x309/0x4a0 lib/debugobjects.c:790
+Code: 28 00 74 08 4c 89 ef e8 35 31 84 fd 4d 8b 4d 00 4c 89 ff 48 c7 c6 60 5e e1 8b 4c 89 e2 8b 4c 24 04 4c 8b 44 24 10 ff 74 24 08 <67> 48 0f b9 3a 48 83 c4 08 4d 89 f4 ff 05 21 b4 06 0b 41 83 fc 03
+RSP: 0018:ffffc90003057268 EFLAGS: 00010246
+RAX: 1ffffffff17154e0 RBX: ffff888114db0d58 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15e60 RDI: ffffffff8fb18b00
+RBP: dffffc0000000000 R08: ffff888114db0d58 R09: ffffffff8b8ab740
+R10: dffffc0000000000 R11: ffffffff818b6c40 R12: ffffffff8be16160
+R13: ffffffff8b8aa700 R14: 0000000000000003 R15: ffffffff8fb18b00
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f73837b9030 CR3: 0000000115f96000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ chan_close_cb+0x3c9/0x6a0 net/bluetooth/6lowpan.c:819
+ l2cap_disconnect_req+0x305/0x510 net/bluetooth/l2cap_core.c:4515
+ l2cap_le_sig_cmd net/bluetooth/l2cap_core.c:5556 [inline]
+ l2cap_le_sig_channel net/bluetooth/l2cap_core.c:5598 [inline]
+ l2cap_recv_frame+0x8ab5/0x10400 net/bluetooth/l2cap_core.c:6964
+ l2cap_recv_acldata+0x682/0x1330 net/bluetooth/l2cap_core.c:7688
+ hci_acldata_packet net/bluetooth/hci_core.c:3855 [inline]
+ hci_rx_work+0x4f9/0x1040 net/bluetooth/hci_core.c:4082
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	28 00                	sub    %al,(%rax)
+   2:	74 08                	je     0xc
+   4:	4c 89 ef             	mov    %r13,%rdi
+   7:	e8 35 31 84 fd       	call   0xfd843141
+   c:	4d 8b 4d 00          	mov    0x0(%r13),%r9
+  10:	4c 89 ff             	mov    %r15,%rdi
+  13:	48 c7 c6 60 5e e1 8b 	mov    $0xffffffff8be15e60,%rsi
+  1a:	4c 89 e2             	mov    %r12,%rdx
+  1d:	8b 4c 24 04          	mov    0x4(%rsp),%ecx
+  21:	4c 8b 44 24 10       	mov    0x10(%rsp),%r8
+  26:	ff 74 24 08          	push   0x8(%rsp)
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4d 89 f4             	mov    %r14,%r12
+  36:	ff 05 21 b4 06 0b    	incl   0xb06b421(%rip)        # 0xb06b45d
+  3c:	41 83 fc 03          	cmp    $0x3,%r12d
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 9426 Comm: kworker/u11:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: hci1 hci_rx_work
+RIP: 0010:__debug_object_init+0x309/0x4a0
+Code: 28 00 74 08 4c 89 ef e8 35 31 84 fd 4d 8b 4d 00 4c 89 ff 48 c7 c6 60 5e e1 8b 4c 89 e2 8b 4c 24 04 4c 8b 44 24 10 ff 74 24 08 <67> 48 0f b9 3a 48 83 c4 08 4d 89 f4 ff 05 21 b4 06 0b 41 83 fc 03
+RSP: 0018:ffffc90003057268 EFLAGS: 00010246
+RAX: 1ffffffff17154e0 RBX: ffff888114db0d58 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15e60 RDI: ffffffff8fb18b00
+RBP: dffffc0000000000 R08: ffff888114db0d58 R09: ffffffff8b8ab740
+R10: dffffc0000000000 R11: ffffffff818b6c40 R12: ffffffff8be16160
+R13: ffffffff8b8aa700 R14: 0000000000000003 R15: ffffffff8fb18b00
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f73837b9030 CR3: 0000000115f96000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ chan_close_cb+0x3c9/0x6a0
+ l2cap_disconnect_req+0x305/0x510
+ l2cap_recv_frame+0x8ab5/0x10400
+ l2cap_recv_acldata+0x682/0x1330
+ hci_rx_work+0x4f9/0x1040
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

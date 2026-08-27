@@ -1,0 +1,166 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+2 distinct call traces.
+
+======================================================================
+[1/2]
+======================================================================
+
+------------[ cut here ]------------
+wc->opcode != IB_WC_RECV
+WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:2518 at rtrs_clt_info_rsp_done+0xd1b/0xe70 drivers/infiniband/ulp/rtrs/rtrs-clt.c:2518, CPU#0: kworker/u9:0/26
+Modules linked in:
+CPU: 0 UID: 0 PID: 26 Comm: kworker/u9:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:rtrs_clt_info_rsp_done+0xd1b/0xe70 drivers/infiniband/ulp/rtrs/rtrs-clt.c:2518
+Code: 33 48 83 c6 68 48 c7 c7 80 c8 71 8c e8 de ec 88 f8 e9 f6 fe ff ff e8 b4 1c 20 f9 90 0f 0b 90 e9 9e f3 ff ff e8 a6 1c 20 f9 90 <0f> 0b 90 e9 13 f4 ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 68 f3
+RSP: 0018:ffffc90000007da8 EFLAGS: 00010246
+RAX: ffffffff889eab1a RBX: 0000000000000081 RCX: ffff888015e8d100
+RDX: 0000000000000100 RSI: 0000000000000081 RDI: 0000000000000080
+RBP: ffff88812532a000 R08: 0000000000000002 R09: 0000000000000002
+R10: 0000000100000000 R11: ffffffff889e9e00 R12: ffff88812532a000
+R13: dffffc0000000000 R14: ffff88811ee85d80 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4e38d9741c CR3: 00000000265ba000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <IRQ>
+ __ib_process_cq+0x149/0x440 drivers/infiniband/core/cq.c:110
+ ib_poll_handler+0x78/0x280 drivers/infiniband/core/cq.c:157
+ irq_poll_softirq+0x1ea/0x500 lib/irq_poll.c:110
+ handle_softirqs+0x191/0x5a0 kernel/softirq.c:622
+ do_softirq+0x69/0x90 kernel/softirq.c:523
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x7f/0x90 kernel/softirq.c:450
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ __alloc_skb+0x1a7/0x7d0 net/core/skbuff.c:697
+ alloc_skb include/linux/skbuff.h:1383 [inline]
+ rxe_init_packet+0x15b/0x4c0 drivers/infiniband/sw/rxe/rxe_net.c:562
+ prepare_ack_packet+0xb4/0x800 drivers/infiniband/sw/rxe/rxe_resp.c:823
+ send_common_ack drivers/infiniband/sw/rxe/rxe_resp.c:1217 [inline]
+ send_ack+0xbf/0x220 drivers/infiniband/sw/rxe/rxe_resp.c:1230
+ rxe_receiver+0x3b98/0xc940
+ do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+ do_work+0x1aa/0x720 drivers/infiniband/sw/rxe/rxe_task.c:191
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/2]
+======================================================================
+
+------------[ cut here ]------------
+wc->opcode != IB_WC_RECV
+WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:2518 at rtrs_clt_info_rsp_done+0xd1b/0xe70 drivers/infiniband/ulp/rtrs/rtrs-clt.c:2518, CPU#0: kworker/u9:4/1116
+Modules linked in:
+CPU: 0 UID: 0 PID: 1116 Comm: kworker/u9:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:rtrs_clt_info_rsp_done+0xd1b/0xe70 drivers/infiniband/ulp/rtrs/rtrs-clt.c:2518
+Code: 33 48 83 c6 68 48 c7 c7 80 c8 71 8c e8 de ec 88 f8 e9 f6 fe ff ff e8 b4 1c 20 f9 90 0f 0b 90 e9 9e f3 ff ff e8 a6 1c 20 f9 90 <0f> 0b 90 e9 13 f4 ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 68 f3
+RSP: 0018:ffffc90000007d98 EFLAGS: 00010246
+RAX: ffffffff889eab1a RBX: 0000000000000081 RCX: ffff888018dbd100
+RDX: 0000000000000100 RSI: 0000000000000081 RDI: 0000000000000080
+RBP: ffff888025931000 R08: 0000000000000002 R09: 0000000000000002
+R10: 0000000100000000 R11: ffffffff889e9e00 R12: ffff888025931000
+R13: dffffc0000000000 R14: ffff888034bd5e80 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000056228ea22060 CR3: 0000000043497000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <IRQ>
+ __ib_process_cq+0x149/0x440 drivers/infiniband/core/cq.c:110
+ ib_poll_handler+0x78/0x280 drivers/infiniband/core/cq.c:157
+ irq_poll_softirq+0x1ea/0x500 lib/irq_poll.c:110
+ handle_softirqs+0x191/0x5a0 kernel/softirq.c:622
+ __do_softirq kernel/softirq.c:656 [inline]
+ invoke_softirq kernel/softirq.c:496 [inline]
+ __irq_exit_rcu+0x79/0x180 kernel/softirq.c:735
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1061 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1061
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:697
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:179 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x18/0x40 kernel/locking/spinlock.c:198
+Code: 00 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa e8 d7 0c 00 00 90 f7 c6 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> 73 0d 21 f6 65 8b 05 ec a8 24 07 85 c0 74 06 e9 53 52 00 00 cc
+RSP: 0018:ffffc900060a7518 EFLAGS: 00000206
+RAX: 0000000000000001 RBX: 1ffff110045856a8 RCX: ffff888018dbd100
+RDX: 0000000000000000 RSI: 0000000000000a06 RDI: 0000000000000001
+RBP: ffffc900060a7610 R08: ffff888018dbd107 R09: 1ffff110031b7a20
+R10: dffffc0000000000 R11: ffffed10031b7a21 R12: ffff888022c2b400
+R13: dffffc0000000000 R14: ffffffff88799d40 R15: ffff888022c2b544
+ spin_unlock_irqrestore include/linux/spinlock.h:408 [inline]
+ rxe_cq_post+0x391/0x690 drivers/infiniband/sw/rxe/rxe_cq.c:88
+ do_complete drivers/infiniband/sw/rxe/rxe_resp.c:1190 [inline]
+ rxe_receiver+0x4344/0xc940 drivers/infiniband/sw/rxe/rxe_resp.c:1593
+ do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+ do_work+0x1aa/0x720 drivers/infiniband/sw/rxe/rxe_task.c:191
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 cc                	add    %cl,%ah
+   2:	90                   	nop
+   3:	90                   	nop
+   4:	90                   	nop
+   5:	90                   	nop
+   6:	90                   	nop
+   7:	90                   	nop
+   8:	90                   	nop
+   9:	90                   	nop
+   a:	90                   	nop
+   b:	90                   	nop
+   c:	90                   	nop
+   d:	90                   	nop
+   e:	90                   	nop
+   f:	90                   	nop
+  10:	90                   	nop
+  11:	90                   	nop
+  12:	f3 0f 1e fa          	endbr64
+  16:	e8 d7 0c 00 00       	call   0xcf2
+  1b:	90                   	nop
+  1c:	f7 c6 00 02 00 00    	test   $0x200,%esi
+  22:	74 01                	je     0x25
+  24:	fb                   	sti
+  25:	bf 01 00 00 00       	mov    $0x1,%edi
+* 2a:	e8 73 0d 21 f6       	call   0xf6210da2 <-- trapping instruction
+  2f:	65 8b 05 ec a8 24 07 	mov    %gs:0x724a8ec(%rip),%eax        # 0x724a922
+  36:	85 c0                	test   %eax,%eax
+  38:	74 06                	je     0x40
+  3a:	e9 53 52 00 00       	jmp    0x5292
+  3f:	cc                   	int3
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

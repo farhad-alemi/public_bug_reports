@@ -1,0 +1,14 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+BUG: KASAN: slab-out-of-bounds in vga16fb_probe+0x824/0x9d0
+Read of size 1 at addr ffff88801eb510ff by task bash/9402
+vga16fb_probe
+platform_probe
+really_probe
+__driver_probe_device
+device_driver_attach
+bind_store
+kernfs_fop_write_iter
+vfs_write
+Kernel panic - not syncing: KASAN: panic_on_warn set

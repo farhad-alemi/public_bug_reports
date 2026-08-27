@@ -1,0 +1,242 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+BUG: KASAN: slab-use-after-free in atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+BUG: KASAN: slab-use-after-free in __mutex_trylock_fast kernel/locking/mutex.c:161 [inline]
+BUG: KASAN: slab-use-after-free in mutex_lock+0x90/0x100 kernel/locking/mutex.c:318
+Write of size 8 at addr ffff8880184d8118 by task syz.4.1078/24006
+
+CPU: 1 UID: 0 PID: 24006 Comm: syz.4.1078 Tainted: G     U       L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER, [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+ atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+ __mutex_trylock_fast kernel/locking/mutex.c:161 [inline]
+ mutex_lock+0x90/0x100 kernel/locking/mutex.c:318
+ v4l_enable_media_source+0x4b/0xd0 drivers/media/v4l2-core/v4l2-mc.c:289
+ v4l_s_input+0x2f/0x170 drivers/media/v4l2-core/v4l2-ioctl.c:1158
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb9c4ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb9c59fa018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fb9c4e36360 RCX: 00007fb9c4ba778d
+RDX: 0000200000001800 RSI: 00000000c0045627 RDI: 0000000000000007
+RBP: 00007fb9c4c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fb9c4e363f8 R14: 00007fb9c4e36360 R15: 00007ffec74e1c50
+ </TASK>
+
+Allocated by task 23934 on cpu 0 at 212.314469s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ cx231xx_media_device_init drivers/media/usb/cx231xx/cx231xx-cards.c:1382 [inline]
+ cx231xx_usb_probe+0x7ab/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1802
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 23934 on cpu 1 at 212.866928s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ cx231xx_unregister_media_device drivers/media/usb/cx231xx/cx231xx-cards.c:1345 [inline]
+ cx231xx_usb_probe+0x11a7/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1912
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff8880184d8000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 280 bytes inside of
+ freed 1024-byte region [ffff8880184d8000, ffff8880184d8400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x184d8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9438, tgid 9438 (syz-executor), ts 60356417938, free_ts 58538850615
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ psi_cgroup_alloc+0x56/0x200 kernel/sched/psi.c:1117
+ cgroup_create kernel/cgroup/cgroup.c:5858 [inline]
+ cgroup_mkdir+0x4b2/0xfb0 kernel/cgroup/cgroup.c:5983
+ kernfs_iop_mkdir+0x1b7/0x290 fs/kernfs/dir.c:1306
+ vfs_mkdir+0x413/0x630 fs/namei.c:5261
+ filename_mkdirat+0x285/0x510 fs/namei.c:5294
+ __do_sys_mkdirat fs/namei.c:5315 [inline]
+ __se_sys_mkdirat+0x35/0x150 fs/namei.c:5312
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 9438 tgid 9438 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ __kmalloc_cache_noprof+0x202/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ kset_create lib/kobject.c:965 [inline]
+ kset_create_and_add+0x5a/0x160 lib/kobject.c:1008
+ register_queue_kobjects net/core/net-sysfs.c:2091 [inline]
+ netdev_register_kobject+0x1a2/0x310 net/core/net-sysfs.c:2347
+ register_netdevice+0x104e/0x1a90 net/core/dev.c:11423
+ nsim_init_netdevsim drivers/net/netdevsim/netdev.c:1069 [inline]
+ nsim_create+0x929/0xd60 drivers/net/netdevsim/netdev.c:1151
+ __nsim_dev_port_add+0x7f1/0xc90 drivers/net/netdevsim/dev.c:1509
+ nsim_dev_port_add_all+0x37/0xf0 drivers/net/netdevsim/dev.c:1570
+ nsim_drv_probe+0x8fe/0xc40 drivers/net/netdevsim/dev.c:1731
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+
+Memory state around the buggy address:
+ ffff8880184d8000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880184d8080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880184d8100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff8880184d8180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880184d8200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9438, tgid 9438 (syz-executor), ts 60356417938, free_ts 58538850615
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_noprof+0x2c3/0x560
+ psi_cgroup_alloc+0x56/0x200
+ cgroup_mkdir+0x4b2/0xfb0
+ kernfs_iop_mkdir+0x1b7/0x290
+ vfs_mkdir+0x413/0x630
+ filename_mkdirat+0x285/0x510
+ __se_sys_mkdirat+0x35/0x150
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 9438 tgid 9438 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ __kmalloc_cache_noprof+0x202/0x560
+ kset_create_and_add+0x5a/0x160
+ netdev_register_kobject+0x1a2/0x310
+ register_netdevice+0x104e/0x1a90
+ nsim_create+0x929/0xd60
+ __nsim_dev_port_add+0x7f1/0xc90
+ nsim_dev_port_add_all+0x37/0xf0
+ nsim_drv_probe+0x8fe/0xc40
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+Memory state around the buggy address:
+ ffff8880184d8000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880184d8080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880184d8100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff8880184d8180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880184d8200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

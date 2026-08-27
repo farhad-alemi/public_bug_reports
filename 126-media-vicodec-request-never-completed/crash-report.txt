@@ -1,0 +1,670 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+7 distinct call traces, each reproduced once.
+
+======================================================================
+[1/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#1: syz.9.775/21126
+Modules linked in:
+CPU: 1 UID: 0 PID: 21126 Comm: syz.9.775 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc900086a7b18 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88813edc1928 RCX: ffff88810cfd5100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520010d4f54 R12: 1ffff11027db8325
+R13: ffff88813edc1948 R14: ffff88813edc194c R15: ffff88813edc1900
+FS:  0000555580ea4500(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000004008 CR3: 000000004aa58000 CR4: 0000000000752ff0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300 drivers/media/test-drivers/vicodec/vicodec-core.c:1527
+ vicodec_stop_streaming+0x48/0x750 drivers/media/test-drivers/vicodec/vicodec-core.c:1646
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ffbad9a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff98e84aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fff98e84b78 RCX: 00007ffbad9a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007ffbadc37da0 R08: 0000000000000001 R09: 0000001e00000000
+R10: 0000001b2eb20000 R11: 0000000000000246 R12: 00007ffbadc35fac
+R13: 00007ffbadc35fa0 R14: 0000000000036de3 R15: 0000000000036b36
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 21126 Comm: syz.9.775 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc900086a7b18 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88813edc1928 RCX: ffff88810cfd5100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520010d4f54 R12: 1ffff11027db8325
+R13: ffff88813edc1948 R14: ffff88813edc194c R15: ffff88813edc1900
+FS:  0000555580ea4500(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000004008 CR3: 000000004aa58000 CR4: 0000000000752ff0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300
+ vicodec_stop_streaming+0x48/0x750
+ __vb2_queue_cancel+0xba/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ffbad9a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff98e84aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fff98e84b78 RCX: 00007ffbad9a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007ffbadc37da0 R08: 0000000000000001 R09: 0000001e00000000
+R10: 0000001b2eb20000 R11: 0000000000000246 R12: 00007ffbadc35fac
+R13: 00007ffbadc35fa0 R14: 0000000000036de3 R15: 0000000000036b36
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#0: syz.6.284/13959
+Modules linked in:
+CPU: 0 UID: 0 PID: 13959 Comm: syz.6.284 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc90002b17bc8 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88801f489a28 RCX: ffff88810c1c8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000562f68 R12: 1ffff11003e91345
+R13: ffff88801f489a48 R14: ffff88801f489a4c R15: ffff88801f489a00
+FS:  0000555570bf9500(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c3fe330 CR3: 00000001016a4000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __vb2_queue_cancel+0x4f5/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2279
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7bfbfa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff58ee8e98 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fff58ee8f68 RCX: 00007f7bfbfa778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007f7bfc237da0 R08: 0000000000000001 R09: 0000001200000000
+R10: 0000001b2e520000 R11: 0000000000000246 R12: 00007f7bfc235fac
+R13: 00007f7bfc235fa0 R14: 0000000000015559 R15: 0000000000015518
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 13959 Comm: syz.6.284 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc90002b17bc8 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88801f489a28 RCX: ffff88810c1c8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000562f68 R12: 1ffff11003e91345
+R13: ffff88801f489a48 R14: ffff88801f489a4c R15: ffff88801f489a00
+FS:  0000555570bf9500(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c3fe330 CR3: 00000001016a4000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __vb2_queue_cancel+0x4f5/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7bfbfa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff58ee8e98 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fff58ee8f68 RCX: 00007f7bfbfa778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007f7bfc237da0 R08: 0000000000000001 R09: 0000001200000000
+R10: 0000001b2e520000 R11: 0000000000000246 R12: 00007f7bfc235fac
+R13: 00007f7bfc235fa0 R14: 0000000000015559 R15: 0000000000015518
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#0: syz.1.858/23824
+Modules linked in:
+CPU: 0 UID: 0 PID: 23824 Comm: syz.1.858 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc900025a7758 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff888018cef628 RCX: ffff8880240d8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520004b4edc R12: 1ffff1100319dec5
+R13: ffff888018cef648 R14: ffff888018cef64c R15: ffff888018cef600
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9ee9ccd000 CR3: 0000000034353000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300 drivers/media/test-drivers/vicodec/vicodec-core.c:1527
+ vicodec_stop_streaming+0x48/0x750 drivers/media/test-drivers/vicodec/vicodec-core.c:1646
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd78ca012df
+Code: Unable to access opcode bytes at 0x7fd78ca012b5.
+RSP: 002b:00007fffa5410d40 EFLAGS: 00000293 ORIG_RAX: 00000000000000e6
+RAX: 0000000000000000 RBX: 00007fd78cc35fa0 RCX: 00007fd78ca012df
+RDX: 00007fffa5410dd0 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fffa5410db0 R08: 0000000000000000 R09: 3fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007fffa5410dd0
+R13: 0000000000000000 R14: 000000000002ea01 R15: 0000000000000000
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 23824 Comm: syz.1.858 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc900025a7758 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff888018cef628 RCX: ffff8880240d8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520004b4edc R12: 1ffff1100319dec5
+R13: ffff888018cef648 R14: ffff888018cef64c R15: ffff888018cef600
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9ee9ccd000 CR3: 0000000034353000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300
+ vicodec_stop_streaming+0x48/0x750
+ __vb2_queue_cancel+0xba/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ do_exit+0x6ee/0x2360
+ do_group_exit+0x20c/0x2c0
+ get_signal+0x12b2/0x1410
+ arch_do_signal_or_restart+0xbc/0x840
+ exit_to_user_mode_loop+0x88/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd78ca012df
+Code: Unable to access opcode bytes at 0x7fd78ca012b5.
+RSP: 002b:00007fffa5410d40 EFLAGS: 00000293 ORIG_RAX: 00000000000000e6
+RAX: 0000000000000000 RBX: 00007fd78cc35fa0 RCX: 00007fd78ca012df
+RDX: 00007fffa5410dd0 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fffa5410db0 R08: 0000000000000000 R09: 3fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007fffa5410dd0
+R13: 0000000000000000 R14: 000000000002ea01 R15: 0000000000000000
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#0: syz.5.67/12477
+Modules linked in:
+CPU: 0 UID: 0 PID: 12477 Comm: syz.5.67 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc90006db7b18 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88801537a528 RCX: ffff88802ff95100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000db6f54 R12: 1ffff11002a6f4a5
+R13: ffff88801537a548 R14: ffff88801537a54c R15: ffff88801537a500
+FS:  00005555840ba500(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4d2819d3a0 CR3: 000000002dce3000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300 drivers/media/test-drivers/vicodec/vicodec-core.c:1527
+ vicodec_stop_streaming+0x48/0x750 drivers/media/test-drivers/vicodec/vicodec-core.c:1646
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc9be7a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffcb643cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fffcb643dc8 RCX: 00007fc9be7a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007fc9bea37da0 R08: 0000000000000001 R09: 0000001a00000000
+R10: 0000001b31220000 R11: 0000000000000246 R12: 00007fc9bea35fac
+R13: 00007fc9bea35fa0 R14: 000000000000fbe4 R15: 000000000000fb9f
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 12477 Comm: syz.5.67 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc90006db7b18 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88801537a528 RCX: ffff88802ff95100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000db6f54 R12: 1ffff11002a6f4a5
+R13: ffff88801537a548 R14: ffff88801537a54c R15: ffff88801537a500
+FS:  00005555840ba500(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4d2819d3a0 CR3: 000000002dce3000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300
+ vicodec_stop_streaming+0x48/0x750
+ __vb2_queue_cancel+0xba/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc9be7a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffcb643cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fffcb643dc8 RCX: 00007fc9be7a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007fc9bea37da0 R08: 0000000000000001 R09: 0000001a00000000
+R10: 0000001b31220000 R11: 0000000000000246 R12: 00007fc9bea35fac
+R13: 00007fc9bea35fa0 R14: 000000000000fbe4 R15: 000000000000fb9f
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#0: syz.4.343/14818
+Modules linked in:
+CPU: 0 UID: 0 PID: 14818 Comm: syz.4.343 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc9002126fa18 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88810d2a3a28 RCX: ffff88810c68d100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff5200424df34 R12: 1ffff11021a54745
+R13: ffff88810d2a3a48 R14: ffff88810d2a3a4c R15: ffff88810d2a3a00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000019abe000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300 drivers/media/test-drivers/vicodec/vicodec-core.c:1527
+ vicodec_stop_streaming+0x48/0x750 drivers/media/test-drivers/vicodec/vicodec-core.c:1646
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ __do_sys_exit kernel/exit.c:1086 [inline]
+ __se_sys_exit kernel/exit.c:1084 [inline]
+ __x64_sys_exit+0x40/0x40 kernel/exit.c:1084
+ x64_sys_call+0x2231/0x2240 arch/x86/include/generated/asm/syscalls_64.h:61
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3d595a778d
+Code: Unable to access opcode bytes at 0x7f3d595a7763.
+RSP: 002b:00007f3d5a3bafc8 EFLAGS: 00000246 ORIG_RAX: 000000000000003c
+RAX: ffffffffffffffda RBX: 00007f3d59835fa0 RCX: 00007f3d595a778d
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007f3d5964eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3d59836038 R14: 00007f3d59835fa0 R15: 00007ffceaaa2560
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 14818 Comm: syz.4.343 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc9002126fa18 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88810d2a3a28 RCX: ffff88810c68d100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff5200424df34 R12: 1ffff11021a54745
+R13: ffff88810d2a3a48 R14: ffff88810d2a3a4c R15: ffff88810d2a3a00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000019abe000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300
+ vicodec_stop_streaming+0x48/0x750
+ __vb2_queue_cancel+0xba/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ do_exit+0x6ee/0x2360
+ __x64_sys_exit+0x40/0x40
+ x64_sys_call+0x2231/0x2240
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3d595a778d
+Code: Unable to access opcode bytes at 0x7f3d595a7763.
+RSP: 002b:00007f3d5a3bafc8 EFLAGS: 00000246 ORIG_RAX: 000000000000003c
+RAX: ffffffffffffffda RBX: 00007f3d59835fa0 RCX: 00007f3d595a778d
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007f3d5964eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3d59836038 R14: 00007f3d59835fa0 R15: 00007ffceaaa2560
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[6/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#0: syz.0.128/12582
+Modules linked in:
+CPU: 0 UID: 0 PID: 12582 Comm: syz.0.128 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc9000228fac8 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88802c5ef428 RCX: ffff888019989b00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000451f48 R12: 1ffff110058bde85
+R13: ffff88802c5ef448 R14: ffff88802c5ef44c R15: ffff88802c5ef400
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd738ef9000 CR3: 0000000027ff8000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __vb2_queue_cancel+0x4f5/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2279
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ __do_sys_exit kernel/exit.c:1086 [inline]
+ __se_sys_exit kernel/exit.c:1084 [inline]
+ __x64_sys_exit+0x40/0x40 kernel/exit.c:1084
+ x64_sys_call+0x2231/0x2240 arch/x86/include/generated/asm/syscalls_64.h:61
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe47a7a778d
+Code: Unable to access opcode bytes at 0x7fe47a7a7763.
+RSP: 002b:00007fe47b603fc8 EFLAGS: 00000246 ORIG_RAX: 000000000000003c
+RAX: ffffffffffffffda RBX: 00007fe47aa35fa0 RCX: 00007fe47a7a778d
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fe47a84eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fe47aa36038 R14: 00007fe47aa35fa0 R15: 00007ffefc66e770
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 12582 Comm: syz.0.128 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc9000228fac8 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff88802c5ef428 RCX: ffff888019989b00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000451f48 R12: 1ffff110058bde85
+R13: ffff88802c5ef448 R14: ffff88802c5ef44c R15: ffff88802c5ef400
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd738ef9000 CR3: 0000000027ff8000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __vb2_queue_cancel+0x4f5/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ do_exit+0x6ee/0x2360
+ __x64_sys_exit+0x40/0x40
+ x64_sys_call+0x2231/0x2240
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe47a7a778d
+Code: Unable to access opcode bytes at 0x7fe47a7a7763.
+RSP: 002b:00007fe47b603fc8 EFLAGS: 00000246 ORIG_RAX: 000000000000003c
+RAX: ffffffffffffffda RBX: 00007fe47aa35fa0 RCX: 00007fe47a7a778d
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fe47a84eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fe47aa36038 R14: 00007fe47aa35fa0 R15: 00007ffefc66e770
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[7/7]
+======================================================================
+
+------------[ cut here ]------------
+req->num_incomplete_objects
+WARNING: drivers/media/mc/mc-request.c:528 at media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528, CPU#1: syz.6.408/19732
+Modules linked in:
+CPU: 1 UID: 0 PID: 19732 Comm: syz.6.408 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230 drivers/media/mc/mc-request.c:528
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc90007137758 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff888111ea2628 RCX: ffff888122c38000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000e26edc R12: 1ffff110223d44c5
+R13: ffff888111ea2648 R14: ffff888111ea264c R15: ffff888111ea2600
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8602e6ffd0 CR3: 000000000e0dc000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300 drivers/media/test-drivers/vicodec/vicodec-core.c:1527
+ vicodec_stop_streaming+0x48/0x750 drivers/media/test-drivers/vicodec/vicodec-core.c:1646
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_queue_release+0x2f/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2677
+ v4l2_m2m_ctx_release+0x2a/0x40 drivers/media/v4l2-core/v4l2-mem2mem.c:1286
+ vicodec_release+0x94/0x110 drivers/media/test-drivers/vicodec/vicodec-core.c:1947
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc1e88012df
+Code: Unable to access opcode bytes at 0x7fc1e88012b5.
+RSP: 002b:00007fc1e9699f10 EFLAGS: 00000293 ORIG_RAX: 00000000000000e6
+RAX: fffffffffffffdfc RBX: 00007fc1e8a35fa0 RCX: 00007fc1e88012df
+RDX: 00007fc1e9699fa0 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fc1e9699f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007fc1e9699fa0
+R13: 0000000000000000 R14: 00007fc1e8a35f01 R15: 0000000000000000
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 19732 Comm: syz.6.408 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:media_request_manual_complete+0x173/0x230
+Code: 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 94 33 02 fa 90 0f 0b 90 eb 1d e8 89 33 02 fa 90 0f 0b 90 eb 09 e8 7e 33 02 fa 90 <0f> 0b 90 48 8b 5c 24 08 4c 8b 24 24 48 89 df 4c 89 e6 48 83 c4 10
+RSP: 0018:ffffc90007137758 EFLAGS: 00010093
+RAX: ffffffff87bc9442 RBX: ffff888111ea2628 RCX: ffff888122c38000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000e26edc R12: 1ffff110223d44c5
+R13: ffff888111ea2648 R14: ffff888111ea264c R15: ffff888111ea2600
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8602e6ffd0 CR3: 000000000e0dc000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vicodec_return_bufs+0x246/0x300
+ vicodec_stop_streaming+0x48/0x750
+ __vb2_queue_cancel+0xba/0xdb0
+ vb2_core_queue_release+0x2f/0x150
+ v4l2_m2m_ctx_release+0x2a/0x40
+ vicodec_release+0x94/0x110
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ do_exit+0x6ee/0x2360
+ do_group_exit+0x20c/0x2c0
+ get_signal+0x12b2/0x1410
+ arch_do_signal_or_restart+0xbc/0x840
+ exit_to_user_mode_loop+0x88/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc1e88012df
+Code: Unable to access opcode bytes at 0x7fc1e88012b5.
+RSP: 002b:00007fc1e9699f10 EFLAGS: 00000293 ORIG_RAX: 00000000000000e6
+RAX: fffffffffffffdfc RBX: 00007fc1e8a35fa0 RCX: 00007fc1e88012df
+RDX: 00007fc1e9699fa0 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fc1e9699f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007fc1e9699fa0
+R13: 0000000000000000 R14: 00007fc1e8a35f01 R15: 0000000000000000
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

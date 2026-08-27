@@ -1,0 +1,74 @@
+Recovered console capture for 136-most-description_show-null-drvdata
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: log names range, a crash site of the entry.
+Source log: console_try-136-most-description_show-null-drvdata-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   51.071109][   T24] usb 3-1: new high-speed USB device number 2 using dummy_hcd
+[   51.235375][   T24] usb 3-1: New USB device found, idVendor=0424, idProduct=c001, bcdDevice= 1.00
+[   51.249702][   T24] usb 3-1: New USB device strings: Mfr=1, Product=1, SerialNumber=1
+[   51.250723][   T24] usb 3-1: Product: most
+[   51.251471][   T24] usb 3-1: Manufacturer: most
+[   51.252055][   T24] usb 3-1: SerialNumber: most
+[   55.842890][ T9493] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
+[   55.848420][ T9493] KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+[   55.850947][ T9493] CPU: 1 UID: 0 PID: 9493 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   55.854391][ T9493] Tainted: [W]=WARN
+[   55.855518][ T9493] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   55.857886][ T9493] RIP: 0010:description_show+0x46/0x80
+[   55.858577][ T9493] Code: 7a f8 49 83 c6 78 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 98 17 ea f8 4d 8b 36 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 80 3c 38 00 74 08 4c 89 f7 e8 7b 17 ea f8 49 8b 0e be 00 10 00
+[   55.860908][ T9493] RSP: 0018:ffffc9000612faf8 EFLAGS: 00010202
+[   55.861664][ T9493] RAX: 0000000000000004 RBX: ffff888107cac000 RCX: ffff88802913cc80
+[   55.862638][ T9493] RDX: 0000000000000000 RSI: ffffffff8ff4ca40 RDI: ffff88811c958000
+[   55.863599][ T9493] RBP: 1ffffffff1fe994d R08: ffff888107cacfff R09: 0000000000000000
+[   55.864568][ T9493] R10: ffff888107cac000 R11: ffffffff894c9500 R12: ffff88811c958000
+[   55.865536][ T9493] R13: dffffc0000000000 R14: 0000000000000020 R15: dffffc0000000000
+[   55.866574][ T9493] FS:  0000000028c27400(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   55.867666][ T9493] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   55.868444][ T9493] CR2: 0000556d49d236f0 CR3: 0000000112a28000 CR4: 0000000000752ef0
+[   55.869381][ T9493] PKRU: 55555554
+[   55.869809][ T9493] Call Trace:
+[   55.870209][ T9493]  <TASK>
+[   55.870574][ T9493]  dev_attr_show+0x58/0xc0
+[   55.871121][ T9493]  ? __pfx_dev_attr_show+0x10/0x10
+[   55.871745][ T9493]  sysfs_kf_seq_show+0x331/0x490
+[   55.872359][ T9493]  seq_read_iter+0x4ef/0xe10
+[   55.872930][ T9493]  vfs_read+0x582/0xa70
+[   55.873461][ T9493]  ? __pfx_vfs_read+0x10/0x10
+[   55.874073][ T9493]  ? __fget_files+0x2a/0x420
+[   55.874670][ T9493]  ksys_read+0x150/0x270
+[   55.875213][ T9493]  ? __pfx_ksys_read+0x10/0x10
+[   55.875913][ T9493]  do_syscall_64+0x155/0x510
+[   55.876509][ T9493]  ? trace_irq_disable+0x3b/0x140
+[   55.877157][ T9493]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   55.877931][ T9493]  ? clear_bhb_loop+0x30/0x80
+[   55.878532][ T9493]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   55.879284][ T9493] RIP: 0033:0x45a272
+[   55.879793][ T9493] Code: 08 0f 85 d1 df ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 48 89 e5
+[   55.882177][ T9493] RSP: 002b:00007ffc2ea2a968 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[   55.883185][ T9493] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000045a272
+[   55.884106][ T9493] RDX: 00000000000000ff RSI: 00007ffc2ea2a9e0 RDI: 0000000000000004
+[   55.885049][ T9493] RBP: 00007ffc2ea2a990 R08: 0000000000000000 R09: 0000000000000000
+[   55.886057][ T9493] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc2ea2c068
+[   55.887003][ T9493] R13: 00007ffc2ea2c078 R14: 0000000000000002 R15: 00000000004cea20
+[   55.887944][ T9493]  </TASK>
+[   55.888328][ T9493] Modules linked in:
+[   55.888845][ T9493] ---[ end trace 0000000000000000 ]---
+[   55.889530][ T9493] RIP: 0010:description_show+0x46/0x80
+[   55.890192][ T9493] Code: 7a f8 49 83 c6 78 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 98 17 ea f8 4d 8b 36 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 80 3c 38 00 74 08 4c 89 f7 e8 7b 17 ea f8 49 8b 0e be 00 10 00
+[   55.892530][ T9493] RSP: 0018:ffffc9000612faf8 EFLAGS: 00010202
+[   55.893263][ T9493] RAX: 0000000000000004 RBX: ffff888107cac000 RCX: ffff88802913cc80
+[   55.894206][ T9493] RDX: 0000000000000000 RSI: ffffffff8ff4ca40 RDI: ffff88811c958000
+[   55.895153][ T9493] RBP: 1ffffffff1fe994d R08: ffff888107cacfff R09: 0000000000000000
+[   55.896188][ T9493] R10: ffff888107cac000 R11: ffffffff894c9500 R12: ffff88811c958000
+[   55.897135][ T9493] R13: dffffc0000000000 R14: 0000000000000020 R15: dffffc0000000000
+[   55.898087][ T9493] FS:  0000000028c27400(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   55.899169][ T9493] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   55.899950][ T9493] CR2: 0000556d49d236f0 CR3: 0000000112a28000 CR4: 0000000000752ef0
+[   55.900944][ T9493] PKRU: 55555554
+[   55.901384][ T9493] Kernel panic - not syncing: Fatal exception
+[   55.902488][ T9493] Kernel Offset: disabled
+[   55.903144][ T9493] Rebooting in 86400 seconds..

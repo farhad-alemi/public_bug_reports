@@ -1,0 +1,184 @@
+Recovered console capture for 284-kasan-slab-use-after-free-read-in-em28xx-v4l2-close
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
+this directory; captured after the harness marker, so boot noise is excluded.
+Matched to this entry because: same crash site: em28xx_v4l2_close, reached the same way (v4l2_release <- __fput).
+Source log: console_try-284-kasan-slab-use-after-free-read-in-em-cand11.log
+
+This file exists because this entry faces a near-miss commit that is MERGED and
+present in v7.2-12252. A crash on that tree is what proves the merged commit did
+not remove this defect -- the argument should not rest on source reading alone.
+The original crash-report.txt records the first observation on v7.1-rc5.
+======================================================================
+
+[   51.322703][   T24] em28xx 3-1:1.0: Closing video extension
+[   51.323456][   T24] em28xx 3-1:1.0: V4L2 device vbi0 deregistered
+[   51.326315][   T24] em28xx 3-1:1.0: V4L2 device video7 deregistered
+[   51.328825][   T24] em28xx 3-1:1.0: Closing input extension
+[   51.329798][   T24] em28xx 3-1:1.0: Deregistering snapshot button
+[   76.550913][ T9492] ==================================================================
+[   76.555646][ T9492] BUG: KASAN: slab-use-after-free in em28xx_v4l2_close+0xae/0x380
+[   76.559373][ T9492] Read of size 8 at addr ffff88810ab460b8 by task repro/9492
+[   76.562905][ T9492] 
+[   76.563938][ T9492] CPU: 0 UID: 0 PID: 9492 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   76.563955][ T9492] Tainted: [W]=WARN
+[   76.563962][ T9492] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   76.563976][ T9492] Call Trace:
+[   76.563983][ T9492]  <TASK>
+[   76.563988][ T9492]  dump_stack_lvl+0xe8/0x150
+[   76.564003][ T9492]  print_address_description+0x55/0x1e0
+[   76.564015][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.564026][ T9492]  print_report+0x58/0x70
+[   76.564036][ T9492]  kasan_report+0x117/0x150
+[   76.564049][ T9492]  ? lockdep_hardirqs_on+0x7b/0x110
+[   76.564062][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.564075][ T9492]  em28xx_v4l2_close+0xae/0x380
+[   76.564086][ T9492]  ? __pfx_v4l2_release+0x10/0x10
+[   76.564102][ T9492]  v4l2_release+0x250/0x370
+[   76.564116][ T9492]  ? __pfx_v4l2_release+0x10/0x10
+[   76.564131][ T9492]  __fput+0x44f/0xa60
+[   76.564146][ T9492]  fput_close_sync+0x11f/0x240
+[   76.564159][ T9492]  ? __pfx_fput_close_sync+0x10/0x10
+[   76.564174][ T9492]  __x64_sys_close+0x7e/0x110
+[   76.564187][ T9492]  do_syscall_64+0x155/0x510
+[   76.564200][ T9492]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   76.564212][ T9492]  ? clear_bhb_loop+0x30/0x80
+[   76.564224][ T9492]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   76.564235][ T9492] RIP: 0033:0x45e3a2
+[   76.564248][ T9492] Code: 08 0f 85 21 eb ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 48 89 e5
+[   76.564263][ T9492] RSP: 002b:00007ffee0061f68 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[   76.564281][ T9492] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000045e3a2
+[   76.564289][ T9492] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+[   76.564295][ T9492] RBP: 00007ffee0061f90 R08: 0000000000000000 R09: 0000000000000000
+[   76.564302][ T9492] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffee00627b8
+[   76.564309][ T9492] R13: 00007ffee00627c8 R14: 0000000000000002 R15: 00000000004ce9e0
+[   76.564321][ T9492]  </TASK>
+[   76.564325][ T9492] 
+[   76.594326][ T9492] Allocated by task 797:
+[   76.594915][ T9492]  kasan_save_track+0x3e/0x80
+[   76.595538][ T9492]  __kasan_kmalloc+0x93/0xb0
+[   76.596154][ T9492]  __kmalloc_cache_noprof+0x331/0x660
+[   76.596854][ T9492]  usb_set_configuration+0x3c9/0x2110
+[   76.597551][ T9492]  usb_generic_driver_probe+0x8d/0x150
+[   76.598246][ T9492]  usb_probe_device+0x1c4/0x3b0
+[   76.598883][ T9492]  really_probe+0x267/0xaf0
+[   76.599610][ T9492]  __driver_probe_device+0x1e2/0x350
+[   76.600311][ T9492]  driver_probe_device+0x4f/0x240
+[   76.600959][ T9492]  __device_attach_driver+0x270/0x410
+[   76.601649][ T9492]  bus_for_each_drv+0x258/0x2f0
+[   76.602280][ T9492]  __device_attach+0x2c5/0x450
+[   76.602898][ T9492]  device_initial_probe+0xa1/0xd0
+[   76.603597][ T9492]  bus_probe_device+0x12a/0x220
+[   76.604245][ T9492]  device_add+0x7ec/0xb90
+[   76.604813][ T9492]  usb_new_device+0xa14/0x1720
+[   76.605448][ T9492]  hub_event+0x2a1c/0x4f30
+[   76.606058][ T9492]  process_scheduled_works+0xc99/0x1900
+[   76.606815][ T9492]  worker_thread+0xa53/0xfc0
+[   76.607415][ T9492]  kthread+0x38b/0x480
+[   76.607939][ T9492]  ret_from_fork+0x514/0xb70
+[   76.608539][ T9492]  ret_from_fork_asm+0x1a/0x30
+[   76.609266][ T9492] 
+[   76.609605][ T9492] Freed by task 24:
+[   76.610087][ T9492]  kasan_save_track+0x3e/0x80
+[   76.610811][ T9492]  kasan_save_free_info+0x46/0x50
+[   76.611595][ T9492]  __kasan_slab_free+0x5c/0x80
+[   76.612190][ T9492]  kfree+0x1c5/0x640
+[   76.612671][ T9492]  device_release+0xc4/0x1f0
+[   76.613234][ T9492]  kobject_put+0x228/0x560
+[   76.613817][ T9492]  usb_disable_device+0x611/0x8d0
+[   76.614423][ T9492]  usb_disconnect+0x32f/0x990
+[   76.615023][ T9492]  hub_event+0x1cc9/0x4f30
+[   76.615595][ T9492]  process_scheduled_works+0xc99/0x1900
+[   76.616278][ T9492]  worker_thread+0xa53/0xfc0
+[   76.616868][ T9492]  kthread+0x38b/0x480
+[   76.617359][ T9492]  ret_from_fork+0x514/0xb70
+[   76.617922][ T9492]  ret_from_fork_asm+0x1a/0x30
+[   76.618504][ T9492] 
+[   76.618784][ T9492] The buggy address belongs to the object at ffff88810ab46000
+[   76.618784][ T9492]  which belongs to the cache kmalloc-2k of size 2048
+[   76.620583][ T9492] The buggy address is located 184 bytes inside of
+[   76.620583][ T9492]  freed 2048-byte region [ffff88810ab46000, ffff88810ab46800)
+[   76.622227][ T9492] 
+[   76.622522][ T9492] The buggy address belongs to the physical page:
+[   76.623289][ T9492] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88810ab44000 pfn:0x10ab40
+[   76.624503][ T9492] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   76.625502][ T9492] flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+[   76.626463][ T9492] page_type: f5(slab)
+[   76.626918][ T9492] raw: 057ff00000000240 ffff88801b042000 ffffea0004226010 ffffea000428fc10
+[   76.627897][ T9492] raw: ffff88810ab44000 0000000800080006 00000000f5000000 0000000000000000
+[   76.628881][ T9492] head: 057ff00000000240 ffff88801b042000 ffffea0004226010 ffffea000428fc10
+[   76.629934][ T9492] head: ffff88810ab44000 0000000800080006 00000000f5000000 0000000000000000
+[   76.630897][ T9492] head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+[   76.631849][ T9492] head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+[   76.632800][ T9492] page dumped because: kasan: bad access detected
+[   76.633509][ T9492] page_owner tracks the page as allocated
+[   76.634139][ T9492] page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 3573413575
+[   76.636242][ T9492]  post_alloc_hook+0x1f9/0x250
+[   76.636791][ T9492]  get_page_from_freelist+0x235a/0x23e0
+[   76.637396][ T9492]  __alloc_frozen_pages_noprof+0x217/0x5a0
+[   76.638083][ T9492]  allocate_slab+0x79/0x5e0
+[   76.638602][ T9492]  refill_objects+0x2d6/0x350
+[   76.639211][ T9492]  __pcs_replace_empty_main+0x2c4/0x6b0
+[   76.639822][ T9492]  __kmalloc_cache_noprof+0x3ab/0x660
+[   76.640428][ T9492]  device_create+0x13d/0x300
+[   76.640941][ T9492]  add_mtd_device+0x1109/0x17d0
+[   76.641516][ T9492]  mtd_device_parse_register+0xcbb/0xe40
+[   76.642194][ T9492]  mtdram_init_device+0x20c/0x2c0
+[   76.642810][ T9492]  init_mtdram+0x9f/0x120
+[   76.643336][ T9492]  do_one_initcall+0x250/0x870
+[   76.643927][ T9492]  do_initcall_level+0x104/0x190
+[   76.644537][ T9492]  do_initcalls+0x59/0xa0
+[   76.645066][ T9492]  kernel_init_freeable+0x2a6/0x3e0
+[   76.645706][ T9492] page_owner free stack trace missing
+[   76.646357][ T9492] 
+[   76.646651][ T9492] Memory state around the buggy address:
+[   76.647346][ T9492]  ffff88810ab45f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   76.648311][ T9492]  ffff88810ab46000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   76.649352][ T9492] >ffff88810ab46080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   76.650315][ T9492]                                         ^
+[   76.651032][ T9492]  ffff88810ab46100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   76.652014][ T9492]  ffff88810ab46180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   76.652959][ T9492] ==================================================================
+[   76.653994][ T9492] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   76.654964][ T9492] CPU: 0 UID: 0 PID: 9492 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   76.656529][ T9492] Tainted: [W]=WARN
+[   76.657022][ T9492] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   76.658370][ T9492] Call Trace:
+[   76.658798][ T9492]  <TASK>
+[   76.659245][ T9492]  vpanic+0x56d/0xa60
+[   76.659756][ T9492]  ? __pfx_vpanic+0x10/0x10
+[   76.660327][ T9492]  panic+0xc5/0xd0
+[   76.660811][ T9492]  ? __pfx_panic+0x10/0x10
+[   76.661350][ T9492]  ? preempt_schedule_thunk+0x16/0x40
+[   76.661992][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.662699][ T9492]  ? preempt_schedule_thunk+0x16/0x40
+[   76.663449][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.664123][ T9492]  check_panic_on_warn+0x89/0xb0
+[   76.664751][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.665394][ T9492]  end_report+0x73/0x170
+[   76.665969][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.666646][ T9492]  kasan_report+0x128/0x150
+[   76.667211][ T9492]  ? lockdep_hardirqs_on+0x7b/0x110
+[   76.667874][ T9492]  ? em28xx_v4l2_close+0xae/0x380
+[   76.668507][ T9492]  em28xx_v4l2_close+0xae/0x380
+[   76.669179][ T9492]  ? __pfx_v4l2_release+0x10/0x10
+[   76.669824][ T9492]  v4l2_release+0x250/0x370
+[   76.670397][ T9492]  ? __pfx_v4l2_release+0x10/0x10
+[   76.671004][ T9492]  __fput+0x44f/0xa60
+[   76.671492][ T9492]  fput_close_sync+0x11f/0x240
+[   76.672057][ T9492]  ? __pfx_fput_close_sync+0x10/0x10
+[   76.672696][ T9492]  __x64_sys_close+0x7e/0x110
+[   76.673262][ T9492]  do_syscall_64+0x155/0x510
+[   76.673820][ T9492]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   76.674552][ T9492]  ? clear_bhb_loop+0x30/0x80
+[   76.675122][ T9492]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   76.675828][ T9492] RIP: 0033:0x45e3a2
+[   76.676304][ T9492] Code: 08 0f 85 21 eb ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 48 89 e5
+[   76.678816][ T9492] RSP: 002b:00007ffee0061f68 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[   76.680018][ T9492] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000045e3a2
+[   76.681070][ T9492] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+[   76.682089][ T9492] RBP: 00007ffee0061f90 R08: 0000000000000000 R09: 0000000000000000
+[   76.683104][ T9492] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffee00627b8
+[   76.684127][ T9492] R13: 00007ffee00627c8 R14: 0000000000000002 R15: 00000000004ce9e0
+[   76.685133][ T9492]  </TASK>
+[   76.685914][ T9492] Kernel Offset: disabled
+[   76.686614][ T9492] Rebooting in 86400 seconds..

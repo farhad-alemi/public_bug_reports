@@ -1,0 +1,6 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+KASAN: null-ptr-deref in range [0x20-0x27]
+RIP: description_show+0x4b/0x80        Comm: syz.0.17
+-> Kernel panic - not syncing: Fatal exception

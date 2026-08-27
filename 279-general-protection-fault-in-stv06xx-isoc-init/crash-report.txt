@@ -1,0 +1,60 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000007: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000038-0x000000000000003f]
+CPU: 0 UID: 0 PID: 12966 Comm: syz.0.269 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:stv06xx_isoc_init+0x144/0x250 drivers/media/usb/gspca/stv06xx/stv06xx.c:328
+Code: 0f b6 36 bf 04 00 00 00 44 89 f6 e8 e6 5e c2 f9 41 83 fe 03 0f 87 c8 00 00 00 e8 d7 5b c2 f9 4f 8d 34 b7 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 c4 00 00 00 41 0f b7 2e 48 83 c3 48 48
+RSP: 0018:ffffc90005597190 EFLAGS: 00010202
+RAX: 0000000000000007 RBX: ffff88801cf64f80 RCX: 0000000000080000
+RDX: ffffc90026014000 RSI: 0000000000000d07 RDI: 0000000000000d08
+RBP: 0000000000000001 R08: ffff8881101bc7ef R09: 1ffff110220378fd
+R10: dffffc0000000000 R11: ffffffff87fc6ab0 R12: dffffc0000000000
+R13: ffff88803b096800 R14: 0000000000000038 R15: 0000000000000034
+FS:  00007f36cc45f6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000000 CR3: 000000004367a000 CR4: 0000000000752ef0
+DR0: 0000000000000001 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gspca_init_transfer+0x2ef/0x3060 drivers/media/usb/gspca/gspca.c:775
+ gspca_start_streaming+0x6f/0x250 drivers/media/usb/gspca/gspca.c:1360
+ vb2_start_streaming+0x128/0x460 drivers/media/common/videobuf2/videobuf2-core.c:1783
+ vb2_core_streamon+0x2e0/0x4f0 drivers/media/common/videobuf2/videobuf2-core.c:2336
+ __vb2_init_fileio+0xca2/0xff0 drivers/media/common/videobuf2/videobuf2-core.c:2949
+ vb2_core_poll+0x4c1/0x840 drivers/media/common/videobuf2/videobuf2-core.c:2713
+ vb2_poll drivers/media/common/videobuf2/videobuf2-v4l2.c:979 [inline]
+ vb2_fop_poll+0x191/0x310 drivers/media/common/videobuf2/videobuf2-v4l2.c:1245
+ v4l2_poll+0x147/0x2c0 drivers/media/v4l2-core/v4l2-dev.c:350
+ vfs_poll include/linux/poll.h:82 [inline]
+ do_pollfd fs/select.c:877 [inline]
+ do_poll fs/select.c:920 [inline]
+ do_sys_poll+0x96c/0x10e0 fs/select.c:1015
+ __do_sys_poll fs/select.c:1072 [inline]
+ __se_sys_poll fs/select.c:1060 [inline]
+ __x64_sys_poll+0x190/0x350 fs/select.c:1060
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f36cb5a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f36cc45f018 EFLAGS: 00000246 ORIG_RAX: 0000000000000007
+RAX: ffffffffffffffda RBX: 00007f36cb836180 RCX: 00007f36cb5a778d
+RDX: 000000000000002d RSI: 0000000000000001 RDI: 0000200000000780
+RBP: 00007f36cb64eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f36cb836218 R14: 00007f36cb836180 R15: 00007ffcb7226910
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

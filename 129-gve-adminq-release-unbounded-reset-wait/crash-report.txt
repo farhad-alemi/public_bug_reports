@@ -1,0 +1,739 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+7 distinct call traces, each reproduced once.
+
+======================================================================
+[1/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#1: syz.0.63/11869
+Modules linked in:
+CPU: 1 UID: 0 PID: 11869 Comm: syz.0.63 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc9000854f710 EFLAGS: 00010287
+RAX: ffffffff86810248 RBX: ffff88803115eb00 RCX: 0000000000080000
+RDX: ffffc900219d2000 RSI: 000000000000cb4d RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520010a9ea4 R12: dffffc0000000000
+R13: 1ffff1100622bd79 R14: ffff88803115ebc8 R15: 0000000000000000
+FS:  00007f66debf66c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe6c750d000 CR3: 0000000115e3b000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f66e09a778d
+Code: Unable to access opcode bytes at 0x7f66e09a7763.
+RSP: 002b:00007f66debf6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f66e0c35fa0 RCX: 00007f66e09a778d
+RDX: 000000000000000d RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007f66e0a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f66e0c36038 R14: 00007f66e0c35fa0 R15: 00007fff3aa20c80
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 11869 Comm: syz.0.63 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc9000854f710 EFLAGS: 00010287
+RAX: ffffffff86810248 RBX: ffff88803115eb00 RCX: 0000000000080000
+RDX: ffffc900219d2000 RSI: 000000000000cb4d RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520010a9ea4 R12: dffffc0000000000
+R13: 1ffff1100622bd79 R14: ffff88803115ebc8 R15: 0000000000000000
+FS:  00007f66debf66c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe6c750d000 CR3: 0000000115e3b000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140
+ gve_init_priv+0x2a8a/0x3450
+ gve_probe+0x61f/0x970
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ device_driver_attach+0xdc/0x1d0
+ bind_store+0x1d0/0x220
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f66e09a778d
+Code: Unable to access opcode bytes at 0x7f66e09a7763.
+RSP: 002b:00007f66debf6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f66e0c35fa0 RCX: 00007f66e09a778d
+RDX: 000000000000000d RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007f66e0a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f66e0c36038 R14: 00007f66e0c35fa0 R15: 00007fff3aa20c80
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#1: syz.9.946/23759
+Modules linked in:
+CPU: 1 UID: 0 PID: 23759 Comm: syz.9.946 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90002477550 EFLAGS: 00010293
+RAX: ffffffff86810248 RBX: ffff88812835ab00 RCX: ffff888018bd8000
+RDX: 0000000000000000 RSI: 00000000000001f4 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff5200048ee6c R12: dffffc0000000000
+R13: 1ffff1102506b579 R14: ffff88812835abc8 R15: 0000000000000000
+FS:  00007f6fc8f456c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4bc23dc350 CR3: 000000010ac43000 CR4: 0000000000752ef0
+DR0: 0000000000007e9c DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ bus_rescan_devices_helper drivers/base/bus.c:847 [inline]
+ drivers_probe_store+0x11a/0x220 drivers/base/bus.c:318
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6fc7fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6fc8f45018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6fc8235fa0 RCX: 00007f6fc7fa778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000006
+RBP: 00007f6fc804eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6fc8236038 R14: 00007f6fc8235fa0 R15: 00007ffd7af74030
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 23759 Comm: syz.9.946 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90002477550 EFLAGS: 00010293
+RAX: ffffffff86810248 RBX: ffff88812835ab00 RCX: ffff888018bd8000
+RDX: 0000000000000000 RSI: 00000000000001f4 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff5200048ee6c R12: dffffc0000000000
+R13: 1ffff1102506b579 R14: ffff88812835abc8 R15: 0000000000000000
+FS:  00007f6fc8f456c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4bc23dc350 CR3: 000000010ac43000 CR4: 0000000000752ef0
+DR0: 0000000000007e9c DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140
+ gve_init_priv+0x2a8a/0x3450
+ gve_probe+0x61f/0x970
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ drivers_probe_store+0x11a/0x220
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6fc7fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6fc8f45018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6fc8235fa0 RCX: 00007f6fc7fa778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000006
+RBP: 00007f6fc804eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6fc8236038 R14: 00007f6fc8235fa0 R15: 00007ffd7af74030
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#0: syz.6.109/12806
+Modules linked in:
+CPU: 0 UID: 0 PID: 12806 Comm: syz.6.109 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90002447550 EFLAGS: 00010287
+RAX: ffffffff86810248 RBX: ffff8880369c4b00 RCX: 0000000000080000
+RDX: ffffc90007c92000 RSI: 000000000000c826 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000488e6c R12: dffffc0000000000
+R13: 1ffff11006d38979 R14: ffff8880369c4bc8 R15: 0000000000000000
+FS:  00007feb911336c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4d0ba00988 CR3: 000000010fc2b000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ bus_rescan_devices_helper drivers/base/bus.c:847 [inline]
+ drivers_probe_store+0x11a/0x220 drivers/base/bus.c:318
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7feb901a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007feb91133018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007feb90435fa0 RCX: 00007feb901a778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000007
+RBP: 00007feb9024eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007feb90436038 R14: 00007feb90435fa0 R15: 00007ffc31f61930
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007feb91133018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007feb90435fa0 RCX: 00007feb901a778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000007
+RBP: 00007feb9024eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007feb90436038 R14: 00007feb90435fa0 R15: 00007ffc31f61930
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#1: syz.3.262/15041
+Modules linked in:
+CPU: 1 UID: 0 PID: 15041 Comm: syz.3.262 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90002f5f550 EFLAGS: 00010293
+RAX: ffffffff86810248 RBX: ffff888108268b00 RCX: ffff88810a9b9b00
+RDX: 0000000000000000 RSI: 00000000000001f4 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520005ebe6c R12: dffffc0000000000
+R13: 1ffff1102104d179 R14: ffff888108268bc8 R15: 0000000000000000
+FS:  00007f57611226c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007feb1dd8a4e8 CR3: 0000000105d06000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ bus_rescan_devices_helper drivers/base/bus.c:847 [inline]
+ drivers_probe_store+0x11a/0x220 drivers/base/bus.c:318
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f57601a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5761122018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f5760435fa0 RCX: 00007f57601a778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000007
+RBP: 00007f576024eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5760436038 R14: 00007f5760435fa0 R15: 00007ffe665b7420
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 15041 Comm: syz.3.262 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90002f5f550 EFLAGS: 00010293
+RAX: ffffffff86810248 RBX: ffff888108268b00 RCX: ffff88810a9b9b00
+RDX: 0000000000000000 RSI: 00000000000001f4 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520005ebe6c R12: dffffc0000000000
+R13: 1ffff1102104d179 R14: ffff888108268bc8 R15: 0000000000000000
+FS:  00007f57611226c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007feb1dd8a4e8 CR3: 0000000105d06000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140
+ gve_init_priv+0x2a8a/0x3450
+ gve_probe+0x61f/0x970
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ drivers_probe_store+0x11a/0x220
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f57601a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5761122018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f5760435fa0 RCX: 00007f57601a778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000007
+RBP: 00007f576024eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5760436038 R14: 00007f5760435fa0 R15: 00007ffe665b7420
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#0: syz.8.484/18073
+Modules linked in:
+CPU: 0 UID: 0 PID: 18073 Comm: syz.8.484 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc900079a7550 EFLAGS: 00010287
+RAX: ffffffff86810248 RBX: ffff8881087b6b00 RCX: 0000000000080000
+RDX: ffffc90020c02000 RSI: 000000000000cae1 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000f34e6c R12: dffffc0000000000
+R13: 1ffff110210f6d79 R14: ffff8881087b6bc8 R15: 0000000000000000
+FS:  00007f1080bf66c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa66a1ff000 CR3: 0000000146a41000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ bus_rescan_devices_helper drivers/base/bus.c:847 [inline]
+ drivers_probe_store+0x11a/0x220 drivers/base/bus.c:318
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f10829a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1080bf6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f1082c35fa0 RCX: 00007f10829a778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000008
+RBP: 00007f1082a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f1082c36038 R14: 00007f1082c35fa0 R15: 00007ffe2c47d7a0
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ __device_attach+0x2c3/0x450
+ drivers_probe_store+0x11a/0x220
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f10829a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1080bf6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f1082c35fa0 RCX: 00007f10829a778d
+RDX: 000000000000000d RSI: 0000200000000240 RDI: 0000000000000008
+RBP: 00007f1082a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f1082c36038 R14: 00007f1082c35fa0 R15: 00007ffe2c47d7a0
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[6/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#0: syz.6.1993/36390
+Modules linked in:
+CPU: 0 UID: 0 PID: 36390 Comm: syz.6.1993 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90006597710 EFLAGS: 00010283
+RAX: ffffffff86810248 RBX: ffff8880228b0b00 RCX: 0000000000080000
+RDX: ffffc9000a451000 RSI: 0000000000024fc3 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000cb2ea4 R12: dffffc0000000000
+R13: 1ffff11004516179 R14: ffff8880228b0bc8 R15: 0000000000000000
+FS:  00007f3862e0a6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f04681ff000 CR3: 0000000037557000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3861fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3862e0a018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3862235fa0 RCX: 00007f3861fa778d
+RDX: 000000000000000d RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007f386204eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3862236038 R14: 00007f3862235fa0 R15: 00007ffea6385870
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3861fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3862e0a018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3862235fa0 RCX: 00007f3861fa778d
+RDX: 000000000000000d RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007f386204eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3862236038 R14: 00007f3862235fa0 R15: 00007ffea6385870
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[7/7]
+======================================================================
+
+------------[ cut here ]------------
+Unrecoverable platform error!
+WARNING: drivers/net/ethernet/google/gve/gve_adminq.c:378 at gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378, CPU#0: syz.3.449/15945
+Modules linked in:
+CPU: 0 UID: 0 PID: 15945 Comm: syz.3.449 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:gve_adminq_release+0xff/0x260 drivers/net/ethernet/google/gve/gve_adminq.c:378
+Code: 01 00 00 e8 93 c5 3d fb ff c5 bf f4 01 00 00 89 ee e8 c5 c9 3d fb 81 fd f4 01 00 00 75 13 e8 78 c5 3d fb 48 8d 3d 31 57 32 09 <67> 48 0f b9 3a eb 05 e8 65 c5 3d fb bf 14 00 00 00 e8 eb c8 2b fb
+RSP: 0018:ffffc90006207710 EFLAGS: 00010293
+RAX: ffffffff86810248 RBX: ffff88801c234b00 RCX: ffff888138103600
+RDX: 0000000000000000 RSI: 00000000000001f4 RDI: ffffffff8fb35980
+RBP: 00000000000001f4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000c40ea4 R12: dffffc0000000000
+R13: 1ffff11003846979 R14: ffff88801c234bc8 R15: 0000000000000000
+FS:  00007f0e154976c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff01df1f50 CR3: 0000000108344000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ gve_adminq_free+0x78/0x140 drivers/net/ethernet/google/gve/gve_adminq.c:392
+ gve_init_priv+0x2a8a/0x3450 drivers/net/ethernet/google/gve/gve_main.c:2509
+ gve_probe+0x61f/0x970 drivers/net/ethernet/google/gve/gve_main.c:2892
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0e145a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0e15497018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f0e14835fa0 RCX: 00007f0e145a778d
+RDX: 000000000000000d RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007f0e1464eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f0e14836038 R14: 00007f0e14835fa0 R15: 00007fff246829d0
+ </TASK>
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	e8 93 c5 3d fb       	call   0xfb3dc59a
+   7:	ff c5                	inc    %ebp
+   9:	bf f4 01 00 00       	mov    $0x1f4,%edi
+   e:	89 ee                	mov    %ebp,%esi
+  10:	e8 c5 c9 3d fb       	call   0xfb3dc9da
+  15:	81 fd f4 01 00 00    	cmp    $0x1f4,%ebp
+  1b:	75 13                	jne    0x30
+  1d:	e8 78 c5 3d fb       	call   0xfb3dc59a
+  22:	48 8d 3d 31 57 32 09 	lea    0x9325731(%rip),%rdi        # 0x932575a
+* 29:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2e:	eb 05                	jmp    0x35
+  30:	e8 65 c5 3d fb       	call   0xfb3dc59a
+  35:	bf 14 00 00 00       	mov    $0x14,%edi
+  3a:	e8 eb c8 2b fb       	call   0xfb2bc92a
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ device_driver_attach+0xdc/0x1d0
+ bind_store+0x1d0/0x220
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0e145a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0e15497018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f0e14835fa0 RCX: 00007f0e145a778d
+RDX: 000000000000000d RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007f0e1464eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f0e14836038 R14: 00007f0e14835fa0 R15: 00007fff246829d0
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

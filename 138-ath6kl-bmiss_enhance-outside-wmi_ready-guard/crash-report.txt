@@ -1,0 +1,949 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+9 distinct call traces, each reproduced once.
+
+======================================================================
+[1/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#1: kworker/1:5/11133
+Modules linked in:
+CPU: 1 UID: 0 PID: 11133 Comm: kworker/1:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc900337b6868 EFLAGS: 00010283
+RAX: ffffffff86bc7395 RBX: 0000000000000001 RCX: 0000000000100000
+RDX: ffffc9002d03c000 RSI: 000000000002c925 RDI: 000000000002c926
+RBP: 00000000000000b3 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520066f6cfc R12: ffff88810b4c6c31
+R13: ffff8881122fdc38 R14: dffffc0000000000 R15: ffff88810b4c6000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8151c01220 CR3: 000000010ec24000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x21e/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:398
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc900337b6868 EFLAGS: 00010283
+RAX: ffffffff86bc7395 RBX: 0000000000000001 RCX: 0000000000100000
+RDX: ffffc9002d03c000 RSI: 000000000002c925 RDI: 000000000002c926
+RBP: 00000000000000b3 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520066f6cfc R12: ffff88810b4c6c31
+R13: ffff8881122fdc38 R14: dffffc0000000000 R15: ffff88810b4c6000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8151c01220 CR3: 000000010ec24000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x21e/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#1: kworker/1:2/5011
+Modules linked in:
+CPU: 1 UID: 0 PID: 5011 Comm: kworker/1:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0000:ffffc90005546868 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000001 RCX: 0000000000100000
+RDX: ffffc90031f97000 RSI: 000000000000d362 RDI: 000000000000d363
+RBP: 00000000000000ad R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000aa8cfc R12: ffff888112ceac31
+R13: ffff88810561fab8 R14: dffffc0000000000 R15: ffff888112cea000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdf429ff000 CR3: 000000014031a000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x21e/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:398
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0000:ffffc90005546868 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000001 RCX: 0000000000100000
+RDX: ffffc90031f97000 RSI: 000000000000d362 RDI: 000000000000d363
+RBP: 00000000000000ad R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000aa8cfc R12: ffff888112ceac31
+R13: ffff88810561fab8 R14: dffffc0000000000 R15: ffff888112cea000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdf429ff000 CR3: 000000014031a000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x21e/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#0: syz.3.143/13680
+Modules linked in:
+CPU: 0 UID: 0 PID: 13680 Comm: syz.3.143 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc9002077f208 EFLAGS: 00010283
+RAX: ffffffff86bc7395 RBX: 0000000000000001 RCX: 0000000000080000
+RDX: ffffc90023dd8000 RSI: 0000000000007b4e RDI: 0000000000007b4f
+RBP: 00000000000000b4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520040efe30 R12: ffff88801980ac31
+R13: ffff8880198ec138 R14: dffffc0000000000 R15: ffff88801980a000
+FS:  00007f341fce66c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000010000 CR3: 0000000037073000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x21e/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:398
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f341eda778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f341fce6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f341f036090 RCX: 00007f341eda778d
+RDX: 0000000000000009 RSI: 0000200000000600 RDI: 0000000000000005
+RBP: 00007f341ee4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f341f036128 R14: 00007f341f036090 R15: 00007fff94968480
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 13680 Comm: syz.3.143 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc9002077f208 EFLAGS: 00010283
+RAX: ffffffff86bc7395 RBX: 0000000000000001 RCX: 0000000000080000
+RDX: ffffc90023dd8000 RSI: 0000000000007b4e RDI: 0000000000007b4f
+RBP: 00000000000000b4 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520040efe30 R12: ffff88801980ac31
+R13: ffff8880198ec138 R14: dffffc0000000000 R15: ffff88801980a000
+FS:  00007f341fce66c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000010000 CR3: 0000000037073000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x21e/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach+0x346/0x640
+ bus_for_each_dev+0x23a/0x2c0
+ usb_store_new_id+0x56d/0x740
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f341eda778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f341fce6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f341f036090 RCX: 00007f341eda778d
+RDX: 0000000000000009 RSI: 0000200000000600 RDI: 0000000000000005
+RBP: 00007f341ee4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f341f036128 R14: 00007f341f036090 R15: 00007fff94968480
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#1: syz.1.250/13093
+Modules linked in:
+CPU: 1 UID: 0 PID: 13093 Comm: syz.1.250 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc900329b7208 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 000000000000bd03 RCX: 0000000000080000
+RDX: ffffc9002483a000 RSI: 0000000000015cd1 RDI: 0000000000015cd2
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52006536e30 R12: ffff8880197f2c31
+R13: ffff8881059fa338 R14: dffffc0000000000 R15: ffff8880197f2000
+FS:  00007f3151c026c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555558626808 CR3: 000000012a0dc000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x16e/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:377
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3150da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3151c02018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3151036090 RCX: 00007f3150da778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007f3150e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3151036128 R14: 00007f3151036090 R15: 00007ffe9a6604c0
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 13093 Comm: syz.1.250 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc900329b7208 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 000000000000bd03 RCX: 0000000000080000
+RDX: ffffc9002483a000 RSI: 0000000000015cd1 RDI: 0000000000015cd2
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52006536e30 R12: ffff8880197f2c31
+R13: ffff8881059fa338 R14: dffffc0000000000 R15: ffff8880197f2000
+FS:  00007f3151c026c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555558626808 CR3: 000000012a0dc000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x16e/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach+0x346/0x640
+ bus_for_each_dev+0x23a/0x2c0
+ usb_store_new_id+0x56d/0x740
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3150da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3151c02018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3151036090 RCX: 00007f3150da778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007f3150e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3151036128 R14: 00007f3151036090 R15: 00007ffe9a6604c0
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#1: syz.3.33/11578
+Modules linked in:
+CPU: 1 UID: 0 PID: 11578 Comm: syz.3.33 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc90008dbf208 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000004 RCX: 0000000000080000
+RDX: ffffc90022736000 RSI: 00000000000080f4 RDI: 00000000000080f5
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520011b7e30 R12: ffff8881093d4c31
+R13: ffff88810d16ce38 R14: dffffc0000000000 R15: ffff8881093d4000
+FS:  00007f6b86bd56c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055e839bf7220 CR3: 0000000112cf4000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x1e1/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:387
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6b889a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6b86bd5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6b88c36090 RCX: 00007f6b889a778d
+RDX: 0000000000000009 RSI: 0000200000000600 RDI: 0000000000000005
+RBP: 00007f6b88a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6b88c36128 R14: 00007f6b88c36090 R15: 00007ffc2ee07e60
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 11578 Comm: syz.3.33 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc90008dbf208 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000004 RCX: 0000000000080000
+RDX: ffffc90022736000 RSI: 00000000000080f4 RDI: 00000000000080f5
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520011b7e30 R12: ffff8881093d4c31
+R13: ffff88810d16ce38 R14: dffffc0000000000 R15: ffff8881093d4000
+FS:  00007f6b86bd56c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055e839bf7220 CR3: 0000000112cf4000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x1e1/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach+0x346/0x640
+ bus_for_each_dev+0x23a/0x2c0
+ usb_store_new_id+0x56d/0x740
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6b889a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6b86bd5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6b88c36090 RCX: 00007f6b889a778d
+RDX: 0000000000000009 RSI: 0000200000000600 RDI: 0000000000000005
+RBP: 00007f6b88a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6b88c36128 R14: 00007f6b88c36090 R15: 00007ffc2ee07e60
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[6/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#1: syz.2.224/13351
+Modules linked in:
+CPU: 1 UID: 0 PID: 13351 Comm: syz.2.224 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc90005577208 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc90021df3000 RSI: 000000000001b9d1 RDI: 000000000001b9d2
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff5200003c1c8 R12: ffff888029c34c31
+R13: ffff8881121df1b8 R14: dffffc0000000000 R15: ffff888029c34000
+FS:  00007fe0e3bea6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000561e27415b08 CR3: 0000000022a0d000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x105/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:347
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe0e2da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe0e3bea018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fe0e3036090 RCX: 00007fe0e2da778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007fe0e2e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fe0e3036128 R14: 00007fe0e3036090 R15: 00007ffd48f47650
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 13351 Comm: syz.2.224 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc90005577208 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc90021df3000 RSI: 000000000001b9d1 RDI: 000000000001b9d2
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff5200003c1c8 R12: ffff888029c34c31
+R13: ffff8881121df1b8 R14: dffffc0000000000 R15: ffff888029c34000
+FS:  00007fe0e3bea6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000561e27415b08 CR3: 0000000022a0d000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x105/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach+0x346/0x640
+ bus_for_each_dev+0x23a/0x2c0
+ usb_store_new_id+0x56d/0x740
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe0e2da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe0e3bea018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fe0e3036090 RCX: 00007fe0e2da778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007fe0e2e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fe0e3036128 R14: 00007fe0e3036090 R15: 00007ffd48f47650
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[7/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314 at ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314, CPU#0: kworker/0:2/2232
+Modules linked in:
+CPU: 0 UID: 0 PID: 2232 Comm: kworker/0:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1314
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc9000a45e868 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000000 RCX: 0000000000100000
+RDX: ffffc9002dabf000 RSI: 000000000001b609 RDI: 000000000001b60a
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000000fc8 R12: ffff888023f42c31
+R13: ffff888023faf638 R14: dffffc0000000000 R15: ffff888023f42000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055fdad09bec0 CR3: 0000000039e27000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x105/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:347
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xb46/0x12c0
+Code: 77 30 e8 4d 54 02 fb eb 20 e8 46 54 02 fb 48 c7 c7 a0 64 28 8c e8 ba 33 71 fa b8 92 ff ff ff e9 00 f6 ff ff e8 2b 54 02 fb 90 <0f> 0b 90 e9 ed f5 ff ff 49 8d 9f 34 0c 00 00 48 89 d8 48 c1 e8 03
+RSP: 0018:ffffc9000a45e868 EFLAGS: 00010287
+RAX: ffffffff86bc7395 RBX: 0000000000000000 RCX: 0000000000100000
+RDX: ffffc9002dabf000 RSI: 000000000001b609 RDI: 000000000001b60a
+RBP: 00000000000000be R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000000fc8 R12: ffff888023f42c31
+R13: ffff888023faf638 R14: dffffc0000000000 R15: ffff888023f42000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055fdad09bec0 CR3: 0000000039e27000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x105/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[8/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1342 at ath6kl_htc_pipe_conn_service+0xbdf/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1342, CPU#1: syz.1.350/15113
+Modules linked in:
+CPU: 1 UID: 0 PID: 15113 Comm: syz.1.350 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xbdf/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1342
+Code: 42 0f b6 04 30 84 c0 0f 85 9d 06 00 00 44 0f b6 23 bf 08 00 00 00 44 89 e6 e8 9d 56 02 fb 41 83 fc 09 72 0e e8 92 53 02 fb 90 <0f> 0b 90 e9 54 f5 ff ff 49 8d 9f 36 0c 00 00 4d 8d af 37 0c 00 00
+RSP: 0018:ffffc90002f1f208 EFLAGS: 00010283
+RAX: ffffffff86bc742e RBX: ffff888111e50c35 RCX: 0000000000080000
+RDX: ffffc900225cd000 RSI: 000000000001e578 RDI: 000000000001e579
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520005e3e30 R12: 0000000000000009
+R13: ffff88801cd080b8 R14: dffffc0000000000 R15: ffff888111e50000
+FS:  00007f89d3fee6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d1eff8 CR3: 00000001301e7000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x105/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:347
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f89d31a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f89d3fee018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f89d3436090 RCX: 00007f89d31a778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007f89d324eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f89d3436128 R14: 00007f89d3436090 R15: 00007fffe463b2d0
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[9/9]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: drivers/net/wireless/ath/ath6kl/htc_pipe.c:1347 at ath6kl_htc_pipe_conn_service+0xc3d/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1347, CPU#0: syz.0.74/11808
+Modules linked in:
+CPU: 0 UID: 0 PID: 11808 Comm: syz.0.74 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xc3d/0x12c0 drivers/net/wireless/ath/ath6kl/htc_pipe.c:1347
+Code: 04 30 84 c0 0f 85 7b 06 00 00 0f b7 1b 31 ff 89 de e8 e7 56 02 fb 85 db 74 0a e8 3e 53 02 fb e9 98 f4 ff ff e8 34 53 02 fb 90 <0f> 0b 90 e9 f6 f4 ff ff 44 89 e1 80 e1 07 fe c1 38 c1 0f 8c 29 f4
+RSP: 0018:ffffc900086c7208 EFLAGS: 00010283
+RAX: ffffffff86bc748c RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc90023d33000 RSI: 0000000000017ff0 RDI: 0000000000017ff1
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520010d8e30 R12: 0000000000000000
+R13: ffff888035d38c37 R14: dffffc0000000000 R15: ffff888035d38000
+FS:  00007f5f8e22c6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32b23ffc CR3: 000000003f3df000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_htc_conn_service drivers/net/wireless/ath/ath6kl/htc-ops.h:42 [inline]
+ ath6kl_connectservice+0x16c/0x6b0 drivers/net/wireless/ath/ath6kl/init.c:291
+ ath6kl_init_service_ep+0x1a9/0x2a0 drivers/net/wireless/ath/ath6kl/init.c:382
+ __ath6kl_init_hw_start+0x8d0/0x1260 drivers/net/wireless/ath/ath6kl/init.c:1753
+ ath6kl_init_hw_start+0x16/0x80 drivers/net/wireless/ath/ath6kl/init.c:1832
+ ath6kl_core_init+0x7cd/0x10b0 drivers/net/wireless/ath/ath6kl/core.c:191
+ ath6kl_usb_probe+0x1b78/0x1e20 drivers/net/wireless/ath/ath6kl/usb.c:1162
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5f8d3a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5f8e22c018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f5f8d636090 RCX: 00007f5f8d3a778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007f5f8d44eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5f8d636128 R14: 00007f5f8d636090 R15: 00007fffde3d3cf0
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 11808 Comm: syz.0.74 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ath6kl_htc_pipe_conn_service+0xc3d/0x12c0
+Code: 04 30 84 c0 0f 85 7b 06 00 00 0f b7 1b 31 ff 89 de e8 e7 56 02 fb 85 db 74 0a e8 3e 53 02 fb e9 98 f4 ff ff e8 34 53 02 fb 90 <0f> 0b 90 e9 f6 f4 ff ff 44 89 e1 80 e1 07 fe c1 38 c1 0f 8c 29 f4
+RSP: 0018:ffffc900086c7208 EFLAGS: 00010283
+RAX: ffffffff86bc748c RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc90023d33000 RSI: 0000000000017ff0 RDI: 0000000000017ff1
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520010d8e30 R12: 0000000000000000
+R13: ffff888035d38c37 R14: dffffc0000000000 R15: ffff888035d38000
+FS:  00007f5f8e22c6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32b23ffc CR3: 000000003f3df000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ ath6kl_connectservice+0x16c/0x6b0
+ ath6kl_init_service_ep+0x1a9/0x2a0
+ __ath6kl_init_hw_start+0x8d0/0x1260
+ ath6kl_init_hw_start+0x16/0x80
+ ath6kl_core_init+0x7cd/0x10b0
+ ath6kl_usb_probe+0x1b78/0x1e20
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach+0x346/0x640
+ bus_for_each_dev+0x23a/0x2c0
+ usb_store_new_id+0x56d/0x740
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5f8d3a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5f8e22c018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f5f8d636090 RCX: 00007f5f8d3a778d
+RDX: 0000000000000009 RSI: 00002000000002c0 RDI: 0000000000000005
+RBP: 00007f5f8d44eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5f8d636128 R14: 00007f5f8d636090 R15: 00007fffde3d3cf0
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

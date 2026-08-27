@@ -1,0 +1,64 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+skbuff: skb_under_panic: text:ffffffff8b215482 len:53 put:17 head:ffff888022682700 data:ffff8880226826ff tail:0x34 end:0x180 dev:bt0
+------------[ cut here ]------------
+kernel BUG at net/core/skbuff.c:214!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 12131 Comm: syz.0.104 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:skb_panic+0x157/0x160 net/core/skbuff.c:214
+Code: c7 80 2d 8e 8c 48 8b 74 24 08 48 8b 54 24 10 8b 0c 24 44 8b 44 24 04 4d 89 e9 50 55 41 57 41 56 e8 4e 88 f5 ff 48 83 c4 20 90 <0f> 0b cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90005e36ec0 EFLAGS: 00010286
+RAX: 0000000000000084 RBX: dffffc0000000000 RCX: 076e38ca3289d300
+RDX: ffffc90009611000 RSI: 0000000000000978 RDI: 0000000000000979
+RBP: 0000000000000180 R08: ffffc90005e36c27 R09: 1ffff92000bc6d84
+R10: dffffc0000000000 R11: fffff52000bc6d85 R12: ffff888019a41650
+R13: ffff888022682700 R14: ffff8880226826ff R15: 0000000000000034
+FS:  00007f2d98df66c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c2bf914 CR3: 0000000028331000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ skb_under_panic net/core/skbuff.c:224 [inline]
+ skb_push+0xc3/0xe0 net/core/skbuff.c:2648
+ lowpan_header_compress+0x11e2/0x1ef0 net/6lowpan/iphc.c:1304
+ setup_header net/bluetooth/6lowpan.c:417 [inline]
+ bt_xmit+0xbf9/0x1ce0 net/bluetooth/6lowpan.c:525
+ __netdev_start_xmit include/linux/netdevice.h:5368 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5377 [inline]
+ xmit_one net/core/dev.c:3888 [inline]
+ dev_hard_start_xmit+0x23b/0x620 net/core/dev.c:3904
+ sch_direct_xmit+0x251/0x4c0 net/sched/sch_generic.c:372
+ __dev_xmit_skb net/core/dev.c:4276 [inline]
+ __dev_queue_xmit+0x160b/0x3250 net/core/dev.c:4831
+ packet_snd net/packet/af_packet.c:3082 [inline]
+ packet_sendmsg+0x3d9b/0x5150 net/packet/af_packet.c:3114
+ sock_sendmsg_nosec net/socket.c:787 [inline]
+ __sock_sendmsg net/socket.c:802 [inline]
+ __sys_sendto+0x672/0x710 net/socket.c:2265
+ __do_sys_sendto net/socket.c:2272 [inline]
+ __se_sys_sendto net/socket.c:2268 [inline]
+ __x64_sys_sendto+0xde/0x100 net/socket.c:2268
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f2d9aba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f2d98df6018 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00007f2d9ae35fa0 RCX: 00007f2d9aba778d
+RDX: 0000000000000024 RSI: 0000200000000500 RDI: 0000000000000004
+RBP: 00007f2d9ac4eb3d R08: 0000200000000000 R09: 0000000000000014
+R10: 0000000004004000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f2d9ae36038 R14: 00007f2d9ae35fa0 R15: 00007ffdd9ac8cb0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

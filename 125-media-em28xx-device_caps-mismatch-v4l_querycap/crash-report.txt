@@ -1,0 +1,470 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+5 distinct call traces, each reproduced once.
+
+======================================================================
+[1/5]
+======================================================================
+
+------------[ cut here ]------------
+(cap->capabilities & (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)) != (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)
+WARNING: drivers/media/v4l2-core/v4l2-ioctl.c:1119 at v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117, CPU#1: v4l_id/26859
+Modules linked in:
+CPU: 1 UID: 0 PID: 26859 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc9000353fb38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff888019103600
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff920006a7fb6 R08: ffff888130390ed7 R09: 1ffff110260721da
+R10: dffffc0000000000 R11: ffffed10260721db R12: 0000000000000000
+R13: ffffc9000353fdb8 R14: 1ffff110260720d4 R15: 0000000085010010
+FS:  00007f9487eb49c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000560aa860f004 CR3: 000000001ff5c000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f948811891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffc3b808f50 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f948811891b
+RDX: 00007ffc3b808fb0 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc3b808fb0
+R13: 00007ffc3b809160 R14: 00007f948873a000 R15: 0000560aa8610c58
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 26859 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc9000353fb38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff888019103600
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff920006a7fb6 R08: ffff888130390ed7 R09: 1ffff110260721da
+R10: dffffc0000000000 R11: ffffed10260721db R12: 0000000000000000
+R13: ffffc9000353fdb8 R14: 1ffff110260720d4 R15: 0000000085010010
+FS:  00007f9487eb49c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000560aa860f004 CR3: 000000001ff5c000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90
+ video_usercopy+0x86a/0x1320
+ v4l2_ioctl+0x18d/0x1e0
+ __se_sys_ioctl+0xfc/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f948811891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffc3b808f50 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f948811891b
+RDX: 00007ffc3b808fb0 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc3b808fb0
+R13: 00007ffc3b809160 R14: 00007f948873a000 R15: 0000560aa8610c58
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/5]
+======================================================================
+
+------------[ cut here ]------------
+(cap->capabilities & (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)) != (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)
+WARNING: drivers/media/v4l2-core/v4l2-ioctl.c:1119 at v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117, CPU#0: v4l_id/20240
+Modules linked in:
+CPU: 0 UID: 0 PID: 20240 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc90020f7fb38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff88801c71d100
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff920041effb6 R08: ffff88812f8d0ed7 R09: 1ffff11025f1a1da
+R10: dffffc0000000000 R11: ffffed1025f1a1db R12: 0000000000000000
+R13: ffffc90020f7fdb8 R14: 1ffff11025f1a0d4 R15: 0000000085010010
+FS:  00007fcca00459c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005649eae4b004 CR3: 0000000035425000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fcca0b1891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffe51af3cd0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fcca0b1891b
+RDX: 00007ffe51af3d30 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe51af3d30
+R13: 00007ffe51af3ee0 R14: 00007fcca116f000 R15: 00005649eae4cc58
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 20240 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc90020f7fb38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff88801c71d100
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff920041effb6 R08: ffff88812f8d0ed7 R09: 1ffff11025f1a1da
+R10: dffffc0000000000 R11: ffffed1025f1a1db R12: 0000000000000000
+R13: ffffc90020f7fdb8 R14: 1ffff11025f1a0d4 R15: 0000000085010010
+FS:  00007fcca00459c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005649eae4b004 CR3: 0000000035425000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90
+ video_usercopy+0x86a/0x1320
+ v4l2_ioctl+0x18d/0x1e0
+ __se_sys_ioctl+0xfc/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fcca0b1891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffe51af3cd0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fcca0b1891b
+RDX: 00007ffe51af3d30 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe51af3d30
+R13: 00007ffe51af3ee0 R14: 00007fcca116f000 R15: 00005649eae4cc58
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/5]
+======================================================================
+
+------------[ cut here ]------------
+(cap->capabilities & (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)) != (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)
+WARNING: drivers/media/v4l2-core/v4l2-ioctl.c:1119 at v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117, CPU#0: v4l_id/22734
+Modules linked in:
+CPU: 0 UID: 0 PID: 22734 Comm: v4l_id Tainted: G     U       L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER, [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc900072c7b38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff888108ca5100
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff92000e58fb6 R08: ffff88804f0a4ed7 R09: 1ffff11009e149da
+R10: dffffc0000000000 R11: ffffed1009e149db R12: 0000000000000000
+R13: ffffc900072c7db8 R14: 1ffff11009e148d4 R15: 0000000085010010
+FS:  00007f71d9e3f9c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055b272b3d004 CR3: 000000003dc5f000 CR4: 0000000000752ef0
+DR0: 0000000000000005 DR1: 0000000000000007 DR2: 0000000000000004
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f71da11891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007fffe0391eb0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f71da11891b
+RDX: 00007fffe0391f10 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fffe0391f10
+R13: 00007fffe03920c0 R14: 00007f71da77d000 R15: 000055b272b3ec58
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 22734 Comm: v4l_id Tainted: G     U       L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER, [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc900072c7b38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff888108ca5100
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff92000e58fb6 R08: ffff88804f0a4ed7 R09: 1ffff11009e149da
+R10: dffffc0000000000 R11: ffffed1009e149db R12: 0000000000000000
+R13: ffffc900072c7db8 R14: 1ffff11009e148d4 R15: 0000000085010010
+FS:  00007f71d9e3f9c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055b272b3d004 CR3: 000000003dc5f000 CR4: 0000000000752ef0
+DR0: 0000000000000005 DR1: 0000000000000007 DR2: 0000000000000004
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90
+ video_usercopy+0x86a/0x1320
+ v4l2_ioctl+0x18d/0x1e0
+ __se_sys_ioctl+0xfc/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f71da11891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007fffe0391eb0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f71da11891b
+RDX: 00007fffe0391f10 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fffe0391f10
+R13: 00007fffe03920c0 R14: 00007f71da77d000 R15: 000055b272b3ec58
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/5]
+======================================================================
+
+------------[ cut here ]------------
+(cap->capabilities & (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)) != (vfd->device_caps | V4L2_CAP_DEVICE_CAPS)
+WARNING: drivers/media/v4l2-core/v4l2-ioctl.c:1119 at v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117, CPU#0: v4l_id/19959
+Modules linked in:
+CPU: 0 UID: 0 PID: 19959 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1117
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc9000258fb38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff8880245f5100
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff920004b1fb6 R08: ffff888028a1ced7 R09: 1ffff110051439da
+R10: dffffc0000000000 R11: ffffed10051439db R12: 0000000000000000
+R13: ffffc9000258fdb8 R14: 1ffff110051438d4 R15: 0000000085010010
+FS:  00007fdaef2ae9c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb70cc8d000 CR3: 000000003558e000 CR4: 0000000000752ef0
+DR0: 0000000000000001 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdaef51891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffca7e6eaf0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fdaef51891b
+RDX: 00007ffca7e6eb50 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffca7e6eb50
+R13: 00007ffca7e6ed00 R14: 00007fdaefc25000 R15: 00005613db229c58
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 19959 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:v4l_querycap+0x359/0x4a0
+Code: 89 e0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 cc ee b0 03 cc e8 e6 cc ff f9 90 0f 0b 90 e9 56 ff ff ff e8 d8 cc ff f9 90 <0f> 0b 90 eb 9b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c e7 fc ff ff 48
+RSP: 0018:ffffc9000258fb38 EFLAGS: 00010293
+RAX: ffffffff87befae8 RBX: 0000000085000010 RCX: ffff8880245f5100
+RDX: 0000000000000000 RSI: 0000000085010010 RDI: 0000000085000010
+RBP: 1ffff920004b1fb6 R08: ffff888028a1ced7 R09: 1ffff110051439da
+R10: dffffc0000000000 R11: ffffed10051439db R12: 0000000000000000
+R13: ffffc9000258fdb8 R14: 1ffff110051438d4 R15: 0000000085010010
+FS:  00007fdaef2ae9c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb70cc8d000 CR3: 000000003558e000 CR4: 0000000000752ef0
+DR0: 0000000000000001 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __video_do_ioctl+0xad7/0xc90
+ video_usercopy+0x86a/0x1320
+ v4l2_ioctl+0x18d/0x1e0
+ __se_sys_ioctl+0xfc/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdaef51891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffca7e6eaf0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fdaef51891b
+RDX: 00007ffca7e6eb50 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffca7e6eb50
+R13: 00007ffca7e6ed00 R14: 00007fdaefc25000 R15: 00005613db229c58
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/5]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l_querycap+0x415/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1112
+Read of size 4 at addr ffff8880350a8140 by task v4l_id/25929
+
+CPU: 1 UID: 0 PID: 25929 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l_querycap+0x415/0x4a0 drivers/media/v4l2-core/v4l2-ioctl.c:1112
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f49c6f1891b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffcdb451a50 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f49c6f1891b
+RDX: 00007ffcdb451ab0 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffcdb451ab0
+R13: 00007ffcdb451c60 R14: 00007f49c75ab000 R15: 00005596b620bc58
+ </TASK>
+
+Allocated by task 11298 on cpu 0 at 229.353205s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ sur40_probe+0x16e/0x1060 drivers/input/touchscreen/sur40.c:675
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2281 on cpu 1 at 231.374989s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ sur40_disconnect+0xaf/0x140 drivers/input/touchscreen/sur40.c:832
+ usb_unbind_interface+0x26e/0x910 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:621 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x4ce/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ usb_disable_device+0x3d4/0x8d0 drivers/usb/core/message.c:1478
+ usb_disconnect+0x32d/0x980 drivers/usb/core/hub.c:2345
+ hub_port_connect drivers/usb/core/hub.c:5407 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x1cbc/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880350a8000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 320 bytes inside of
+ freed 4096-byte region [ffff8880350a8000, ffff8880350a9000)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x350a8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013042140 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800040004 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013042140 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800040004 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9412, tgid 9412 ((udev-worker)), ts 127511435280, free_ts 127055725408
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+

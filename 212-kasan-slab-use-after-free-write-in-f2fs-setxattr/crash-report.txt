@@ -1,0 +1,244 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+F2FS-fs (loop5): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+F2FS-fs (loop5): Try to recover 2th superblock, ret: 0
+F2FS-fs (loop5): Mounted with checkpoint version = 48b305e4
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+BUG: KASAN: slab-use-after-free in atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+BUG: KASAN: slab-use-after-free in rwsem_write_trylock kernel/locking/rwsem.c:268 [inline]
+BUG: KASAN: slab-use-after-free in __down_write_common kernel/locking/rwsem.c:1346 [inline]
+BUG: KASAN: slab-use-after-free in __down_write kernel/locking/rwsem.c:1356 [inline]
+BUG: KASAN: slab-use-after-free in down_write+0x90/0x150 kernel/locking/rwsem.c:1626
+Write of size 8 at addr ffff888104cc99b8 by task syz.5.1357/28934
+
+CPU: 1 UID: 0 PID: 28934 Comm: syz.5.1357 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+ atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+ rwsem_write_trylock kernel/locking/rwsem.c:268 [inline]
+ __down_write_common kernel/locking/rwsem.c:1346 [inline]
+ __down_write kernel/locking/rwsem.c:1356 [inline]
+ down_write+0x90/0x150 kernel/locking/rwsem.c:1626
+ f2fs_down_write fs/f2fs/f2fs.h:2411 [inline]
+ f2fs_setxattr+0x255/0x460 fs/f2fs/xattr.c:826
+ f2fs_xattr_generic_set+0x133/0x170 fs/f2fs/xattr.c:87
+ __vfs_setxattr+0x43c/0x480 fs/xattr.c:218
+ __vfs_setxattr_noperm+0x12d/0x660 fs/xattr.c:252
+ vfs_setxattr+0x163/0x360 fs/xattr.c:339
+ do_setxattr fs/xattr.c:654 [inline]
+ filename_setxattr+0x296/0x630 fs/xattr.c:682
+ path_setxattrat+0x3eb/0x440 fs/xattr.c:726
+ __do_sys_lsetxattr fs/xattr.c:767 [inline]
+ __se_sys_lsetxattr fs/xattr.c:763 [inline]
+ __x64_sys_lsetxattr+0xbf/0xe0 fs/xattr.c:763
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f94da1a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f94dafa7018 EFLAGS: 00000246 ORIG_RAX: 00000000000000bd
+RAX: ffffffffffffffda RBX: 00007f94da435fa0 RCX: 00007f94da1a778d
+RDX: 0000200000000900 RSI: 0000200000000300 RDI: 0000200000000280
+RBP: 00007f94da24eb3d R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000066 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f94da436038 R14: 00007f94da435fa0 R15: 00007ffd275d2d90
+ </TASK>
+
+Allocated by task 28545 on cpu 1 at 300.692288s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ unpoison_slab_object mm/kasan/common.c:340 [inline]
+ __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:366
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ kmem_cache_alloc_lru_noprof+0x200/0x540 mm/slub.c:4918
+ ocfs2_alloc_inode+0x2a/0xf0 fs/ocfs2/super.c:553
+ alloc_inode+0x6a/0x1b0 fs/inode.c:345
+ iget5_locked+0x4a/0xa0 fs/inode.c:1382
+ ocfs2_iget+0x1a9/0x1880 fs/ocfs2/inode.c:145
+ _ocfs2_get_system_file_inode fs/ocfs2/sysfile.c:142 [inline]
+ ocfs2_get_system_file_inode+0x35c/0x6f0 fs/ocfs2/sysfile.c:112
+ ocfs2_init_global_system_inodes+0x2f0/0x6d0 fs/ocfs2/super.c:461
+ ocfs2_initialize_super fs/ocfs2/super.c:2196 [inline]
+ ocfs2_fill_super+0x4433/0x6730 fs/ocfs2/super.c:993
+ get_tree_bdev_flags+0x41c/0x4e0 fs/super.c:1694
+ vfs_get_tree+0x8f/0x290 fs/super.c:1754
+ fc_mount fs/namespace.c:1193 [inline]
+ do_new_mount_fc fs/namespace.c:3758 [inline]
+ do_new_mount+0x341/0xd80 fs/namespace.c:3834
+ do_mount fs/namespace.c:4167 [inline]
+ __do_sys_mount fs/namespace.c:4383 [inline]
+ __se_sys_mount+0x30c/0x410 fs/namespace.c:4360
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 11054 on cpu 0 at 300.875195s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0x150/0x4d0 mm/slub.c:6378
+ rcu_do_batch kernel/rcu/tree.c:2617 [inline]
+ rcu_core+0x6dd/0xfb0 kernel/rcu/tree.c:2869
+ handle_softirqs+0x191/0x5a0 kernel/softirq.c:622
+ __do_softirq kernel/softirq.c:656 [inline]
+ invoke_softirq kernel/softirq.c:496 [inline]
+ __irq_exit_rcu+0x79/0x180 kernel/softirq.c:735
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1061 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1061
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:697
+
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
+ __call_rcu_common kernel/rcu/tree.c:3131 [inline]
+ call_rcu+0xee/0x6e0 kernel/rcu/tree.c:3251
+ destroy_inode fs/inode.c:399 [inline]
+ evict+0x7e5/0x930 fs/inode.c:865
+ ocfs2_release_system_inodes+0x9b/0x490 fs/ocfs2/super.c:517
+ ocfs2_dismount_volume+0x35a/0x820 fs/ocfs2/super.c:1852
+ generic_shutdown_super+0x13d/0x2d0 fs/super.c:646
+ kill_block_super+0x44/0x90 fs/super.c:1725
+ deactivate_locked_super+0xbc/0x290 fs/super.c:476
+ cleanup_mnt+0x464/0x4f0 fs/namespace.c:1312
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888104cc9980
+ which belongs to the cache ocfs2_inode_cache of size 2016
+The buggy address is located 56 bytes inside of
+ freed 2016-byte region [ffff888104cc9980, ffff888104cca160)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888104cc8000 pfn:0x104cc8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+memcg:ffff888104ccff81
+flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000240 ffff8881006898c0 ffffea0004133410 ffff888100688510
+raw: ffff888104cc8000 00000008000f0001 00000000f5000000 ffff888104ccff81
+head: 057ff00000000240 ffff8881006898c0 ffffea0004133410 ffff888100688510
+head: ffff888104cc8000 00000008000f0001 00000000f5000000 ffff888104ccff81
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Reclaimable, gfp_mask 0xd2050(__GFP_RECLAIMABLE|__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 11290, tgid 11287 (syz.5.6), ts 72327539802, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ kmem_cache_alloc_lru_noprof+0x2b4/0x540 mm/slub.c:4918
+ ocfs2_alloc_inode+0x2a/0xf0 fs/ocfs2/super.c:553
+ alloc_inode+0x6a/0x1b0 fs/inode.c:345
+ new_inode+0x22/0x170 fs/inode.c:1179
+ ocfs2_get_init_inode+0x8d/0x1c0 fs/ocfs2/namei.c:193
+ ocfs2_mknod+0x9e6/0x2150 fs/ocfs2/namei.c:314
+ ocfs2_mkdir+0x10f/0x3a0 fs/ocfs2/namei.c:660
+ vfs_mkdir+0x413/0x630 fs/namei.c:5261
+ filename_mkdirat+0x285/0x510 fs/namei.c:5294
+ __do_sys_mkdir fs/namei.c:5321 [inline]
+ __se_sys_mkdir+0x34/0x150 fs/namei.c:5318
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888104cc9880: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+ ffff888104cc9900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888104cc9980: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff888104cc9a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888104cc9a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ deactivate_locked_super+0xbc/0x290
+ cleanup_mnt+0x464/0x4f0
+ task_work_run+0x1d5/0x250
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The buggy address belongs to the object at ffff888104cc9980
+ which belongs to the cache ocfs2_inode_cache of size 2016
+The buggy address is located 56 bytes inside of
+ freed 2016-byte region [ffff888104cc9980, ffff888104cca160)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888104cc8000 pfn:0x104cc8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+memcg:ffff888104ccff81
+flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000240 ffff8881006898c0 ffffea0004133410 ffff888100688510
+raw: ffff888104cc8000 00000008000f0001 00000000f5000000 ffff888104ccff81
+head: 057ff00000000240 ffff8881006898c0 ffffea0004133410 ffff888100688510
+head: ffff888104cc8000 00000008000f0001 00000000f5000000 ffff888104ccff81
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Reclaimable, gfp_mask 0xd2050(__GFP_RECLAIMABLE|__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 11290, tgid 11287 (syz.5.6), ts 72327539802, free_ts 0
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ kmem_cache_alloc_lru_noprof+0x2b4/0x540
+ ocfs2_alloc_inode+0x2a/0xf0
+ alloc_inode+0x6a/0x1b0
+ new_inode+0x22/0x170
+ ocfs2_get_init_inode+0x8d/0x1c0
+ ocfs2_mknod+0x9e6/0x2150
+ ocfs2_mkdir+0x10f/0x3a0
+ vfs_mkdir+0x413/0x630
+ filename_mkdirat+0x285/0x510
+ __se_sys_mkdir+0x34/0x150
+page_owner free stack trace missing
+Memory state around the buggy address:
+ ffff888104cc9880: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+ ffff888104cc9900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888104cc9980: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff888104cc9a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888104cc9a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

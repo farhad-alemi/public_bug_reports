@@ -1,0 +1,456 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+3 distinct call traces.
+
+======================================================================
+[1/3]
+======================================================================
+
+greybus 3-svc: Resetting the greybus network, watch out!!!
+------------[ cut here ]------------
+ODEBUG: init active (active state 0) object: ffffffff92bbc2a0 object type: timer_list hint: greybus_reset+0x0/0x50
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/0:4/11040
+WARNING: lib/debugobjects.c:632 at __debug_object_init+0x2a8/0x4a0 lib/debugobjects.c:790, CPU#0: kworker/0:4/11040
+Modules linked in:
+CPU: 0 UID: 0 PID: 11040 Comm: kworker/0:4 Tainted: G     U              7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events do_work
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_object_init+0x309/0x4a0 lib/debugobjects.c:790
+Code: 28 00 74 08 4c 89 ef e8 35 31 84 fd 4d 8b 4d 00 4c 89 ff 48 c7 c6 60 5e e1 8b 4c 89 e2 8b 4c 24 04 4c 8b 44 24 10 ff 74 24 08 <67> 48 0f b9 3a 48 83 c4 08 4d 89 f4 ff 05 21 b4 06 0b 41 83 fc 03
+RSP: 0018:ffffc900325c7b20 EFLAGS: 00010246
+RAX: 1ffffffff171b9a4 RBX: ffffffff92bbc2a0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15e60 RDI: ffffffff8fb18b00
+RBP: dffffc0000000000 R08: ffffffff92bbc2a0 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffffffff8be16160
+R13: ffffffff8b8dcd20 R14: 0000000000000003 R15: ffffffff8fb18b00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1be49656c8 CR3: 0000000040d1d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ debug_timer_init kernel/time/timer.c:788 [inline]
+ debug_init kernel/time/timer.c:836 [inline]
+ timer_init_key+0x34/0x1e0 kernel/time/timer.c:880
+ list_splice_tail_init include/linux/list.h:620 [inline]
+ do_work+0x19e/0x2b0 drivers/md/dm-kcopyd.c:664
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	28 00                	sub    %al,(%rax)
+   2:	74 08                	je     0xc
+   4:	4c 89 ef             	mov    %r13,%rdi
+   7:	e8 35 31 84 fd       	call   0xfd843141
+   c:	4d 8b 4d 00          	mov    0x0(%r13),%r9
+  10:	4c 89 ff             	mov    %r15,%rdi
+  13:	48 c7 c6 60 5e e1 8b 	mov    $0xffffffff8be15e60,%rsi
+  1a:	4c 89 e2             	mov    %r12,%rdx
+  1d:	8b 4c 24 04          	mov    0x4(%rsp),%ecx
+  21:	4c 8b 44 24 10       	mov    0x10(%rsp),%r8
+  26:	ff 74 24 08          	push   0x8(%rsp)
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4d 89 f4             	mov    %r14,%r12
+  36:	ff 05 21 b4 06 0b    	incl   0xb06b421(%rip)        # 0xb06b45d
+  3c:	41 83 fc 03          	cmp    $0x3,%r12d
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 11040 Comm: kworker/0:4 Tainted: G     U              7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events do_work
+RIP: 0010:__debug_object_init+0x309/0x4a0
+Code: 28 00 74 08 4c 89 ef e8 35 31 84 fd 4d 8b 4d 00 4c 89 ff 48 c7 c6 60 5e e1 8b 4c 89 e2 8b 4c 24 04 4c 8b 44 24 10 ff 74 24 08 <67> 48 0f b9 3a 48 83 c4 08 4d 89 f4 ff 05 21 b4 06 0b 41 83 fc 03
+RSP: 0018:ffffc900325c7b20 EFLAGS: 00010246
+RAX: 1ffffffff171b9a4 RBX: ffffffff92bbc2a0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15e60 RDI: ffffffff8fb18b00
+RBP: dffffc0000000000 R08: ffffffff92bbc2a0 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffffffff8be16160
+R13: ffffffff8b8dcd20 R14: 0000000000000003 R15: ffffffff8fb18b00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1be49656c8 CR3: 0000000040d1d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ timer_init_key+0x34/0x1e0
+ do_work+0x19e/0x2b0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/3]
+======================================================================
+
+greybus 1-svc: SVC ping has returned -71, something is wrong!!!
+greybus 1-svc: Resetting the greybus network, watch out!!!
+==================================================================
+BUG: KASAN: slab-use-after-free in do_work+0x257/0x2b0
+Write of size 1 at addr ffff8881116c9460 by task kworker/1:2/1668
+
+CPU: 1 UID: 0 PID: 1668 Comm: kworker/1:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events do_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ do_work+0x257/0x2b0
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 12 on cpu 1 at 103.213689s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ gb_svc_watchdog_create+0x94/0x330 drivers/greybus/svc_watchdog.c:115
+ gb_svc_hello drivers/greybus/svc.c:861 [inline]
+ gb_svc_request_handler+0x4a0/0x1a90 drivers/greybus/svc.c:1276
+ gb_operation_request_handle drivers/greybus/operation.c:243 [inline]
+ gb_operation_work+0xf3/0x9d0 drivers/greybus/operation.c:280
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 11127 on cpu 1 at 105.776457s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ gb_svc_del+0xf7/0x2f0 drivers/greybus/svc.c:1393
+ gb_hd_del+0x4b/0x170 drivers/greybus/hd.c:228
+ ap_disconnect+0x59/0x130 drivers/greybus/es2.c:1434
+ usb_unbind_interface+0x26e/0x910 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:621 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x4ce/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ usb_disable_device+0x3d4/0x8d0 drivers/usb/core/message.c:1478
+ usb_disconnect+0x32d/0x980 drivers/usb/core/hub.c:2345
+ hub_port_connect drivers/usb/core/hub.c:5407 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x1cbc/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
+ insert_work+0x3d/0x240 kernel/workqueue.c:2226
+ __queue_work+0xa72/0xe10 kernel/workqueue.c:2393
+ call_timer_fn+0x3b/0x310 kernel/time/timer.c:1748
+ expire_timers kernel/time/timer.c:1794 [inline]
+ __run_timers kernel/time/timer.c:2374 [inline]
+ __run_timer_base+0x73f/0xa40 kernel/time/timer.c:2386
+ run_timer_base kernel/time/timer.c:2395 [inline]
+ run_timer_softirq+0xb7/0x170 kernel/time/timer.c:2405
+ handle_softirqs+0x191/0x5a0 kernel/softirq.c:622
+ __do_softirq kernel/softirq.c:656 [inline]
+ invoke_softirq kernel/softirq.c:496 [inline]
+ __irq_exit_rcu+0x79/0x180 kernel/softirq.c:735
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1061 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1061
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:697
+
+The buggy address belongs to the object at ffff8881116c9400
+ which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 96 bytes inside of
+ freed 128-byte region [ffff8881116c9400, ffff8881116c9480)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8881116c9c00 pfn:0x1116c9
+flags: 0x57ff00000000200(workingset|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000200 ffff888013041a00 ffffea000443a450 ffffea00043aab50
+raw: ffff8881116c9c00 000000080010000a 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9436, tgid 9436 (syz-executor), ts 65781863444, free_ts 64787974376
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ netdevice_queue_work drivers/infiniband/core/roce_gid_mgmt.c:663 [inline]
+ netdevice_event+0x3cb/0x8c0 drivers/infiniband/core/roce_gid_mgmt.c:822
+ notifier_call_chain+0x12e/0x320 kernel/notifier.c:85
+ call_netdevice_notifiers_info net/core/dev.c:2249 [inline]
+ call_netdevice_notifiers_extack net/core/dev.c:2287 [inline]
+ call_netdevice_notifiers net/core/dev.c:2301 [inline]
+ netif_set_mac_address+0x3ad/0x500 net/core/dev.c:9999
+ do_setlink+0x9b2/0x4440 net/core/rtnetlink.c:3133
+ rtnl_changelink net/core/rtnetlink.c:3800 [inline]
+ __rtnl_newlink net/core/rtnetlink.c:3973 [inline]
+ rtnl_newlink+0x169d/0x1ce0 net/core/rtnetlink.c:4110
+ rtnetlink_rcv_msg+0x830/0xa10 net/core/rtnetlink.c:6997
+ netlink_rcv_skb+0x232/0x4b0 net/netlink/af_netlink.c:2550
+ netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
+ netlink_unicast+0x8d2/0xa70 net/netlink/af_netlink.c:1344
+ netlink_sendmsg+0x7f0/0xb20 net/netlink/af_netlink.c:1894
+page last free pid 46 tgid 46 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ kasan_depopulate_vmalloc_pte+0x6d/0x90 mm/kasan/shadow.c:484
+ apply_to_pte_range mm/memory.c:3338 [inline]
+ apply_to_pmd_range mm/memory.c:3382 [inline]
+ apply_to_pud_range mm/memory.c:3418 [inline]
+ apply_to_p4d_range mm/memory.c:3454 [inline]
+ __apply_to_page_range+0xbd9/0x1390 mm/memory.c:3490
+ __kasan_release_vmalloc+0xa2/0xd0 mm/kasan/shadow.c:602
+ kasan_release_vmalloc include/linux/kasan.h:593 [inline]
+ kasan_release_vmalloc_node mm/vmalloc.c:2284 [inline]
+ purge_vmap_node+0x225/0x950 mm/vmalloc.c:2306
+ __purge_vmap_area_lazy+0x704/0x9b0 mm/vmalloc.c:2396
+ drain_vmap_area_work+0x25/0x40 mm/vmalloc.c:2430
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff8881116c9300: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+ ffff8881116c9380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8881116c9400: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                       ^
+ ffff8881116c9480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881116c9500: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+The buggy address belongs to the object at ffff8881116c9400
+ which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 96 bytes inside of
+ freed 128-byte region [ffff8881116c9400, ffff8881116c9480)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8881116c9c00 pfn:0x1116c9
+flags: 0x57ff00000000200(workingset|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000200 ffff888013041a00 ffffea000443a450 ffffea00043aab50
+raw: ffff8881116c9c00 000000080010000a 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9436, tgid 9436 (syz-executor), ts 65781863444, free_ts 64787974376
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_noprof+0x2c3/0x560
+ netdevice_event+0x3cb/0x8c0
+ notifier_call_chain+0x12e/0x320
+ netif_set_mac_address+0x3ad/0x500
+ do_setlink+0x9b2/0x4440
+ rtnl_newlink+0x169d/0x1ce0
+ rtnetlink_rcv_msg+0x830/0xa10
+ netlink_rcv_skb+0x232/0x4b0
+ netlink_unicast+0x8d2/0xa70
+ netlink_sendmsg+0x7f0/0xb20
+page last free pid 46 tgid 46 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ kasan_depopulate_vmalloc_pte+0x6d/0x90
+ __apply_to_page_range+0xbd9/0x1390
+ __kasan_release_vmalloc+0xa2/0xd0
+ purge_vmap_node+0x225/0x950
+ __purge_vmap_area_lazy+0x704/0x9b0
+ drain_vmap_area_work+0x25/0x40
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff8881116c9300: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+ ffff8881116c9380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8881116c9400: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                       ^
+ ffff8881116c9480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881116c9500: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[3/3]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: init active (active state 0) object: ffffffff92bbc2a0 object type: timer_list hint: greybus_reset+0x0/0x50
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/0:3/9481
+WARNING: lib/debugobjects.c:632 at __debug_object_init+0x2a8/0x4a0 lib/debugobjects.c:790, CPU#0: kworker/0:3/9481
+Modules linked in:
+CPU: 0 UID: 0 PID: 9481 Comm: kworker/0:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events do_work
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_object_init+0x309/0x4a0 lib/debugobjects.c:790
+Code: 28 00 74 08 4c 89 ef e8 35 31 84 fd 4d 8b 4d 00 4c 89 ff 48 c7 c6 60 5e e1 8b 4c 89 e2 8b 4c 24 04 4c 8b 44 24 10 ff 74 24 08 <67> 48 0f b9 3a 48 83 c4 08 4d 89 f4 ff 05 21 b4 06 0b 41 83 fc 03
+RSP: 0018:ffffc900090bfb20 EFLAGS: 00010246
+RAX: 1ffffffff171b9a4 RBX: ffffffff92bbc2a0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15e60 RDI: ffffffff8fb18b00
+RBP: dffffc0000000000 R08: ffffffff92bbc2a0 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffffffff8be16160
+R13: ffffffff8b8dcd20 R14: 0000000000000003 R15: ffffffff8fb18b00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe9ef8d5290 CR3: 000000010c6c0000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ debug_timer_init kernel/time/timer.c:788 [inline]
+ debug_init kernel/time/timer.c:836 [inline]
+ timer_init_key+0x34/0x1e0 kernel/time/timer.c:880
+ list_splice_tail_init include/linux/list.h:620 [inline]
+ do_work+0x19e/0x2b0 drivers/md/dm-kcopyd.c:664
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	28 00                	sub    %al,(%rax)
+   2:	74 08                	je     0xc
+   4:	4c 89 ef             	mov    %r13,%rdi
+   7:	e8 35 31 84 fd       	call   0xfd843141
+   c:	4d 8b 4d 00          	mov    0x0(%r13),%r9
+  10:	4c 89 ff             	mov    %r15,%rdi
+  13:	48 c7 c6 60 5e e1 8b 	mov    $0xffffffff8be15e60,%rsi
+  1a:	4c 89 e2             	mov    %r12,%rdx
+  1d:	8b 4c 24 04          	mov    0x4(%rsp),%ecx
+  21:	4c 8b 44 24 10       	mov    0x10(%rsp),%r8
+  26:	ff 74 24 08          	push   0x8(%rsp)
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4d 89 f4             	mov    %r14,%r12
+  36:	ff 05 21 b4 06 0b    	incl   0xb06b421(%rip)        # 0xb06b45d
+  3c:	41 83 fc 03          	cmp    $0x3,%r12d
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+------------[ cut here ]------------
+!work_pending(work)
+WARNING: kernel/workqueue.c:806 at insert_work+0x1f3/0x240, CPU#1: syz.1.398/14885
+Modules linked in:
+
+CPU: 1 UID: 0 PID: 14885 Comm: syz.1.398 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:insert_work+0x1f3/0x240
+Code: e8 22 4e 33 00 43 0f b6 04 3e 84 c0 75 45 ff 03 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 fe 4d 33 00 90 <0f> 0b 90 e9 88 fe ff ff e8 f0 4d 33 00 90 0f 0b 90 eb c8 89 d9 80
+RSP: 0018:ffffc900001e0c80 EFLAGS: 00010046
+RAX: ffffffff818b79c2 RBX: ffff888100004400 RCX: ffff888112ed5100
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff92bbc287 R09: 1ffffffff2577850
+R10: dffffc0000000000 R11: fffffbfff2577851 R12: 1ffffffff2577850
+R13: 0000000000000000 R14: ffffffff92bbc280 R15: 0000000000000000
+FS:  00007f994a44b6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8eb069e000 CR3: 0000000032c6f000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <IRQ>
+ __queue_work+0xa72/0xe10
+ call_timer_fn+0x3b/0x310
+ __run_timer_base+0x73f/0xa40
+ run_timer_softirq+0xb7/0x170
+ handle_softirqs+0x191/0x5a0
+ __irq_exit_rcu+0x79/0x180
+ sysvec_apic_timer_interrupt+0xa6/0xc0
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20
+RIP: 0010:_raw_spin_unlock_irq+0x10/0x40
+Code: 00 00 cc 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa e8 87 0c 00 00 90 fb bf 01 00 00 00 <e8> 2b 0d 21 f6 65 8b 05 a4 a8 24 07 85 c0 74 06 e9 0b 52 00 00 cc
+RSP: 0018:ffffc90006a77100 EFLAGS: 00000246
+RAX: 0000000000000001 RBX: ffff888015f9c888 RCX: 0000000000080000
+RDX: ffffc900229a3000 RSI: 000000000007ffff RDI: 0000000000000001
+RBP: ffff88801ea18638 R08: ffffffff8fa88437 R09: 1ffffffff1f51086
+R10: dffffc0000000000 R11: fffffbfff1f51087 R12: ffff88801ea18618
+R13: ffff8880163f4490 R14: dffffc0000000000 R15: ffff888015f9c884
+ loop_queue_rq+0x91a/0xaf0
+ blk_mq_request_issue_directly+0x3bb/0x6d0
+ blk_mq_issue_direct+0x2f7/0x8a0
+ blk_mq_dispatch_queue_requests+0x374/0x580
+ blk_mq_flush_plug_list+0x456/0x570
+ __blk_flush_plug+0x3ed/0x4d0
+ __submit_bio+0x525/0x880
+ submit_bio_noacct_nocheck+0x273/0x990
+ __bh_read+0xa7/0x190
+ gfs2_meta_ra+0x16f/0x410
+ gfs2_quota_init+0x516/0x14b0
+ gfs2_make_fs_rw+0x13d/0x230
+ gfs2_fill_super+0x1bdd/0x2330
+ get_tree_bdev_flags+0x41c/0x4e0
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+CR2: 00007fe9ef8d5290 CR3: 000000010c6c0000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ timer_init_key+0x34/0x1e0
+ do_work+0x19e/0x2b0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

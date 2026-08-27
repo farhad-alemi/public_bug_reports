@@ -1,0 +1,232 @@
+Recovered console captures for 276-kasan-use-after-free-read-in-adjust-free-blocks
+Reproduced on mainline v7.2-12252-g388b607d107c on 2026-08-26. Each capture below
+comes from a VM run of the exact file shipped in this directory -- not from a
+scratch variant. Both are taken after the harness marker, so boot noise is excluded.
+
+The two images are IDENTICAL except for the 4-byte fs_spc field of the UFS1
+superblock (byte offset 8192+172). Everything else is a stock, genuine UFS1
+filesystem (fs_frag 8, fs_fsize 512, fs_bsize 4096, fs_clean = UFS_FSCLEAN).
+
+The original crash-report.txt records the FIRST observations on the reporting
+kernel (v7.1-rc5); this records the reproductions. Both are kept.
+======================================================================
+
+----- reproducer.c  (fs_spc = 1): UBSAN array-index-out-of-bounds at the ubh_cg_blks() statement in adjust_free_blocks() -----
+Source log: console_try-276-primary-reproducer_standalone.log
+
+VMTEST_REPRO_BEGIN_try-276-primary-reproducer_standalone
+[   50.716279][ T9502] loop0: detected capacity change from 0 to 16384
+[   50.730898][ T9502] ufs filesystem being mounted at /tmp/ufs276mnt supports timestamps until 2038-01-19 (0x7fffffff)
+[   50.794978][ T9502] ------------[ cut here ]------------
+[   50.796281][ T9502] UBSAN: array-index-out-of-bounds in fs/ufs/balloc.c:53:17
+[   50.798408][ T9502] index 8 is out of range for type 'struct buffer_head *[8]'
+[   50.799735][ T9502] CPU: 0 UID: 0 PID: 9502 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   50.799754][ T9502] Tainted: [W]=WARN
+[   50.799762][ T9502] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   50.799774][ T9502] Call Trace:
+[   50.799782][ T9502]  <TASK>
+[   50.799788][ T9502]  dump_stack_lvl+0xe8/0x150
+[   50.799823][ T9502]  ubsan_epilogue+0xa/0x30
+[   50.799843][ T9502]  __ubsan_handle_out_of_bounds+0xe8/0xf0
+[   50.799872][ T9502]  adjust_free_blocks+0x1b0a/0x24e0
+[   50.799901][ T9502]  ? do_raw_spin_unlock+0xf5/0x200
+[   50.799926][ T9502]  ufs_alloccg_block+0x757/0xac0
+[   50.799949][ T9502]  ufs_alloc_fragments+0x4d9/0x2130
+[   50.799980][ T9502]  ufs_new_fragments+0x78e/0x3560
+[   50.800005][ T9502]  ? bdev_getblk+0xbe/0x6e0
+[   50.800021][ T9502]  ? bdev_getblk+0x582/0x6e0
+[   50.800055][ T9502]  ? ufs_getfrag_block+0x1b8f/0x2820
+[   50.800079][ T9502]  ufs_inode_getblock+0x504/0x8f0
+[   50.800106][ T9502]  ufs_getfrag_block+0x21d6/0x2820
+[   50.800123][ T9502]  ? __lock_acquire+0x6b5/0x2d10
+[   50.800157][ T9502]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.800173][ T9502]  ? do_raw_spin_lock+0x12b/0x2f0
+[   50.800199][ T9502]  ? do_raw_spin_unlock+0xf5/0x200
+[   50.800219][ T9502]  ? _raw_spin_unlock+0x28/0x50
+[   50.800245][ T9502]  __block_write_begin_int+0x6c6/0x18e0
+[   50.800272][ T9502]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.800290][ T9502]  ? __pfx___block_write_begin_int+0x10/0x10
+[   50.800307][ T9502]  ? __filemap_get_folio_mpol+0x7c6/0xf80
+[   50.800330][ T9502]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.800346][ T9502]  block_write_begin+0x8d/0x120
+[   50.800361][ T9502]  ? ufs_write_begin+0x1d/0x80
+[   50.800380][ T9502]  ufs_write_begin+0x35/0x80
+[   50.800400][ T9502]  generic_perform_write+0x2e2/0x8f0
+[   50.800429][ T9502]  ? __pfx_generic_perform_write+0x10/0x10
+[   50.800447][ T9502]  ? file_update_time_flags+0x1e0/0x440
+[   50.800468][ T9502]  ? __generic_file_write_iter+0xf9/0x230
+[   50.800486][ T9502]  ? generic_file_write_iter+0x9a/0x330
+[   50.800507][ T9502]  generic_file_write_iter+0xae/0x330
+[   50.800529][ T9502]  vfs_write+0x61d/0xb90
+[   50.800555][ T9502]  ? __pfx_vfs_write+0x10/0x10
+[   50.800576][ T9502]  ? blkdev_issue_flush+0xe0/0x150
+[   50.800602][ T9502]  ksys_write+0x150/0x270
+[   50.800622][ T9502]  ? __pfx_ksys_write+0x10/0x10
+[   50.800648][ T9502]  do_syscall_64+0x155/0x510
+[   50.800673][ T9502]  ? trace_irq_disable+0x3b/0x140
+[   50.800690][ T9502]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.800705][ T9502]  ? clear_bhb_loop+0x30/0x80
+[   50.800722][ T9502]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.800735][ T9502] RIP: 0033:0x4568e6
+[   50.800754][ T9502] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   50.800769][ T9502] RSP: 002b:00007ffe99961db0 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   50.800789][ T9502] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00000000004568e6
+[   50.800799][ T9502] RDX: 0000000000010000 RSI: 00000000004bdac0 RDI: 0000000000000005
+[   50.800807][ T9502] RBP: 00007ffe99961dc0 R08: 0000000000000000 R09: 0000000000000000
+[   50.800815][ T9502] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffe99962008
+[   50.800823][ T9502] R13: 00007ffe99962018 R14: 0000000000000002 R15: 00000000004b7a60
+[   50.800846][ T9502]  </TASK>
+[   50.802655][ T9502] ---[ end trace ]---
+[   50.870248][ T9502] Kernel panic - not syncing: UBSAN: panic_on_warn set ...
+[   50.872015][ T9502] CPU: 0 UID: 0 PID: 9502 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   50.874824][ T9502] Tainted: [W]=WARN
+[   50.875804][ T9502] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   50.877379][ T9502] Call Trace:
+[   50.877785][ T9502]  <TASK>
+[   50.878159][ T9502]  vpanic+0x56d/0xa60
+[   50.878692][ T9502]  ? __pfx_vpanic+0x10/0x10
+[   50.879271][ T9502]  panic+0xc5/0xd0
+[   50.879740][ T9502]  ? __pfx_panic+0x10/0x10
+[   50.880317][ T9502]  ? __pfx__printk+0x10/0x10
+[   50.880918][ T9502]  check_panic_on_warn+0x89/0xb0
+[   50.881549][ T9502]  __ubsan_handle_out_of_bounds+0xe8/0xf0
+[   50.882283][ T9502]  adjust_free_blocks+0x1b0a/0x24e0
+[   50.882964][ T9502]  ? do_raw_spin_unlock+0xf5/0x200
+[   50.883613][ T9502]  ufs_alloccg_block+0x757/0xac0
+[   50.884231][ T9502]  ufs_alloc_fragments+0x4d9/0x2130
+[   50.884892][ T9502]  ufs_new_fragments+0x78e/0x3560
+[   50.885593][ T9502]  ? bdev_getblk+0xbe/0x6e0
+[   50.886144][ T9502]  ? bdev_getblk+0x582/0x6e0
+[   50.886760][ T9502]  ? ufs_getfrag_block+0x1b8f/0x2820
+[   50.887429][ T9502]  ufs_inode_getblock+0x504/0x8f0
+[   50.888081][ T9502]  ufs_getfrag_block+0x21d6/0x2820
+[   50.888729][ T9502]  ? __lock_acquire+0x6b5/0x2d10
+[   50.889351][ T9502]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.890041][ T9502]  ? do_raw_spin_lock+0x12b/0x2f0
+[   50.890659][ T9502]  ? do_raw_spin_unlock+0xf5/0x200
+[   50.891303][ T9502]  ? _raw_spin_unlock+0x28/0x50
+[   50.891929][ T9502]  __block_write_begin_int+0x6c6/0x18e0
+[   50.892600][ T9502]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.893286][ T9502]  ? __pfx___block_write_begin_int+0x10/0x10
+[   50.894020][ T9502]  ? __filemap_get_folio_mpol+0x7c6/0xf80
+[   50.894738][ T9502]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.895495][ T9502]  block_write_begin+0x8d/0x120
+[   50.896112][ T9502]  ? ufs_write_begin+0x1d/0x80
+[   50.896746][ T9502]  ufs_write_begin+0x35/0x80
+[   50.897326][ T9502]  generic_perform_write+0x2e2/0x8f0
+[   50.897991][ T9502]  ? __pfx_generic_perform_write+0x10/0x10
+[   50.898732][ T9502]  ? file_update_time_flags+0x1e0/0x440
+[   50.899439][ T9502]  ? __generic_file_write_iter+0xf9/0x230
+[   50.900144][ T9502]  ? generic_file_write_iter+0x9a/0x330
+[   50.900841][ T9502]  generic_file_write_iter+0xae/0x330
+[   50.901527][ T9502]  vfs_write+0x61d/0xb90
+[   50.902070][ T9502]  ? __pfx_vfs_write+0x10/0x10
+[   50.902680][ T9502]  ? blkdev_issue_flush+0xe0/0x150
+[   50.903320][ T9502]  ksys_write+0x150/0x270
+[   50.903885][ T9502]  ? __pfx_ksys_write+0x10/0x10
+[   50.904483][ T9502]  do_syscall_64+0x155/0x510
+[   50.905075][ T9502]  ? trace_irq_disable+0x3b/0x140
+[   50.905807][ T9502]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.906599][ T9502]  ? clear_bhb_loop+0x30/0x80
+[   50.907190][ T9502]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.907948][ T9502] RIP: 0033:0x4568e6
+[   50.908454][ T9502] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   50.910847][ T9502] RSP: 002b:00007ffe99961db0 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   50.911893][ T9502] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00000000004568e6
+[   50.912935][ T9502] RDX: 0000000000010000 RSI: 00000000004bdac0 RDI: 0000000000000005
+[   50.913923][ T9502] RBP: 00007ffe99961dc0 R08: 0000000000000000 R09: 0000000000000000
+[   50.914899][ T9502] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffe99962008
+[   50.915921][ T9502] R13: 00007ffe99962018 R14: 0000000000000002 R15: 00000000004b7a60
+[   50.916936][ T9502]  </TASK>
+[   50.917703][ T9502] Kernel Offset: disabled
+[   50.918413][ T9502] Rebooting in 86400 seconds..
+
+----- reproducer-divide-error.c  (fs_spc = 0): divide error in ufs_cbtocylno() at the same call site -----
+Source log: console_try-276-divzero-cand_divzero_standalone.log
+
+VMTEST_REPRO_BEGIN_try-276-divzero-cand_divzero_standalone
+[   50.738393][ T9504] loop0: detected capacity change from 0 to 16384
+[   50.746581][ T9504] ufs filesystem being mounted at /tmp/ufs276mnt supports timestamps until 2038-01-19 (0x7fffffff)
+[   50.753871][ T9504] Oops: divide error: 0000 [#1] SMP KASAN NOPTI
+[   50.754653][ T9504] CPU: 1 UID: 0 PID: 9504 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   50.756113][ T9504] Tainted: [W]=WARN
+[   50.756604][ T9504] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   50.758022][ T9504] RIP: 0010:adjust_free_blocks+0x1202/0x24e0
+[   50.758783][ T9504] Code: 8d a6 08 01 00 00 4c 89 e0 48 c1 e8 03 48 89 44 24 60 42 0f b6 04 28 84 c0 4d 89 ee 0f 85 1b 08 00 00 45 8b 2c 24 89 e8 31 d2 <41> f7 f5 48 89 04 24 48 8b 44 24 48 48 8d 50 6c 48 89 d0 48 c1 e8
+[   50.761140][ T9504] RSP: 0018:ffffc90008df7210 EFLAGS: 00010246
+[   50.761869][ T9504] RAX: 0000000000000040 RBX: ffff8881082130e0 RCX: ffff88810de4cc80
+[   50.762869][ T9504] RDX: 0000000000000000 RSI: 0000000000011954 RDI: 0000000019540119
+[   50.763873][ T9504] RBP: 0000000000000040 R08: 00000000ffffffff R09: 0000000000000004
+[   50.764875][ T9504] R10: 0000000000000008 R11: 0000000000000000 R12: ffff888108213108
+[   50.765874][ T9504] R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888111380678
+[   50.766938][ T9504] FS:  00000000220a0400(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   50.768116][ T9504] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.768992][ T9504] CR2: 00000000004cc000 CR3: 000000002271b000 CR4: 0000000000752ef0
+[   50.770018][ T9504] PKRU: 55555554
+[   50.770471][ T9504] Call Trace:
+[   50.770910][ T9504]  <TASK>
+[   50.771289][ T9504]  ? do_raw_spin_unlock+0xf5/0x200
+[   50.771971][ T9504]  ufs_alloccg_block+0x757/0xac0
+[   50.772626][ T9504]  ufs_alloc_fragments+0xb2f/0x2130
+[   50.773314][ T9504]  ufs_new_fragments+0x78e/0x3560
+[   50.773972][ T9504]  ? __mutex_lock+0x310/0x1590
+[   50.774614][ T9504]  ? ufs_getfrag_block+0x1b8f/0x2820
+[   50.775318][ T9504]  ufs_inode_getfrag+0x4b9/0x820
+[   50.776042][ T9504]  ufs_getfrag_block+0x20cc/0x2820
+[   50.776715][ T9504]  ? lockdep_unlock+0x5c/0xd0
+[   50.777329][ T9504]  ? __lock_acquire+0x146e/0x2d10
+[   50.777994][ T9504]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.778713][ T9504]  ? do_raw_spin_lock+0x12b/0x2f0
+[   50.779378][ T9504]  ? do_raw_spin_unlock+0xf5/0x200
+[   50.780065][ T9504]  ? _raw_spin_unlock+0x28/0x50
+[   50.780717][ T9504]  __block_write_begin_int+0x6c6/0x18e0
+[   50.781459][ T9504]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.782173][ T9504]  ? __pfx___block_write_begin_int+0x10/0x10
+[   50.782928][ T9504]  ? __filemap_get_folio_mpol+0x7c6/0xf80
+[   50.783660][ T9504]  ? __pfx_ufs_getfrag_block+0x10/0x10
+[   50.784354][ T9504]  block_write_begin+0x8d/0x120
+[   50.784940][ T9504]  ? ufs_write_begin+0x1d/0x80
+[   50.785543][ T9504]  ufs_write_begin+0x35/0x80
+[   50.786210][ T9504]  generic_perform_write+0x2e2/0x8f0
+[   50.786882][ T9504]  ? __pfx_generic_perform_write+0x10/0x10
+[   50.787624][ T9504]  ? file_update_time_flags+0x1e0/0x440
+[   50.788322][ T9504]  ? __generic_file_write_iter+0xf9/0x230
+[   50.789022][ T9504]  ? generic_file_write_iter+0x9a/0x330
+[   50.789698][ T9504]  generic_file_write_iter+0xae/0x330
+[   50.790437][ T9504]  vfs_write+0x61d/0xb90
+[   50.791011][ T9504]  ? handle_mm_fault+0xf4/0x3710
+[   50.791646][ T9504]  ? __pfx_vfs_write+0x10/0x10
+[   50.792262][ T9504]  ? do_sys_openat2+0x14e/0x200
+[   50.792870][ T9504]  ksys_write+0x150/0x270
+[   50.793406][ T9504]  ? __pfx_ksys_write+0x10/0x10
+[   50.794004][ T9504]  do_syscall_64+0x155/0x510
+[   50.794580][ T9504]  ? trace_irq_disable+0x3b/0x140
+[   50.795194][ T9504]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.796059][ T9504]  ? clear_bhb_loop+0x30/0x80
+[   50.796657][ T9504]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   50.797408][ T9504] RIP: 0033:0x4568e6
+[   50.797927][ T9504] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   50.800250][ T9504] RSP: 002b:00007ffd610d1ee0 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   50.801271][ T9504] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00000000004568e6
+[   50.802254][ T9504] RDX: 0000000000010000 RSI: 00000000004bdac0 RDI: 0000000000000005
+[   50.803209][ T9504] RBP: 00007ffd610d1ef0 R08: 0000000000000000 R09: 0000000000000000
+[   50.804175][ T9504] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffd610d2138
+[   50.805127][ T9504] R13: 00007ffd610d2148 R14: 0000000000000002 R15: 00000000004b7a60
+[   50.806171][ T9504]  </TASK>
+[   50.806567][ T9504] Modules linked in:
+[   50.807177][ T9504] ---[ end trace 0000000000000000 ]---
+[   50.808045][ T9504] RIP: 0010:adjust_free_blocks+0x1202/0x24e0
+[   50.808830][ T9504] Code: 8d a6 08 01 00 00 4c 89 e0 48 c1 e8 03 48 89 44 24 60 42 0f b6 04 28 84 c0 4d 89 ee 0f 85 1b 08 00 00 45 8b 2c 24 89 e8 31 d2 <41> f7 f5 48 89 04 24 48 8b 44 24 48 48 8d 50 6c 48 89 d0 48 c1 e8
+[   50.811316][ T9504] RSP: 0018:ffffc90008df7210 EFLAGS: 00010246
+[   50.812094][ T9504] RAX: 0000000000000040 RBX: ffff8881082130e0 RCX: ffff88810de4cc80
+[   50.813101][ T9504] RDX: 0000000000000000 RSI: 0000000000011954 RDI: 0000000019540119
+[   50.814116][ T9504] RBP: 0000000000000040 R08: 00000000ffffffff R09: 0000000000000004
+[   50.815117][ T9504] R10: 0000000000000008 R11: 0000000000000000 R12: ffff888108213108
+[   50.816172][ T9504] R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888111380678
+[   50.817422][ T9504] FS:  00000000220a0400(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   50.818581][ T9504] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.819416][ T9504] CR2: 00000000004cc000 CR3: 000000002271b000 CR4: 0000000000752ef0
+[   50.820431][ T9504] PKRU: 55555554
+[   50.820878][ T9504] Kernel panic - not syncing: Fatal exception
+[   50.821984][ T9504] Kernel Offset: disabled
+[   50.822686][ T9504] Rebooting in 86400 seconds..

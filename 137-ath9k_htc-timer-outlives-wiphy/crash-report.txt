@@ -1,0 +1,7 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+ODEBUG: free active (active state 0) object: ... hint: ath9k_htc_tx_cleanup_timer
+debug_check_no_obj_freed+0x3fd
+Workqueue: usb_hub_wq hub_event
+Kernel panic - not syncing: kernel: panic_on_warn set

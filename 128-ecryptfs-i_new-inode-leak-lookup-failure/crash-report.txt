@@ -1,0 +1,7 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+VFS: Busy inodes after unmount of ecryptfs (ecryptfs)
+kernel BUG at fs/super.c:656!
+RIP: generic_shutdown_super+0x2c9
+ecryptfs_kill_block_super <- deactivate_locked_super <- cleanup_mnt

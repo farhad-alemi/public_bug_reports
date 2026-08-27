@@ -1,0 +1,446 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+7 distinct call traces.
+
+======================================================================
+[1/7]
+======================================================================
+
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-19)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 11597 Comm: syz.2.29 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc90006c16ef8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: 0000000000080000
+RDX: ffffc900251b2000 RSI: 0000000000028081 RDI: 0000000000000000
+RBP: 0000000000000042 R08: ffff888015ac0db7 R09: 1ffff11002b581b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 0000000000000042
+R13: ffff888015ac0000 R14: ffff888015ac05e8 R15: dffffc0000000000
+FS:  00007f41a09226c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1ccb09f000 CR3: 0000000111fc1000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ stk1160_i2c_write_reg drivers/media/usb/stk1160/stk1160-i2c.c:59 [inline]
+ stk1160_i2c_xfer+0x446/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:205
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2c_smbus_write_byte_data+0x11b/0x1c0 drivers/i2c/i2c-core-smbus.c:164
+ saa711x_write drivers/media/i2c/saa7115.c:114 [inline]
+ saa711x_writeregs+0xfb/0x200 drivers/media/i2c/saa7115.c:167
+ saa711x_probe+0x1009/0x1590
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ new_device_store+0x248/0x520 drivers/i2c/i2c-core-base.c:1306
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f419f9a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f41a0922018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f419fc36090 RCX: 00007f419f9a778d
+RDX: 0000000000000011 RSI: 0000200000000540 RDI: 0000000000000006
+RBP: 00007f419fa4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f419fc36128 R14: 00007f419fc36090 R15: 00007ffefa994370
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[2/7]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 33325 Comm: syz.3.2962 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc9000274f898 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: 0000000000080000
+RDX: ffffc90004aba000 RSI: 0000000000000371 RDI: 0000000000000000
+RBP: 00000000000000a0 R08: ffff888025f14db7 R09: 1ffff11004be29b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 00000000000000a0
+R13: ffff888025f14000 R14: ffff888025f145e8 R15: dffffc0000000000
+FS:  00007f85ff9b56c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c3a7d32 CR3: 000000002c2f5000 CR4: 0000000000752ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000017 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ stk1160_i2c_read_reg drivers/media/usb/stk1160/stk1160-i2c.c:91 [inline]
+ stk1160_i2c_xfer+0x70d/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:187
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2cdev_ioctl_smbus+0x43a/0x740 drivers/i2c/i2c-dev.c:389
+ i2cdev_ioctl+0x5f9/0x860 drivers/i2c/i2c-dev.c:478
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f85feba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f85ff9b5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f85fee35fa0 RCX: 00007f85feba778d
+RDX: 0000200000000500 RSI: 0000000000000720 RDI: 0000000000000004
+RBP: 00007f85fec4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f85fee36038 R14: 00007f85fee35fa0 R15: 00007ffc7ecdfa90
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[3/7]
+======================================================================
+
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-71)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 1954 Comm: kworker/u9:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc9000a42ef18 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: ffff88801a023600
+RDX: 0000000000000000 RSI: 0000000000000203 RDI: 0000000000000000
+RBP: 000000000000004a R08: ffff888112304db7 R09: 1ffff110224609b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 000000000000004a
+R13: ffff888112304000 R14: ffff8881123045e8 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f10db5ff000 CR3: 000000003ac00000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ stk1160_i2c_write_reg drivers/media/usb/stk1160/stk1160-i2c.c:59 [inline]
+ stk1160_i2c_xfer+0x446/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:205
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2c_smbus_write_i2c_block_data+0x138/0x1e0 drivers/i2c/i2c-core-smbus.c:297
+ _regmap_raw_write_impl+0x187f/0x29c0 drivers/base/regmap/regmap.c:1799
+ _regmap_write+0x52a/0x7d0 drivers/base/regmap/regmap.c:1957
+ _regmap_update_bits+0x25f/0x480 drivers/base/regmap/regmap.c:3273
+ regmap_update_bits_base+0xbe/0x160 drivers/base/regmap/regmap.c:3314
+ regmap_update_bits include/linux/regmap.h:1344 [inline]
+ tcpci_register_port+0x484/0x7a0 drivers/usb/typec/tcpm/tcpci.c:878
+ max_tcpci_probe+0x2f5/0x630 drivers/usb/typec/tcpm/tcpci_maxim_core.c:519
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach_async_helper+0x1f1/0x2c0 drivers/base/dd.c:1058
+ async_run_entry_fn+0xa8/0x440 kernel/async.c:129
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[4/7]
+======================================================================
+
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-19)
+stk1160: write failed on reg 0x203 (-19)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 16352 Comm: syz.6.376 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc9003493ee78 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: 0000000000080000
+RDX: ffffc90022289000 RSI: 0000000000032e98 RDI: 0000000000000000
+RBP: 0000000000000042 R08: ffff888112308db7 R09: 1ffff110224611b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 0000000000000042
+R13: ffff888112308000 R14: ffff8881123085e8 R15: dffffc0000000000
+FS:  00007ff786b646c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0fddccd580 CR3: 000000002dba2000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ stk1160_i2c_write_reg drivers/media/usb/stk1160/stk1160-i2c.c:59 [inline]
+ stk1160_i2c_xfer+0x446/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:205
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2c_smbus_write_byte_data+0x11b/0x1c0 drivers/i2c/i2c-core-smbus.c:164
+ saa711x_s_ctrl+0x2f0/0x3e0 drivers/media/i2c/saa7115.c:114
+ __v4l2_ctrl_handler_setup+0x58c/0x660 drivers/media/v4l2-core/v4l2-ctrls-core.c:2716
+ v4l2_ctrl_handler_setup+0x53/0x90 drivers/media/v4l2-core/v4l2-ctrls-core.c:2733
+ saa711x_probe+0x1092/0x1590 drivers/media/i2c/saa7115.c:1912
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ new_device_store+0x248/0x520 drivers/i2c/i2c-core-base.c:1306
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff785ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ff786b64018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ff785e35fa0 RCX: 00007ff785ba778d
+RDX: 0000000000000011 RSI: 00002000000004c0 RDI: 0000000000000005
+RBP: 00007ff785c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ff785e36038 R14: 00007ff785e35fa0 R15: 00007ffe5cf2b110
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[5/7]
+======================================================================
+
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-19)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 12694 Comm: syz.0.128 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc90003146f58 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: 0000000000080000
+RDX: ffffc90023ae0000 RSI: 0000000000007d84 RDI: 0000000000000000
+RBP: 0000000000000042 R08: ffff88810f5ecdb7 R09: 1ffff11021ebd9b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 0000000000000042
+R13: ffff88810f5ec000 R14: ffff88810f5ec5e8 R15: dffffc0000000000
+FS:  00007f32969c36c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fbf2976c000 CR3: 0000000026d69000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ stk1160_i2c_write_reg drivers/media/usb/stk1160/stk1160-i2c.c:59 [inline]
+ stk1160_i2c_xfer+0x446/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:205
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2c_smbus_write_byte_data+0x11b/0x1c0 drivers/i2c/i2c-core-smbus.c:164
+ saa711x_detect_chip drivers/media/i2c/saa7115.c:1709 [inline]
+ saa711x_probe+0x1c6/0x1590 drivers/media/i2c/saa7115.c:1816
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ new_device_store+0x248/0x520 drivers/i2c/i2c-core-base.c:1306
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3295ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f32969c3018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3295e36090 RCX: 00007f3295ba778d
+RDX: 0000000000000011 RSI: 0000200000000540 RDI: 0000000000000006
+RBP: 00007f3295c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3295e36128 R14: 00007f3295e36090 R15: 00007ffec8ae2d20
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[6/7]
+======================================================================
+
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-19)
+stk1160: write failed on reg 0x203 (-19)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 16109 Comm: syz.0.548 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc90005506f58 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: 0000000000080000
+RDX: ffffc90026702000 RSI: 00000000000147a6 RDI: 0000000000000000
+RBP: 0000000000000042 R08: ffff888108cd4db7 R09: 1ffff1102119a9b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 0000000000000042
+R13: ffff888108cd4000 R14: ffff888108cd45e8 R15: dffffc0000000000
+FS:  00007f742821b6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0f6d804000 CR3: 0000000021c9d000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ stk1160_i2c_write_reg drivers/media/usb/stk1160/stk1160-i2c.c:59 [inline]
+ stk1160_i2c_xfer+0x446/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:205
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2c_smbus_write_byte_data+0x11b/0x1c0 drivers/i2c/i2c-core-smbus.c:164
+ saa711x_probe+0x1088/0x1590 drivers/media/i2c/saa7115.c:1911
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ new_device_store+0x248/0x520 drivers/i2c/i2c-core-base.c:1306
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f74273a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f742821b018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f7427636180 RCX: 00007f74273a778d
+RDX: 0000000000000011 RSI: 0000200000000540 RDI: 0000000000000006
+RBP: 00007f742744eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f7427636218 R14: 00007f7427636180 R15: 00007ffd2015e960
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[7/7]
+======================================================================
+
+stk1160: write failed on reg 0x203 (-71)
+stk1160: write failed on reg 0x203 (-19)
+stk1160: write failed on reg 0x203 (-19)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 12099 Comm: syz.2.117 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:__create_pipe include/linux/usb.h:2030 [inline]
+RIP: 0010:stk1160_write_reg+0x47/0xe0 drivers/media/usb/stk1160/stk1160-core.c:84
+Code: fd a7 f9 49 81 c6 e8 05 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 63 67 0f fa 49 8b 3e 48 89 f8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 75 71 8b 37 c1 e6 08 81 ce 00 00 00 80 44 0f
+RSP: 0018:ffffc9000990eef8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000203 RCX: 0000000000080000
+RDX: ffffc900202a2000 RSI: 000000000004da26 RDI: 0000000000000000
+RBP: 0000000000000042 R08: ffff888022be4db7 R09: 1ffff1100457c9b6
+R10: dffffc0000000000 R11: ffffffff88174110 R12: 0000000000000042
+R13: ffff888022be4000 R14: ffff888022be45e8 R15: dffffc0000000000
+FS:  00007f30359aa6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6c9567d000 CR3: 0000000024202000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ stk1160_i2c_read_reg drivers/media/usb/stk1160/stk1160-i2c.c:91 [inline]
+ stk1160_i2c_xfer+0x70d/0xe40 drivers/media/usb/stk1160/stk1160-i2c.c:187
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2c_smbus_read_byte_data+0x113/0x1e0 drivers/i2c/i2c-core-smbus.c:143
+ saa711x_read drivers/media/i2c/saa7115.c:180 [inline]
+ saa711x_set_v4lstd+0x5d3/0xc10 drivers/media/i2c/saa7115.c:1013
+ saa711x_probe+0x1088/0x1590 drivers/media/i2c/saa7115.c:1911
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ new_device_store+0x248/0x520 drivers/i2c/i2c-core-base.c:1306
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3034ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f30359aa018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3034e35fa0 RCX: 00007f3034ba778d
+RDX: 0000000000000011 RSI: 0000200000000540 RDI: 0000000000000005
+RBP: 00007f3034c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3034e36038 R14: 00007f3034e35fa0 R15: 00007ffcdce69940
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

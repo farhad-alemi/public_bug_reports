@@ -1,0 +1,225 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+2 distinct call traces.
+
+======================================================================
+[1/2]
+======================================================================
+
+==================================================================
+BUG: KASAN: global-out-of-bounds in set_frame_rate+0x48d/0x5b0 drivers/media/usb/gspca/ov534.c:856
+Read of size 1 at addr ffffffff8c57d315 by task syz.1.57/11966
+
+CPU: 0 UID: 0 PID: 11966 Comm: syz.1.57 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ set_frame_rate+0x48d/0x5b0 drivers/media/usb/gspca/ov534.c:856
+ sd_set_streamparm+0xf7/0x240 drivers/media/usb/gspca/ov534.c:1560
+ vidioc_s_parm+0x151/0x250 drivers/media/usb/gspca/gspca.c:1285
+ __video_do_ioctl+0xad7/0xc90 drivers/media/v4l2-core/v4l2-ioctl.c:3133
+ video_usercopy+0x86a/0x1320 drivers/media/v4l2-core/v4l2-ioctl.c:3475
+ v4l2_ioctl+0x18d/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:366
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa8d73a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa8d82cc018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fa8d7636090 RCX: 00007fa8d73a778d
+RDX: 0000200000000600 RSI: 00000000c0cc5616 RDI: 0000000000000005
+RBP: 00007fa8d744eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fa8d7636128 R14: 00007fa8d7636090 R15: 00007ffdb6b65db0
+ </TASK>
+
+The buggy address belongs to the variable:
+ set_frame_rate.rate_0+0x15/0x40
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xc57d
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea0000315f48 ffffea0000315f48 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffffffff8c57d200: 00 00 02 f9 f9 f9 f9 f9 00 00 02 f9 f9 f9 f9 f9
+ ffffffff8c57d280: 00 00 02 f9 f9 f9 f9 f9 00 00 00 00 00 00 00 00
+>ffffffff8c57d300: 00 00 04 f9 f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9
+                         ^
+ ffffffff8c57d380: f9 f9 f9 f9 00 00 06 f9 f9 f9 f9 f9 00 00 02 f9
+ ffffffff8c57d400: f9 f9 f9 f9 00 00 05 f9 f9 f9 f9 f9 00 00 07 f9
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Read of size 1 at addr ffffffff8c57d315 by task syz.1.57/11966
+CPU: 0 UID: 0 PID: 11966 Comm: syz.1.57 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0
+ print_address_description+0x55/0x1e0
+ print_report+0x58/0x70
+ kasan_report+0x130/0x170
+ set_frame_rate+0x48d/0x5b0
+ sd_set_streamparm+0xf7/0x240
+ vidioc_s_parm+0x151/0x250
+ __video_do_ioctl+0xad7/0xc90
+ video_usercopy+0x86a/0x1320
+ v4l2_ioctl+0x18d/0x1e0
+ __se_sys_ioctl+0xfc/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa8d73a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa8d82cc018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fa8d7636090 RCX: 00007fa8d73a778d
+RDX: 0000200000000600 RSI: 00000000c0cc5616 RDI: 0000000000000005
+RBP: 00007fa8d744eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fa8d7636128 R14: 00007fa8d7636090 R15: 00007ffdb6b65db0
+ </TASK>
+The buggy address belongs to the variable:
+ set_frame_rate.rate_0+0x15/0x40
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xc57d
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea0000315f48 ffffea0000315f48 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+Memory state around the buggy address:
+ ffffffff8c57d200: 00 00 02 f9 f9 f9 f9 f9 00 00 02 f9 f9 f9 f9 f9
+ ffffffff8c57d280: 00 00 02 f9 f9 f9 f9 f9 00 00 00 00 00 00 00 00
+>ffffffff8c57d300: 00 00 04 f9 f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9
+                         ^
+ ffffffff8c57d380: f9 f9 f9 f9 00 00 06 f9 f9 f9 f9 f9 00 00 02 f9
+ ffffffff8c57d400: f9 f9 f9 f9 00 00 05 f9 f9 f9 f9 f9 00 00 07 f9
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[2/2]
+======================================================================
+
+==================================================================
+BUG: KASAN: global-out-of-bounds in set_frame_rate+0x48d/0x5b0 drivers/media/usb/gspca/ov534.c:856
+Read of size 1 at addr ffffffff8c57d315 by task syz.1.334/14470
+
+CPU: 1 UID: 0 PID: 14470 Comm: syz.1.334 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ set_frame_rate+0x48d/0x5b0 drivers/media/usb/gspca/ov534.c:856
+ sd_start+0x6c9/0x1140 drivers/media/usb/gspca/ov534.c:1414
+ gspca_init_transfer+0x2470/0x3060 drivers/media/usb/gspca/gspca.c:842
+ gspca_start_streaming+0x6f/0x250 drivers/media/usb/gspca/gspca.c:1360
+ vb2_start_streaming+0x128/0x460 drivers/media/common/videobuf2/videobuf2-core.c:1783
+ vb2_core_streamon+0x2e0/0x4f0 drivers/media/common/videobuf2/videobuf2-core.c:2336
+ __vb2_init_fileio+0xca2/0xff0 drivers/media/common/videobuf2/videobuf2-core.c:2949
+ __vb2_perform_fileio+0x282/0x1620 drivers/media/common/videobuf2/videobuf2-core.c:3025
+ vb2_fop_read+0x271/0x350 drivers/media/common/videobuf2/videobuf2-v4l2.c:1215
+ v4l2_read+0x19c/0x2c0 drivers/media/v4l2-core/v4l2-dev.c:316
+ vfs_read+0x20c/0xa60 fs/read_write.c:572
+ ksys_read+0x14d/0x260 fs/read_write.c:717
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f43c65a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f43c7483018 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00007f43c6836180 RCX: 00007f43c65a778d
+RDX: 0000000000001000 RSI: 00002000000025c0 RDI: 0000000000000007
+RBP: 00007f43c664eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f43c6836218 R14: 00007f43c6836180 R15: 00007ffeb2509d60
+ </TASK>
+
+The buggy address belongs to the variable:
+ set_frame_rate.rate_0+0x15/0x40
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xc57d
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea0000315f48 ffffea0000315f48 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffffffff8c57d200: 00 00 02 f9 f9 f9 f9 f9 00 00 02 f9 f9 f9 f9 f9
+ ffffffff8c57d280: 00 00 02 f9 f9 f9 f9 f9 00 00 00 00 00 00 00 00
+>ffffffff8c57d300: 00 00 04 f9 f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9
+                         ^
+ ffffffff8c57d380: f9 f9 f9 f9 00 00 06 f9 f9 f9 f9 f9 00 00 02 f9
+ ffffffff8c57d400: f9 f9 f9 f9 00 00 05 f9 f9 f9 f9 f9 00 00 07 f9
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Read of size 1 at addr ffffffff8c57d315 by task syz.1.334/14470
+CPU: 1 UID: 0 PID: 14470 Comm: syz.1.334 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0
+ print_address_description+0x55/0x1e0
+ print_report+0x58/0x70
+ kasan_report+0x130/0x170
+ set_frame_rate+0x48d/0x5b0
+ sd_start+0x6c9/0x1140
+ gspca_init_transfer+0x2470/0x3060
+ gspca_start_streaming+0x6f/0x250
+ vb2_start_streaming+0x128/0x460
+ vb2_core_streamon+0x2e0/0x4f0
+ __vb2_init_fileio+0xca2/0xff0
+ __vb2_perform_fileio+0x282/0x1620
+ vb2_fop_read+0x271/0x350
+ v4l2_read+0x19c/0x2c0
+ vfs_read+0x20c/0xa60
+ ksys_read+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f43c65a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f43c7483018 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00007f43c6836180 RCX: 00007f43c65a778d
+RDX: 0000000000001000 RSI: 00002000000025c0 RDI: 0000000000000007
+RBP: 00007f43c664eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f43c6836218 R14: 00007f43c6836180 R15: 00007ffeb2509d60
+ </TASK>
+The buggy address belongs to the variable:
+ set_frame_rate.rate_0+0x15/0x40
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xc57d
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea0000315f48 ffffea0000315f48 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+Memory state around the buggy address:
+ ffffffff8c57d200: 00 00 02 f9 f9 f9 f9 f9 00 00 02 f9 f9 f9 f9 f9
+ ffffffff8c57d280: 00 00 02 f9 f9 f9 f9 f9 00 00 00 00 00 00 00 00
+>ffffffff8c57d300: 00 00 04 f9 f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9
+                         ^
+ ffffffff8c57d380: f9 f9 f9 f9 00 00 06 f9 f9 f9 f9 f9 00 00 02 f9
+ ffffffff8c57d400: f9 f9 f9 f9 00 00 05 f9 f9 f9 f9 f9 00 00 07 f9
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

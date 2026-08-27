@@ -1,0 +1,239 @@
+Recovered console capture for 150-usb-chipidea-foreign-platform_data-oob
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: log names ci_hdrc_add_device, a crash site of the entry.
+Source log: console_try-150-usb-chipidea-foreign-platform_data-o-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   50.904409][ T9505] vhci_hcd vhci_hcd.0: remove, state 4
+[   50.905230][ T9505] usb usb34: USB disconnect, device number 1
+[   50.932519][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.933428][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.934680][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.936600][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.937493][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.948684][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.950024][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.950768][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.951555][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.952747][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.953386][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.954094][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.955239][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.955910][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.957965][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.960504][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.961230][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.961921][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.964425][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.965095][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.965797][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.969365][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   50.970016][   T13] vhci_hcd vhci_hcd.0: release socket
+[   50.970652][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   50.971362][ T9505] vhci_hcd vhci_hcd.0: USB bus 34 deregistered
+[   50.980312][ T9505] vhci_hcd vhci_hcd.0: remove, state 4
+[   50.981237][ T9505] usb usb33: USB disconnect, device number 1
+[   51.013221][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.013869][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.014596][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.016954][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.017573][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.019986][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.021764][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.022362][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.022982][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.023705][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.024408][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.025061][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.025796][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.026458][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.027122][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.027860][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.029080][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.029771][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.030545][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.031215][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.031852][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.033637][   T13] vhci_hcd vhci_hcd.0: stop threads
+[   51.034301][   T13] vhci_hcd vhci_hcd.0: release socket
+[   51.034907][   T13] vhci_hcd vhci_hcd.0: disconnect device
+[   51.035567][ T9505] vhci_hcd vhci_hcd.0: USB bus 33 deregistered
+[   51.046609][ T9505] ==================================================================
+[   51.047711][ T9505] BUG: KASAN: slab-out-of-bounds in ci_hdrc_add_device+0xb76/0xd10
+[   51.050212][ T9505] Read of size 4 at addr ffff88810e9061c8 by task repro/9505
+[   51.051146][ T9505] 
+[   51.051470][ T9505] CPU: 1 UID: 0 PID: 9505 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.051482][ T9505] Tainted: [W]=WARN
+[   51.051487][ T9505] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.051497][ T9505] Call Trace:
+[   51.051502][ T9505]  <TASK>
+[   51.051506][ T9505]  dump_stack_lvl+0xe8/0x150
+[   51.051517][ T9505]  print_address_description+0x55/0x1e0
+[   51.051526][ T9505]  ? ci_hdrc_add_device+0xb76/0xd10
+[   51.051536][ T9505]  print_report+0x58/0x70
+[   51.051543][ T9505]  kasan_report+0x117/0x150
+[   51.051553][ T9505]  ? ci_hdrc_add_device+0xb76/0xd10
+[   51.051564][ T9505]  ci_hdrc_add_device+0xb76/0xd10
+[   51.051575][ T9505]  ci_hdrc_usb2_probe+0x22d/0x370
+[   51.051583][ T9505]  ? __pfx_ci_hdrc_usb2_probe+0x10/0x10
+[   51.051590][ T9505]  platform_probe+0xf9/0x190
+[   51.052304][ T9505]  ? __pfx_platform_probe+0x10/0x10
+[   51.052313][ T9505]  really_probe+0x267/0xaf0
+[   51.052321][ T9505]  __driver_probe_device+0x1e2/0x350
+[   51.052332][ T9505]  device_driver_attach+0xe0/0x1d0
+[   51.052343][ T9505]  bind_store+0x1d0/0x220
+[   51.052353][ T9505]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   51.052364][ T9505]  kernfs_fop_write_iter+0x3af/0x540
+[   51.052373][ T9505]  vfs_write+0x61d/0xb90
+[   51.052385][ T9505]  ? __pfx_vfs_write+0x10/0x10
+[   51.052395][ T9505]  ? do_sys_openat2+0x14e/0x200
+[   51.052403][ T9505]  ? kmem_cache_free+0x182/0x650
+[   51.052412][ T9505]  ksys_write+0x150/0x270
+[   51.052422][ T9505]  ? __pfx_ksys_write+0x10/0x10
+[   51.052433][ T9505]  do_syscall_64+0x155/0x510
+[   51.052441][ T9505]  ? trace_irq_disable+0x3b/0x140
+[   51.052450][ T9505]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.052458][ T9505]  ? clear_bhb_loop+0x30/0x80
+[   51.052466][ T9505]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.052474][ T9505] RIP: 0033:0x453486
+[   51.052484][ T9505] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   51.052493][ T9505] RSP: 002b:00007ffd89616a40 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   51.052506][ T9505] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000453486
+[   51.052511][ T9505] RDX: 000000000000000a RSI: 00007ffd8961ed00 RDI: 0000000000000003
+[   51.052516][ T9505] RBP: 00007ffd89616a50 R08: 0000000000000000 R09: 0000000000000000
+[   51.052520][ T9505] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffd8961ef78
+[   51.052525][ T9505] R13: 00007ffd8961ef88 R14: 0000000000000002 R15: 00000000004ae160
+[   51.052533][ T9505]  </TASK>
+[   51.052535][ T9505] 
+[   51.085666][ T9505] Allocated by task 1:
+[   51.086221][ T9505]  kasan_save_track+0x3e/0x80
+[   51.086879][ T9505]  __kasan_kmalloc+0x93/0xb0
+[   51.087524][ T9505]  __kmalloc_node_track_caller_noprof+0x4cf/0x740
+[   51.088425][ T9505]  kstrdup+0x42/0x100
+[   51.088976][ T9505]  __kernfs_new_node+0xab/0x9a0
+[   51.089648][ T9505]  kernfs_new_node+0xea/0x140
+[   51.090298][ T9505]  kernfs_create_link+0xa7/0x200
+[   51.090975][ T9505]  sysfs_do_create_link_sd+0x83/0x110
+[   51.091732][ T9505]  device_create_sys_dev_entry+0x122/0x190
+[   51.092488][ T9505]  device_add+0x733/0xb90
+[   51.093044][ T9505]  device_create_with_groups+0x26a/0x300
+[   51.093781][ T9505]  misc_register+0x2f6/0x550
+[   51.094470][ T9505]  do_one_initcall+0x250/0x870
+[   51.095127][ T9505]  do_initcall_level+0x104/0x190
+[   51.097317][ T9505]  do_initcalls+0x59/0xa0
+[   51.097913][ T9505]  kernel_init_freeable+0x2a6/0x3e0
+[   51.098641][ T9505]  kernel_init+0x22/0x1d0
+[   51.099239][ T9505]  ret_from_fork+0x514/0xb70
+[   51.099878][ T9505]  ret_from_fork_asm+0x1a/0x30
+[   51.100518][ T9505] 
+[   51.100855][ T9505] The buggy address belongs to the object at ffff88810e9061c0
+[   51.100855][ T9505]  which belongs to the cache kmalloc-8 of size 8
+[   51.102704][ T9505] The buggy address is located 1 bytes to the right of
+[   51.102704][ T9505]  allocated 7-byte region [ffff88810e9061c0, ffff88810e9061c7)
+[   51.104719][ T9505] 
+[   51.105052][ T9505] The buggy address belongs to the physical page:
+[   51.105919][ T9505] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88810e906a20 pfn:0x10e906
+[   51.107284][ T9505] flags: 0x57ff00000000200(workingset|node=1|zone=2|lastcpupid=0x7ff)
+[   51.108378][ T9505] page_type: f5(slab)
+[   51.108932][ T9505] raw: 057ff00000000200 ffff88801b041500 ffffea0004277e90 ffffea00042849d0
+[   51.110092][ T9505] raw: ffff88810e906a20 000000080080005d 00000000f5000000 0000000000000000
+[   51.111244][ T9505] page dumped because: kasan: bad access detected
+[   51.112112][ T9505] page_owner tracks the page as allocated
+[   51.112890][ T9505] page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 5383480375
+[   51.115342][ T9505]  post_alloc_hook+0x1f9/0x250
+[   51.116000][ T9505]  get_page_from_freelist+0x235a/0x23e0
+[   51.116753][ T9505]  __alloc_frozen_pages_noprof+0x217/0x5a0
+[   51.117543][ T9505]  allocate_slab+0x79/0x5e0
+[   51.118164][ T9505]  refill_objects+0x2d6/0x350
+[   51.118837][ T9505]  __pcs_replace_empty_main+0x2c4/0x6b0
+[   51.119580][ T9505]  __kmalloc_node_track_caller_noprof+0x569/0x740
+[   51.120420][ T9505]  kvasprintf+0xeb/0x1a0
+[   51.120983][ T9505]  kobject_set_name_vargs+0x61/0x110
+[   51.121663][ T9505]  dev_set_name+0xe2/0x140
+[   51.122236][ T9505]  usb_create_ep_devs+0x124/0x230
+[   51.122927][ T9505]  usb_new_device+0xb04/0x1720
+[   51.123581][ T9505]  register_root_hub+0x270/0x5f0
+[   51.124354][ T9505]  usb_add_hcd+0xba1/0x10b0
+[   51.124980][ T9505]  dummy_hcd_probe+0x134/0x270
+[   51.125636][ T9505]  platform_probe+0xf9/0x190
+[   51.126271][ T9505] page last free pid 27 tgid 27 ts 5383115322 stack trace:
+[   51.127248][ T9505]  __free_frozen_pages+0xc9f/0xd90
+[   51.127957][ T9505]  __kasan_populate_vmalloc+0x1b2/0x1d0
+[   51.128717][ T9505]  alloc_vmap_area+0xd47/0x1480
+[   51.129384][ T9505]  __get_vm_area_node+0x20e/0x320
+[   51.130072][ T9505]  __vmalloc_node_range_noprof+0x337/0x1560
+[   51.130873][ T9505]  __vmalloc_node_noprof+0xc2/0x100
+[   51.131577][ T9505]  dup_task_struct+0x2c2/0xa20
+[   51.132236][ T9505]  copy_process+0x777/0x4330
+[   51.132881][ T9505]  kernel_clone+0x2d7/0x940
+[   51.133498][ T9505]  user_mode_thread+0x115/0x180
+[   51.134232][ T9505]  call_usermodehelper_exec_work+0x5c/0x230
+[   51.135114][ T9505]  process_scheduled_works+0xc99/0x1900
+[   51.135969][ T9505]  worker_thread+0xa53/0xfc0
+[   51.136673][ T9505]  kthread+0x38b/0x480
+[   51.137321][ T9505]  ret_from_fork+0x514/0xb70
+[   51.138053][ T9505]  ret_from_fork_asm+0x1a/0x30
+[   51.138788][ T9505] 
+[   51.139147][ T9505] Memory state around the buggy address:
+[   51.140015][ T9505]  ffff88810e906080: fa fc fc fc fa fc fc fc fa fc fc fc fa fc fc fc
+[   51.141190][ T9505]  ffff88810e906100: fa fc fc fc fa fc fc fc 07 fc fc fc fa fc fc fc
+[   51.142261][ T9505] >ffff88810e906180: 07 fc fc fc 00 fc fc fc 07 fc fc fc 06 fc fc fc
+[   51.143314][ T9505]                                               ^
+[   51.144338][ T9505]  ffff88810e906200: 06 fc fc fc fa fc fc fc 06 fc fc fc 06 fc fc fc
+[   51.145552][ T9505]  ffff88810e906280: fa fc fc fc fa fc fc fc fa fc fc fc fa fc fc fc
+[   51.146755][ T9505] ==================================================================
+[   51.148863][ T9505] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   51.149862][ T9505] CPU: 1 UID: 0 PID: 9505 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.151449][ T9505] Tainted: [W]=WARN
+[   51.151978][ T9505] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.153417][ T9505] Call Trace:
+[   51.153885][ T9505]  <TASK>
+[   51.154342][ T9505]  vpanic+0x56d/0xa60
+[   51.154911][ T9505]  ? __pfx_vpanic+0x10/0x10
+[   51.155533][ T9505]  panic+0xc5/0xd0
+[   51.156044][ T9505]  ? __pfx_panic+0x10/0x10
+[   51.156652][ T9505]  ? preempt_schedule_thunk+0x16/0x40
+[   51.157393][ T9505]  ? preempt_schedule_thunk+0x16/0x40
+[   51.158121][ T9505]  ? ci_hdrc_add_device+0xb76/0xd10
+[   51.158836][ T9505]  check_panic_on_warn+0x89/0xb0
+[   51.159511][ T9505]  ? ci_hdrc_add_device+0xb76/0xd10
+[   51.160224][ T9505]  end_report+0x73/0x170
+[   51.160808][ T9505]  ? ci_hdrc_add_device+0xb76/0xd10
+[   51.161512][ T9505]  kasan_report+0x128/0x150
+[   51.162130][ T9505]  ? ci_hdrc_add_device+0xb76/0xd10
+[   51.162845][ T9505]  ci_hdrc_add_device+0xb76/0xd10
+[   51.163520][ T9505]  ci_hdrc_usb2_probe+0x22d/0x370
+[   51.164270][ T9505]  ? __pfx_ci_hdrc_usb2_probe+0x10/0x10
+[   51.165022][ T9505]  platform_probe+0xf9/0x190
+[   51.165673][ T9505]  ? __pfx_platform_probe+0x10/0x10
+[   51.166450][ T9505]  really_probe+0x267/0xaf0
+[   51.167176][ T9505]  __driver_probe_device+0x1e2/0x350
+[   51.167998][ T9505]  device_driver_attach+0xe0/0x1d0
+[   51.168699][ T9505]  bind_store+0x1d0/0x220
+[   51.169294][ T9505]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   51.170023][ T9505]  kernfs_fop_write_iter+0x3af/0x540
+[   51.170745][ T9505]  vfs_write+0x61d/0xb90
+[   51.171340][ T9505]  ? __pfx_vfs_write+0x10/0x10
+[   51.171998][ T9505]  ? do_sys_openat2+0x14e/0x200
+[   51.172661][ T9505]  ? kmem_cache_free+0x182/0x650
+[   51.173343][ T9505]  ksys_write+0x150/0x270
+[   51.173937][ T9505]  ? __pfx_ksys_write+0x10/0x10
+[   51.174997][ T9505]  do_syscall_64+0x155/0x510
+[   51.175683][ T9505]  ? trace_irq_disable+0x3b/0x140
+[   51.176373][ T9505]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.177196][ T9505]  ? clear_bhb_loop+0x30/0x80
+[   51.177860][ T9505]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.178656][ T9505] RIP: 0033:0x453486
+[   51.179188][ T9505] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   51.181802][ T9505] RSP: 002b:00007ffd89616a40 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   51.182931][ T9505] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000453486
+[   51.184068][ T9505] RDX: 000000000000000a RSI: 00007ffd8961ed00 RDI: 0000000000000003
+[   51.185137][ T9505] RBP: 00007ffd89616a50 R08: 0000000000000000 R09: 0000000000000000
+[   51.186200][ T9505] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffd8961ef78
+[   51.187275][ T9505] R13: 00007ffd8961ef88 R14: 0000000000000002 R15: 00000000004ae160
+[   51.188347][ T9505]  </TASK>
+[   51.188898][ T9505] Kernel Offset: disabled
+[   51.189484][ T9505] Rebooting in 86400 seconds..

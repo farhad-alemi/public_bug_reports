@@ -1,0 +1,7 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+sh
+echo 1G > /sys/fs/cgroup/memory.reclaim
+WARNING: mm/memcontrol.c:2167 at refill_stock+0x4d3/0x630, CPU#0: bash/9659
+Kernel panic - not syncing: kernel: panic_on_warn set ...

@@ -1,0 +1,520 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+5 distinct call traces, each reproduced once.
+
+======================================================================
+[1/5]
+======================================================================
+
+genirq: Flags mismatch irq 0. 00000080 (mei_me) vs. 00215a00 (timer)
+mei_me 0000:00:01.0: request_threaded_irq failure. irq = 0
+------------[ cut here ]------------
+Trying to free already-free IRQ 0
+WARNING: kernel/irq/manage.c:1879 at __free_irq kernel/irq/manage.c:1879 [inline], CPU#1: kworker/u10:0/27
+WARNING: kernel/irq/manage.c:1879 at free_irq+0x292/0x8b0 kernel/irq/manage.c:2018, CPU#1: kworker/u10:0/27
+Modules linked in:
+CPU: 1 UID: 0 PID: 27 Comm: kworker/u10:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:__free_irq kernel/irq/manage.c:1879 [inline]
+RIP: 0010:free_irq+0x296/0x8b0 kernel/irq/manage.c:2018
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000060f850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff888100043600
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff88811947c000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520000c1ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f52b795efe8 CR3: 000000001cf61000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820 drivers/misc/mei/pci-me.c:295
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach_async_helper+0x128/0x290 drivers/base/dd.c:1227
+ async_run_entry_fn+0xa8/0x440 kernel/async.c:129
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 eb                	add    %ch,%bl
+   2:	1c e8                	sbb    $0xe8,%al
+   4:	ec                   	in     (%dx),%al
+   5:	98                   	cwtl
+   6:	1d 00 4d 89 f5       	sbb    $0xf5894d00,%eax
+   b:	e9 97 00 00 00       	jmp    0xa7
+  10:	e8 df 98 1d 00       	call   0x1d98f4
+  15:	4c 8b 64 24 08       	mov    0x8(%rsp),%r12
+  1a:	4c 8b 6c 24 10       	mov    0x10(%rsp),%r13
+  1f:	48 8d 3d ae 63 0a 0e 	lea    0xe0a63ae(%rip),%rdi        # 0xe0a63d4
+  26:	8b 74 24 24          	mov    0x24(%rsp),%esi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 8b 7c 24 28       	mov    0x28(%rsp),%rdi
+  34:	48 8b 74 24 38       	mov    0x38(%rsp),%rsi
+  39:	e8 16 68 ce 09       	call   0x9ce6854
+  3e:	48                   	rex.W
+  3f:	b8                   	.byte 0xb8
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 27 Comm: kworker/u10:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:free_irq+0x296/0x8b0
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000060f850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff888100043600
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff88811947c000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520000c1ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f52b795efe8 CR3: 000000001cf61000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach_async_helper+0x128/0x290
+ async_run_entry_fn+0xa8/0x440
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/5]
+======================================================================
+
+genirq: Flags mismatch irq 0. 00000080 (mei_me) vs. 00215a00 (timer)
+mei_me 0000:00:01.0: request_threaded_irq failure. irq = 0
+------------[ cut here ]------------
+Trying to free already-free IRQ 0
+WARNING: kernel/irq/manage.c:1879 at __free_irq kernel/irq/manage.c:1879 [inline], CPU#0: kworker/u9:1/29
+WARNING: kernel/irq/manage.c:1879 at free_irq+0x292/0x8b0 kernel/irq/manage.c:2018, CPU#0: kworker/u9:1/29
+Modules linked in:
+CPU: 0 UID: 0 PID: 29 Comm: kworker/u9:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:__free_irq kernel/irq/manage.c:1879 [inline]
+RIP: 0010:free_irq+0x296/0x8b0 kernel/irq/manage.c:2018
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000062f6d0 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff888015e81b00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff888038cf4000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520000c5ec8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f76466b8000 CR3: 0000000023bf6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820 drivers/misc/mei/pci-me.c:295
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach_async_helper+0x1f1/0x2c0 drivers/base/dd.c:1058
+ async_run_entry_fn+0xa8/0x440 kernel/async.c:129
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 eb                	add    %ch,%bl
+   2:	1c e8                	sbb    $0xe8,%al
+   4:	ec                   	in     (%dx),%al
+   5:	98                   	cwtl
+   6:	1d 00 4d 89 f5       	sbb    $0xf5894d00,%eax
+   b:	e9 97 00 00 00       	jmp    0xa7
+  10:	e8 df 98 1d 00       	call   0x1d98f4
+  15:	4c 8b 64 24 08       	mov    0x8(%rsp),%r12
+  1a:	4c 8b 6c 24 10       	mov    0x10(%rsp),%r13
+  1f:	48 8d 3d ae 63 0a 0e 	lea    0xe0a63ae(%rip),%rdi        # 0xe0a63d4
+  26:	8b 74 24 24          	mov    0x24(%rsp),%esi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 8b 7c 24 28       	mov    0x28(%rsp),%rdi
+  34:	48 8b 74 24 38       	mov    0x38(%rsp),%rsi
+  39:	e8 16 68 ce 09       	call   0x9ce6854
+  3e:	48                   	rex.W
+  3f:	b8                   	.byte 0xb8
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 29 Comm: kworker/u9:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:free_irq+0x296/0x8b0
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000062f6d0 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff888015e81b00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff888038cf4000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520000c5ec8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f76466b8000 CR3: 0000000023bf6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach_async_helper+0x1f1/0x2c0
+ async_run_entry_fn+0xa8/0x440
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/5]
+======================================================================
+
+genirq: Flags mismatch irq 0. 00000080 (mei_me) vs. 00215a00 (timer)
+mei_me 0000:00:01.0: request_threaded_irq failure. irq = 0
+------------[ cut here ]------------
+Trying to free already-free IRQ 0
+WARNING: kernel/irq/manage.c:1879 at __free_irq kernel/irq/manage.c:1879 [inline], CPU#1: kworker/u9:2/5051
+WARNING: kernel/irq/manage.c:1879 at free_irq+0x292/0x8b0 kernel/irq/manage.c:2018, CPU#1: kworker/u9:2/5051
+Modules linked in:
+CPU: 1 UID: 0 PID: 5051 Comm: kworker/u9:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:__free_irq kernel/irq/manage.c:1879 [inline]
+RIP: 0010:free_irq+0x296/0x8b0 kernel/irq/manage.c:2018
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000269f850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff88801bc15100
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff888054c4c000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520004d3ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555593181808 CR3: 000000001573c000 CR4: 0000000000752ff0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000003800
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820 drivers/misc/mei/pci-me.c:295
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach_async_helper+0x128/0x290 drivers/base/dd.c:1227
+ async_run_entry_fn+0xa8/0x440 kernel/async.c:129
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 eb                	add    %ch,%bl
+   2:	1c e8                	sbb    $0xe8,%al
+   4:	ec                   	in     (%dx),%al
+   5:	98                   	cwtl
+   6:	1d 00 4d 89 f5       	sbb    $0xf5894d00,%eax
+   b:	e9 97 00 00 00       	jmp    0xa7
+  10:	e8 df 98 1d 00       	call   0x1d98f4
+  15:	4c 8b 64 24 08       	mov    0x8(%rsp),%r12
+  1a:	4c 8b 6c 24 10       	mov    0x10(%rsp),%r13
+  1f:	48 8d 3d ae 63 0a 0e 	lea    0xe0a63ae(%rip),%rdi        # 0xe0a63d4
+  26:	8b 74 24 24          	mov    0x24(%rsp),%esi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 8b 7c 24 28       	mov    0x28(%rsp),%rdi
+  34:	48 8b 74 24 38       	mov    0x38(%rsp),%rsi
+  39:	e8 16 68 ce 09       	call   0x9ce6854
+  3e:	48                   	rex.W
+  3f:	b8                   	.byte 0xb8
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 5051 Comm: kworker/u9:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:free_irq+0x296/0x8b0
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000269f850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff88801bc15100
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff888054c4c000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff520004d3ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555593181808 CR3: 000000001573c000 CR4: 0000000000752ff0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000003800
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach_async_helper+0x128/0x290
+ async_run_entry_fn+0xa8/0x440
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/5]
+======================================================================
+
+genirq: Flags mismatch irq 0. 00000080 (mei_me) vs. 00215a00 (timer)
+mei_me 0000:00:01.0: request_threaded_irq failure. irq = 0
+------------[ cut here ]------------
+Trying to free already-free IRQ 0
+WARNING: kernel/irq/manage.c:1879 at __free_irq kernel/irq/manage.c:1879 [inline], CPU#1: kworker/u10:5/16748
+WARNING: kernel/irq/manage.c:1879 at free_irq+0x292/0x8b0 kernel/irq/manage.c:2018, CPU#1: kworker/u10:5/16748
+Modules linked in:
+CPU: 1 UID: 0 PID: 16748 Comm: kworker/u10:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:__free_irq kernel/irq/manage.c:1879 [inline]
+RIP: 0010:free_irq+0x296/0x8b0 kernel/irq/manage.c:2018
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc90005d97850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff88813cac9b00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff88810798c000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000bb2ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f345c3dd000 CR3: 00000000197b7000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820 drivers/misc/mei/pci-me.c:295
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach_async_helper+0x128/0x290 drivers/base/dd.c:1227
+ async_run_entry_fn+0xa8/0x440 kernel/async.c:129
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 eb                	add    %ch,%bl
+   2:	1c e8                	sbb    $0xe8,%al
+   4:	ec                   	in     (%dx),%al
+   5:	98                   	cwtl
+   6:	1d 00 4d 89 f5       	sbb    $0xf5894d00,%eax
+   b:	e9 97 00 00 00       	jmp    0xa7
+  10:	e8 df 98 1d 00       	call   0x1d98f4
+  15:	4c 8b 64 24 08       	mov    0x8(%rsp),%r12
+  1a:	4c 8b 6c 24 10       	mov    0x10(%rsp),%r13
+  1f:	48 8d 3d ae 63 0a 0e 	lea    0xe0a63ae(%rip),%rdi        # 0xe0a63d4
+  26:	8b 74 24 24          	mov    0x24(%rsp),%esi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 8b 7c 24 28       	mov    0x28(%rsp),%rdi
+  34:	48 8b 74 24 38       	mov    0x38(%rsp),%rsi
+  39:	e8 16 68 ce 09       	call   0x9ce6854
+  3e:	48                   	rex.W
+  3f:	b8                   	.byte 0xb8
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 16748 Comm: kworker/u10:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:free_irq+0x296/0x8b0
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc90005d97850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff88813cac9b00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff88810798c000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000bb2ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f345c3dd000 CR3: 00000000197b7000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach_async_helper+0x128/0x290
+ async_run_entry_fn+0xa8/0x440
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/5]
+======================================================================
+
+genirq: Flags mismatch irq 0. 00000080 (mei_me) vs. 00215a00 (timer)
+mei_me 0000:00:01.0: request_threaded_irq failure. irq = 0
+------------[ cut here ]------------
+Trying to free already-free IRQ 0
+WARNING: kernel/irq/manage.c:1879 at __free_irq kernel/irq/manage.c:1879 [inline], CPU#0: kworker/u9:2/871
+WARNING: kernel/irq/manage.c:1879 at free_irq+0x292/0x8b0 kernel/irq/manage.c:2018, CPU#0: kworker/u9:2/871
+Modules linked in:
+CPU: 0 UID: 0 PID: 871 Comm: kworker/u9:2 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:__free_irq kernel/irq/manage.c:1879 [inline]
+RIP: 0010:free_irq+0x296/0x8b0 kernel/irq/manage.c:2018
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000531f850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff888014f28000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff888019438000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000a63ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c30fcde CR3: 0000000112e68000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820 drivers/misc/mei/pci-me.c:295
+ local_pci_probe drivers/pci/pci-driver.c:332 [inline]
+ pci_call_probe drivers/pci/pci-driver.c:394 [inline]
+ __pci_device_probe drivers/pci/pci-driver.c:455 [inline]
+ pci_device_probe+0x461/0xa50 drivers/pci/pci-driver.c:489
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach_async_helper+0x128/0x290 drivers/base/dd.c:1227
+ async_run_entry_fn+0xa8/0x440 kernel/async.c:129
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 eb                	add    %ch,%bl
+   2:	1c e8                	sbb    $0xe8,%al
+   4:	ec                   	in     (%dx),%al
+   5:	98                   	cwtl
+   6:	1d 00 4d 89 f5       	sbb    $0xf5894d00,%eax
+   b:	e9 97 00 00 00       	jmp    0xa7
+  10:	e8 df 98 1d 00       	call   0x1d98f4
+  15:	4c 8b 64 24 08       	mov    0x8(%rsp),%r12
+  1a:	4c 8b 6c 24 10       	mov    0x10(%rsp),%r13
+  1f:	48 8d 3d ae 63 0a 0e 	lea    0xe0a63ae(%rip),%rdi        # 0xe0a63d4
+  26:	8b 74 24 24          	mov    0x24(%rsp),%esi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 8b 7c 24 28       	mov    0x28(%rsp),%rdi
+  34:	48 8b 74 24 38       	mov    0x38(%rsp),%rsi
+  39:	e8 16 68 ce 09       	call   0x9ce6854
+  3e:	48                   	rex.W
+  3f:	b8                   	.byte 0xb8
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 871 Comm: kworker/u9:2 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: async async_run_entry_fn
+RIP: 0010:free_irq+0x296/0x8b0
+Code: 00 eb 1c e8 ec 98 1d 00 4d 89 f5 e9 97 00 00 00 e8 df 98 1d 00 4c 8b 64 24 08 4c 8b 6c 24 10 48 8d 3d ae 63 0a 0e 8b 74 24 24 <67> 48 0f b9 3a 48 8b 7c 24 28 48 8b 74 24 38 e8 16 68 ce 09 48 b8
+RSP: 0018:ffffc9000531f850 EFLAGS: 00010093
+RAX: ffffffff81a12ee1 RBX: ffff8880130adc00 RCX: ffff888014f28000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8fab92a0
+RBP: ffff888019438000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffff52000a63ef8 R12: ffff8880130add80
+R13: ffff8880130adc40 R14: ffff8880130adc70 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c30fcde CR3: 0000000112e68000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mei_me_probe+0x672/0x820
+ pci_device_probe+0x461/0xa50
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach_async_helper+0x128/0x290
+ async_run_entry_fn+0xa8/0x440
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

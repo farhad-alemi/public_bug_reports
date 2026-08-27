@@ -1,0 +1,126 @@
+Recovered console capture for 159-media-go7007-stop_streaming-buffers-active
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: same crash class (WARNING) and same crash site: __vb2_queue_cancel at videobuf2-core.c:2210.
+Source log: console_try-settle-159-media-go7007-stop_streaming-b-reproducer.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   52.618060][    C1] go7007 3-1:1.0: error in audio pipe: -2
+[   52.618887][    C1] go7007 3-1:1.0: error in audio pipe: -2
+[   52.619664][    C1] go7007 3-1:1.0: error in audio pipe: -2
+[   52.620448][    C1] go7007 3-1:1.0: error in audio pipe: -2
+[   52.838779][ T9514] go7007 3-1:1.0: unable to reset the USB interface
+[   52.843595][ T9514] WIS Star Trek or compatible: error transferring firmware
+[   52.849156][ T9514] ------------[ cut here ]------------
+[   52.852015][ T9514] atomic_read(&q->owned_by_drv_count)
+[   52.852035][ T9514] WARNING: drivers/media/common/videobuf2/videobuf2-core.c:2210 at __vb2_queue_cancel+0xabd/0xdb0, CPU#1: repro/9514
+[   52.856290][ T9514] Modules linked in:
+[   52.857836][ T9514] CPU: 1 UID: 0 PID: 9514 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   52.860738][ T9514] Tainted: [W]=WARN
+[   52.861729][ T9514] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   52.863512][ T9514] RIP: 0010:__vb2_queue_cancel+0xabd/0xdb0
+[   52.864268][ T9514] Code: c9 2c 2c fa e9 07 fd ff ff e8 6f 76 bc f9 eb 05 e8 68 76 bc f9 48 83 c4 58 5b 41 5c 41 5d 41 5e 41 5f 5d e9 85 f8 c1 03 cc 90 <0f> 0b 90 48 8d 9d 48 01 00 00 48 89 d9 48 c1 e9 03 48 b8 00 00 00
+[   52.866925][ T9514] RSP: 0018:ffffc90004f27ae8 EFLAGS: 00010202
+[   52.867887][ T9514] RAX: ffffffff880a767d RBX: 0000000000000002 RCX: ffff88810c7ecc80
+[   52.869045][ T9514] RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+[   52.870162][ T9514] RBP: ffff888029595328 R08: ffff88802959548f R09: 1ffff110052b2a91
+[   52.871278][ T9514] R10: dffffc0000000000 R11: ffffed10052b2a92 R12: ffff88802959548c
+[   52.872437][ T9514] R13: 1ffff110052b2aa6 R14: ffff888029595530 R15: 1ffff110052b2a91
+[   52.873544][ T9514] FS:  000000001c42e400(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   52.874815][ T9514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   52.875749][ T9514] CR2: 00005562ace11130 CR3: 000000003040e000 CR4: 0000000000752ef0
+[   52.876867][ T9514] PKRU: 55555554
+[   52.877407][ T9514] Call Trace:
+[   52.877905][ T9514]  <TASK>
+[   52.878324][ T9514]  vb2_core_streamoff+0x4c/0x140
+[   52.879325][ T9514]  __video_do_ioctl+0xadb/0xca0
+[   52.880025][ T9514]  ? __pfx___video_do_ioctl+0x10/0x10
+[   52.880776][ T9514]  video_usercopy+0x876/0x1450
+[   52.881499][ T9514]  ? __pfx___video_do_ioctl+0x10/0x10
+[   52.882279][ T9514]  ? __pfx_video_usercopy+0x10/0x10
+[   52.883025][ T9514]  ? __fget_files+0x2a/0x420
+[   52.883670][ T9514]  ? __fget_files+0x2a/0x420
+[   52.884303][ T9514]  ? __fget_files+0x3a0/0x420
+[   52.884956][ T9514]  v4l2_ioctl+0x18d/0x1e0
+[   52.885532][ T9514]  ? __pfx_v4l2_ioctl+0x10/0x10
+[   52.886202][ T9514]  __se_sys_ioctl+0xfc/0x170
+[   52.886837][ T9514]  do_syscall_64+0x155/0x510
+[   52.887542][ T9514]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   52.888365][ T9514]  ? clear_bhb_loop+0x30/0x80
+[   52.889012][ T9514]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   52.889824][ T9514] RIP: 0033:0x430a4d
+[   52.890371][ T9514] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+[   52.892959][ T9514] RSP: 002b:00007ffde7205e20 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[   52.894079][ T9514] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000430a4d
+[   52.895145][ T9514] RDX: 00007ffde7205e94 RSI: 0000000040045613 RDI: 0000000000000004
+[   52.896180][ T9514] RBP: 00007ffde7205e70 R08: 0000000000000001 R09: 0000000000000000
+[   52.897238][ T9514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffde72062c8
+[   52.898331][ T9514] R13: 00007ffde72062d8 R14: 0000000000000002 R15: 00000000004cfa20
+[   52.899413][ T9514]  </TASK>
+[   52.899847][ T9514] Kernel panic - not syncing: kernel: panic_on_warn set ...
+[   52.900832][ T9514] CPU: 1 UID: 0 PID: 9514 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   52.902388][ T9514] Tainted: [W]=WARN
+[   52.902875][ T9514] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   52.904286][ T9514] Call Trace:
+[   52.904734][ T9514]  <TASK>
+[   52.905127][ T9514]  vpanic+0x56d/0xa60
+[   52.905671][ T9514]  ? __pfx__printk+0x10/0x10
+[   52.906291][ T9514]  ? __pfx_vpanic+0x10/0x10
+[   52.906888][ T9514]  ? is_bpf_text_address+0x292/0x2b0
+[   52.907600][ T9514]  ? is_bpf_text_address+0x26/0x2b0
+[   52.908287][ T9514]  panic+0xc5/0xd0
+[   52.908783][ T9514]  ? __pfx_panic+0x10/0x10
+[   52.909380][ T9514]  __warn+0x315/0x4c0
+[   52.909895][ T9514]  ? __vb2_queue_cancel+0xabd/0xdb0
+[   52.910604][ T9514]  ? __vb2_queue_cancel+0xabd/0xdb0
+[   52.911330][ T9514]  __report_bug+0x273/0x580
+[   52.911953][ T9514]  ? __pfx___mutex_trylock_common+0x10/0x10
+[   52.912770][ T9514]  ? __vb2_queue_cancel+0xabd/0xdb0
+[   52.913468][ T9514]  ? __pfx___report_bug+0x10/0x10
+[   52.914134][ T9514]  ? go7007_stop_streaming+0x61d/0x700
+[   52.914850][ T9514]  ? __vb2_queue_cancel+0xabd/0xdb0
+[   52.915546][ T9514]  report_bug+0x16b/0x220
+[   52.916104][ T9514]  ? __vb2_queue_cancel+0xabd/0xdb0
+[   52.916781][ T9514]  ? __vb2_queue_cancel+0xabf/0xdb0
+[   52.917467][ T9514]  handle_bug+0x9c/0x200
+[   52.918012][ T9514]  exc_invalid_op+0x1a/0x50
+[   52.918604][ T9514]  asm_exc_invalid_op+0x1a/0x20
+[   52.919234][ T9514] RIP: 0010:__vb2_queue_cancel+0xabd/0xdb0
+[   52.919990][ T9514] Code: c9 2c 2c fa e9 07 fd ff ff e8 6f 76 bc f9 eb 05 e8 68 76 bc f9 48 83 c4 58 5b 41 5c 41 5d 41 5e 41 5f 5d e9 85 f8 c1 03 cc 90 <0f> 0b 90 48 8d 9d 48 01 00 00 48 89 d9 48 c1 e9 03 48 b8 00 00 00
+[   52.922516][ T9514] RSP: 0018:ffffc90004f27ae8 EFLAGS: 00010202
+[   52.923317][ T9514] RAX: ffffffff880a767d RBX: 0000000000000002 RCX: ffff88810c7ecc80
+[   52.924376][ T9514] RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+[   52.925415][ T9514] RBP: ffff888029595328 R08: ffff88802959548f R09: 1ffff110052b2a91
+[   52.926436][ T9514] R10: dffffc0000000000 R11: ffffed10052b2a92 R12: ffff88802959548c
+[   52.927435][ T9514] R13: 1ffff110052b2aa6 R14: ffff888029595530 R15: 1ffff110052b2a91
+[   52.928457][ T9514]  ? __vb2_queue_cancel+0x19d/0xdb0
+[   52.929137][ T9514]  ? __vb2_queue_cancel+0x19d/0xdb0
+[   52.929816][ T9514]  vb2_core_streamoff+0x4c/0x140
+[   52.930438][ T9514]  __video_do_ioctl+0xadb/0xca0
+[   52.931061][ T9514]  ? __pfx___video_do_ioctl+0x10/0x10
+[   52.931748][ T9514]  video_usercopy+0x876/0x1450
+[   52.932402][ T9514]  ? __pfx___video_do_ioctl+0x10/0x10
+[   52.933125][ T9514]  ? __pfx_video_usercopy+0x10/0x10
+[   52.933850][ T9514]  ? __fget_files+0x2a/0x420
+[   52.934489][ T9514]  ? __fget_files+0x2a/0x420
+[   52.935151][ T9514]  ? __fget_files+0x3a0/0x420
+[   52.935845][ T9514]  v4l2_ioctl+0x18d/0x1e0
+[   52.936475][ T9514]  ? __pfx_v4l2_ioctl+0x10/0x10
+[   52.937130][ T9514]  __se_sys_ioctl+0xfc/0x170
+[   52.937756][ T9514]  do_syscall_64+0x155/0x510
+[   52.938435][ T9514]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   52.939264][ T9514]  ? clear_bhb_loop+0x30/0x80
+[   52.939873][ T9514]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   52.940627][ T9514] RIP: 0033:0x430a4d
+[   52.941137][ T9514] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+[   52.943609][ T9514] RSP: 002b:00007ffde7205e20 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[   52.944681][ T9514] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000430a4d
+[   52.945701][ T9514] RDX: 00007ffde7205e94 RSI: 0000000040045613 RDI: 0000000000000004
+[   52.946676][ T9514] RBP: 00007ffde7205e70 R08: 0000000000000001 R09: 0000000000000000
+[   52.947676][ T9514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffde72062c8
+[   52.948693][ T9514] R13: 00007ffde72062d8 R14: 0000000000000002 R15: 00000000004cfa20
+[   52.949729][ T9514]  </TASK>
+[   52.950514][ T9514] Kernel Offset: disabled
+[   52.951227][ T9514] Rebooting in 86400 seconds..

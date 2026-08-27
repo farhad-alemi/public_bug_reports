@@ -1,0 +1,237 @@
+Recovered console capture for 145-memcg-vm_warn-refill_stock-root-cgroup
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: log names refill_stock, which the entry name carries.
+Source log: console_try-145-memcg-vm_warn-refill_stock-root-cgro-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   54.170636][ T9490] Adding 524284k swap on /swapfile.145.  Priority:-1 extents:3 across:598012k 
+[   58.826026][ T9490] ------------[ cut here ]------------
+[   58.826800][ T9490] mem_cgroup_is_root(memcg)
+[   58.826810][ T9490] WARNING: mm/memcontrol.c:2198 at refill_stock+0x644/0x940, CPU#1: repro/9490
+[   58.828465][ T9490] Modules linked in:
+[   58.828992][ T9490] CPU: 1 UID: 0 PID: 9490 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   58.830846][ T9490] Tainted: [W]=WARN
+[   58.831303][ T9490] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   58.832686][ T9490] RIP: 0010:refill_stock+0x644/0x940
+[   58.833367][ T9490] Code: 41 c6 06 00 bf 01 00 00 00 e8 f8 27 54 ff 65 48 8b 05 90 b8 27 11 48 85 c0 0f 85 86 fa ff ff e8 92 7d f3 fe e9 7c fa ff ff 90 <0f> 0b 90 83 fd 40 0f 86 d9 f9 ff ff e9 54 fa ff ff e8 76 7d f3 fe
+[   58.835738][ T9490] RSP: 0018:ffffc900092ee350 EFLAGS: 00010246
+[   58.836489][ T9490] RAX: ffffffff823db701 RBX: 0000000000000040 RCX: ffff888022f3a640
+[   58.837536][ T9490] RDX: 0000000000000000 RSI: 000000000000003f RDI: ffff88801d2c9b80
+[   58.839269][ T9490] RBP: 000000000000003f R08: ffff88801d2c9d07 R09: 1ffff11003a593a0
+[   58.840823][ T9490] R10: dffffc0000000000 R11: ffffed1003a593a1 R12: ffff88801d2c9b80
+[   58.842164][ T9490] R13: ffff888022f3a640 R14: ffff88801d2c9b80 R15: dffffc0000000000
+[   58.843438][ T9490] FS:  000000000aa49400(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   58.844765][ T9490] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   58.845936][ T9490] CR2: 000056066ef03b30 CR3: 0000000112929000 CR4: 0000000000752ef0
+[   58.847276][ T9490] PKRU: 55555554
+[   58.847810][ T9490] Call Trace:
+[   58.848296][ T9490]  <TASK>
+[   58.848776][ T9490]  ? page_counter_try_charge+0x23c/0x410
+[   58.849608][ T9490]  try_charge_memcg+0x12d6/0x1570
+[   58.850514][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.851495][ T9490]  ? __pfx_try_charge_memcg+0x10/0x10
+[   58.852267][ T9490]  ? rcu_lock_acquire+0x7/0x30
+[   58.853061][ T9490]  ? rcu_read_unlock+0x4a/0x60
+[   58.853857][ T9490]  __obj_cgroup_charge+0x35/0xf0
+[   58.854612][ T9490]  obj_cgroup_charge+0x1de/0x210
+[   58.855332][ T9490]  obj_cgroup_charge_zswap+0x83/0x270
+[   58.856080][ T9490]  zswap_store+0x1620/0x2000
+[   58.856935][ T9490]  ? zswap_store+0x764/0x2000
+[   58.857979][ T9490]  ? __pfx_zswap_store+0x10/0x10
+[   58.858897][ T9490]  ? do_raw_spin_unlock+0xf5/0x200
+[   58.859935][ T9490]  swap_writeout+0x94c/0x14c0
+[   58.860693][ T9490]  ? try_to_unmap_flush_dirty+0x74/0x100
+[   58.861581][ T9490]  shrink_folio_list+0x3388/0x52b0
+[   58.862523][ T9490]  ? lru_gen_add_folio+0x391/0x580
+[   58.863359][ T9490]  ? __pfx_shrink_folio_list+0x10/0x10
+[   58.864185][ T9490]  ? __css_rstat_updated+0x239/0x530
+[   58.864941][ T9490]  ? __pfx___css_rstat_updated+0x10/0x10
+[   58.865714][ T9490]  ? move_folios_to_lru+0x116f/0x1360
+[   58.866462][ T9490]  ? try_to_inc_min_seq+0x591/0x870
+[   58.867237][ T9490]  ? __mod_zone_page_state+0xd5/0x140
+[   58.868003][ T9490]  ? evict_folios+0x233/0x48c0
+[   58.868669][ T9490]  evict_folios+0x374d/0x48c0
+[   58.869344][ T9490]  ? evict_folios+0x233/0x48c0
+[   58.870029][ T9490]  ? __pfx_evict_folios+0x10/0x10
+[   58.870749][ T9490]  try_to_shrink_lruvec+0xe72/0x1350
+[   58.871482][ T9490]  ? __pfx_try_to_shrink_lruvec+0x10/0x10
+[   58.872268][ T9490]  ? mem_cgroup_put+0x60/0x2a0
+[   58.872929][ T9490]  ? shrink_node+0x2ef3/0x3b90
+[   58.873593][ T9490]  shrink_one+0x265/0x760
+[   58.874193][ T9490]  ? shrink_node+0x2ef3/0x3b90
+[   58.874864][ T9490]  shrink_node+0x3320/0x3b90
+[   58.875498][ T9490]  ? shrink_node+0x2ef3/0x3b90
+[   58.876169][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.876857][ T9490]  ? ima_match_policy+0x2228/0x22c0
+[   58.877657][ T9490]  ? kernel_text_address+0xa5/0xe0
+[   58.878357][ T9490]  ? __pfx_shrink_node+0x10/0x10
+[   58.879058][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.879770][ T9490]  do_try_to_free_pages+0x6a2/0x1990
+[   58.880500][ T9490]  ? unwind_next_frame+0xa6/0x2550
+[   58.881217][ T9490]  ? __pfx_do_try_to_free_pages+0x10/0x10
+[   58.881998][ T9490]  try_to_free_mem_cgroup_pages+0x30d/0x830
+[   58.882808][ T9490]  ? __pfx_try_to_free_mem_cgroup_pages+0x10/0x10
+[   58.883689][ T9490]  ? strim+0xc2/0x190
+[   58.884239][ T9490]  user_proactive_reclaim+0x504/0x840
+[   58.884993][ T9490]  ? __pfx_user_proactive_reclaim+0x10/0x10
+[   58.885824][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.886461][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.887174][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.887807][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.888434][ T9490]  ? kernfs_root+0x1ea/0x230
+[   58.889100][ T9490]  ? kernfs_root_flags+0x15/0x60
+[   58.889803][ T9490]  ? of_css+0x165/0x230
+[   58.890384][ T9490]  ? __pfx_memory_reclaim+0x10/0x10
+[   58.891098][ T9490]  memory_reclaim+0x1f/0x30
+[   58.891736][ T9490]  cgroup_file_write+0x331/0x8f0
+[   58.892420][ T9490]  ? __pfx_cgroup_file_write+0x10/0x10
+[   58.893174][ T9490]  ? __kmalloc_noprof+0x39e/0x730
+[   58.893875][ T9490]  ? __kmalloc_noprof+0x1b3/0x730
+[   58.894570][ T9490]  ? __pfx_cgroup_file_write+0x10/0x10
+[   58.895323][ T9490]  kernfs_fop_write_iter+0x3af/0x540
+[   58.896061][ T9490]  vfs_write+0x61d/0xb90
+[   58.896652][ T9490]  ? __pfx_vfs_write+0x10/0x10
+[   58.897429][ T9490]  ? do_sys_openat2+0x14e/0x200
+[   58.898098][ T9490]  ? kmem_cache_free+0x182/0x650
+[   58.898800][ T9490]  ksys_write+0x150/0x270
+[   58.899450][ T9490]  ? __pfx_ksys_write+0x10/0x10
+[   58.900178][ T9490]  do_syscall_64+0x155/0x510
+[   58.900834][ T9490]  ? trace_irq_disable+0x3b/0x140
+[   58.901529][ T9490]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   58.902382][ T9490]  ? clear_bhb_loop+0x30/0x80
+[   58.903026][ T9490]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   58.903834][ T9490] RIP: 0033:0x450e26
+[   58.904376][ T9490] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   58.906969][ T9490] RSP: 002b:00007ffeb3219f20 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   58.908173][ T9490] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000450e26
+[   58.909257][ T9490] RDX: 0000000000000002 RSI: 000000000048b2d9 RDI: 0000000000000004
+[   58.910393][ T9490] RBP: 00007ffeb3219f30 R08: 0000000000000000 R09: 0000000000000000
+[   58.911459][ T9490] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffeb321a238
+[   58.912558][ T9490] R13: 00007ffeb321a248 R14: 0000000000000002 R15: 00000000004b2100
+[   58.913641][ T9490]  </TASK>
+[   58.914082][ T9490] Kernel panic - not syncing: kernel: panic_on_warn set ...
+[   58.915085][ T9490] CPU: 1 UID: 0 PID: 9490 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   58.916662][ T9490] Tainted: [W]=WARN
+[   58.917260][ T9490] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   58.918735][ T9490] Call Trace:
+[   58.919190][ T9490]  <TASK>
+[   58.919590][ T9490]  vpanic+0x56d/0xa60
+[   58.920146][ T9490]  ? __pfx__printk+0x10/0x10
+[   58.920793][ T9490]  ? __pfx_vpanic+0x10/0x10
+[   58.921410][ T9490]  ? is_bpf_text_address+0x292/0x2b0
+[   58.922129][ T9490]  ? is_bpf_text_address+0x26/0x2b0
+[   58.922841][ T9490]  panic+0xc5/0xd0
+[   58.923344][ T9490]  ? __pfx_panic+0x10/0x10
+[   58.923961][ T9490]  __warn+0x315/0x4c0
+[   58.924504][ T9490]  ? refill_stock+0x644/0x940
+[   58.925206][ T9490]  ? refill_stock+0x644/0x940
+[   58.925918][ T9490]  __report_bug+0x273/0x580
+[   58.926578][ T9490]  ? refill_stock+0x644/0x940
+[   58.927275][ T9490]  ? __pfx___report_bug+0x10/0x10
+[   58.927975][ T9490]  ? is_bpf_text_address+0x26/0x2b0
+[   58.928654][ T9490]  ? kernel_text_address+0xa5/0xe0
+[   58.929336][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.929992][ T9490]  ? refill_stock+0x644/0x940
+[   58.930572][ T9490]  report_bug+0x16b/0x220
+[   58.931119][ T9490]  ? refill_stock+0x644/0x940
+[   58.931694][ T9490]  ? refill_stock+0x646/0x940
+[   58.932273][ T9490]  handle_bug+0x9c/0x200
+[   58.932809][ T9490]  exc_invalid_op+0x1a/0x50
+[   58.933362][ T9490]  asm_exc_invalid_op+0x1a/0x20
+[   58.933958][ T9490] RIP: 0010:refill_stock+0x644/0x940
+[   58.934595][ T9490] Code: 41 c6 06 00 bf 01 00 00 00 e8 f8 27 54 ff 65 48 8b 05 90 b8 27 11 48 85 c0 0f 85 86 fa ff ff e8 92 7d f3 fe e9 7c fa ff ff 90 <0f> 0b 90 83 fd 40 0f 86 d9 f9 ff ff e9 54 fa ff ff e8 76 7d f3 fe
+[   58.936888][ T9490] RSP: 0018:ffffc900092ee350 EFLAGS: 00010246
+[   58.937674][ T9490] RAX: ffffffff823db701 RBX: 0000000000000040 RCX: ffff888022f3a640
+[   58.938626][ T9490] RDX: 0000000000000000 RSI: 000000000000003f RDI: ffff88801d2c9b80
+[   58.939572][ T9490] RBP: 000000000000003f R08: ffff88801d2c9d07 R09: 1ffff11003a593a0
+[   58.940521][ T9490] R10: dffffc0000000000 R11: ffffed1003a593a1 R12: ffff88801d2c9b80
+[   58.941470][ T9490] R13: ffff888022f3a640 R14: ffff88801d2c9b80 R15: dffffc0000000000
+[   58.942471][ T9490]  ? page_counter_try_charge+0x201/0x410
+[   58.943203][ T9490]  ? page_counter_try_charge+0x23c/0x410
+[   58.943932][ T9490]  try_charge_memcg+0x12d6/0x1570
+[   58.944581][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.945225][ T9490]  ? __pfx_try_charge_memcg+0x10/0x10
+[   58.945914][ T9490]  ? rcu_lock_acquire+0x7/0x30
+[   58.946532][ T9490]  ? rcu_read_unlock+0x4a/0x60
+[   58.947218][ T9490]  __obj_cgroup_charge+0x35/0xf0
+[   58.947863][ T9490]  obj_cgroup_charge+0x1de/0x210
+[   58.948505][ T9490]  obj_cgroup_charge_zswap+0x83/0x270
+[   58.949197][ T9490]  zswap_store+0x1620/0x2000
+[   58.949802][ T9490]  ? zswap_store+0x764/0x2000
+[   58.950418][ T9490]  ? __pfx_zswap_store+0x10/0x10
+[   58.951075][ T9490]  ? do_raw_spin_unlock+0xf5/0x200
+[   58.951738][ T9490]  swap_writeout+0x94c/0x14c0
+[   58.952354][ T9490]  ? try_to_unmap_flush_dirty+0x74/0x100
+[   58.953078][ T9490]  shrink_folio_list+0x3388/0x52b0
+[   58.953755][ T9490]  ? lru_gen_add_folio+0x391/0x580
+[   58.954417][ T9490]  ? __pfx_shrink_folio_list+0x10/0x10
+[   58.955119][ T9490]  ? __css_rstat_updated+0x239/0x530
+[   58.955765][ T9490]  ? __pfx___css_rstat_updated+0x10/0x10
+[   58.956463][ T9490]  ? move_folios_to_lru+0x116f/0x1360
+[   58.957255][ T9490]  ? try_to_inc_min_seq+0x591/0x870
+[   58.957947][ T9490]  ? __mod_zone_page_state+0xd5/0x140
+[   58.958664][ T9490]  ? evict_folios+0x233/0x48c0
+[   58.959288][ T9490]  evict_folios+0x374d/0x48c0
+[   58.959922][ T9490]  ? evict_folios+0x233/0x48c0
+[   58.960509][ T9490]  ? __pfx_evict_folios+0x10/0x10
+[   58.961135][ T9490]  try_to_shrink_lruvec+0xe72/0x1350
+[   58.961779][ T9490]  ? __pfx_try_to_shrink_lruvec+0x10/0x10
+[   58.962466][ T9490]  ? mem_cgroup_put+0x60/0x2a0
+[   58.963084][ T9490]  ? shrink_node+0x2ef3/0x3b90
+[   58.963704][ T9490]  shrink_one+0x265/0x760
+[   58.964266][ T9490]  ? shrink_node+0x2ef3/0x3b90
+[   58.964902][ T9490]  shrink_node+0x3320/0x3b90
+[   58.965488][ T9490]  ? shrink_node+0x2ef3/0x3b90
+[   58.966096][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.966718][ T9490]  ? ima_match_policy+0x2228/0x22c0
+[   58.967429][ T9490]  ? kernel_text_address+0xa5/0xe0
+[   58.968082][ T9490]  ? __pfx_shrink_node+0x10/0x10
+[   58.968708][ T9490]  ? __lock_acquire+0x6b5/0x2d10
+[   58.969334][ T9490]  do_try_to_free_pages+0x6a2/0x1990
+[   58.970000][ T9490]  ? unwind_next_frame+0xa6/0x2550
+[   58.970648][ T9490]  ? __pfx_do_try_to_free_pages+0x10/0x10
+[   58.971390][ T9490]  try_to_free_mem_cgroup_pages+0x30d/0x830
+[   58.972205][ T9490]  ? __pfx_try_to_free_mem_cgroup_pages+0x10/0x10
+[   58.972978][ T9490]  ? strim+0xc2/0x190
+[   58.973456][ T9490]  user_proactive_reclaim+0x504/0x840
+[   58.974103][ T9490]  ? __pfx_user_proactive_reclaim+0x10/0x10
+[   58.974832][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.975416][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.976015][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.976590][ T9490]  ? kernfs_root+0x1c/0x230
+[   58.977227][ T9490]  ? kernfs_root+0x1ea/0x230
+[   58.977823][ T9490]  ? kernfs_root_flags+0x15/0x60
+[   58.978408][ T9490]  ? of_css+0x165/0x230
+[   58.978940][ T9490]  ? __pfx_memory_reclaim+0x10/0x10
+[   58.979596][ T9490]  memory_reclaim+0x1f/0x30
+[   58.980178][ T9490]  cgroup_file_write+0x331/0x8f0
+[   58.980771][ T9490]  ? __pfx_cgroup_file_write+0x10/0x10
+[   58.981421][ T9490]  ? __kmalloc_noprof+0x39e/0x730
+[   58.982031][ T9490]  ? __kmalloc_noprof+0x1b3/0x730
+[   58.982630][ T9490]  ? __pfx_cgroup_file_write+0x10/0x10
+[   58.983333][ T9490]  kernfs_fop_write_iter+0x3af/0x540
+[   58.984008][ T9490]  vfs_write+0x61d/0xb90
+[   58.984519][ T9490]  ? __pfx_vfs_write+0x10/0x10
+[   58.985094][ T9490]  ? do_sys_openat2+0x14e/0x200
+[   58.985667][ T9490]  ? kmem_cache_free+0x182/0x650
+[   58.986267][ T9490]  ksys_write+0x150/0x270
+[   58.986834][ T9490]  ? __pfx_ksys_write+0x10/0x10
+[   58.987552][ T9490]  do_syscall_64+0x155/0x510
+[   58.988214][ T9490]  ? trace_irq_disable+0x3b/0x140
+[   58.988926][ T9490]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   58.989782][ T9490]  ? clear_bhb_loop+0x30/0x80
+[   58.990386][ T9490]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   58.991126][ T9490] RIP: 0033:0x450e26
+[   58.991624][ T9490] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   58.993963][ T9490] RSP: 002b:00007ffeb3219f20 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   58.994968][ T9490] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000450e26
+[   58.995950][ T9490] RDX: 0000000000000002 RSI: 000000000048b2d9 RDI: 0000000000000004
+[   58.996941][ T9490] RBP: 00007ffeb3219f30 R08: 0000000000000000 R09: 0000000000000000
+[   58.997990][ T9490] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffeb321a238
+[   58.998971][ T9490] R13: 00007ffeb321a248 R14: 0000000000000002 R15: 00000000004b2100
+[   58.999973][ T9490]  </TASK>
+[   59.000469][ T9490] Kernel Offset: disabled
+[   59.000985][ T9490] Rebooting in 86400 seconds..

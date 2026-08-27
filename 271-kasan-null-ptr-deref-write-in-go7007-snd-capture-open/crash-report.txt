@@ -1,0 +1,97 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+==================================================================
+BUG: KASAN: null-ptr-deref in instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+BUG: KASAN: null-ptr-deref in atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1300 [inline]
+BUG: KASAN: null-ptr-deref in queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
+BUG: KASAN: null-ptr-deref in do_raw_spin_lock include/linux/spinlock.h:187 [inline]
+BUG: KASAN: null-ptr-deref in __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:133 [inline]
+BUG: KASAN: null-ptr-deref in _raw_spin_lock_irqsave+0x8f/0x100 kernel/locking/spinlock.c:166
+Write of size 4 at addr 0000000000000018 by task syz.5.460/14290
+
+CPU: 0 UID: 0 PID: 14290 Comm: syz.5.460 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+ atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1300 [inline]
+ queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
+ do_raw_spin_lock include/linux/spinlock.h:187 [inline]
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:133 [inline]
+ _raw_spin_lock_irqsave+0x8f/0x100 kernel/locking/spinlock.c:166
+ go7007_snd_capture_open+0x69/0x110 drivers/media/usb/go7007/snd-go7007.c:122
+ snd_pcm_open_substream+0x1070/0x2420 sound/core/pcm_native.c:2811
+ snd_pcm_open_file sound/core/pcm_native.c:2847 [inline]
+ snd_pcm_open+0x1ce/0x5e0 sound/core/pcm_native.c:2912
+ snd_pcm_capture_open+0x72/0xe0 sound/core/pcm_native.c:2886
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f60b45a62d5
+Code: 8b 55 d0 48 89 45 b0 75 a0 44 89 55 9c e8 e3 99 02 00 44 8b 55 9c 89 da 4c 89 e6 41 89 c0 bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 77 33 44 89 c7 89 45 9c e8 38 9a 02 00 8b 45 9c
+RSP: 002b:00007f60b27f5b40 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000200 RCX: 00007f60b45a62d5
+RDX: 0000000000000200 RSI: 00007f60b27f5be0 RDI: 00000000ffffff9c
+RBP: 00007f60b27f5bb0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f60b27f5be0
+R13: 00007f60b4836038 R14: 00007f60b4835fa0 R15: 00007ffcc45ab330
+ </TASK>
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Write of size 4 at addr 0000000000000018 by task syz.5.460/14290
+CPU: 0 UID: 0 PID: 14290 Comm: syz.5.460 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0
+ kasan_report+0x130/0x170
+ kasan_check_range+0x264/0x2c0
+ _raw_spin_lock_irqsave+0x8f/0x100
+ go7007_snd_capture_open+0x69/0x110
+ snd_pcm_open_substream+0x1070/0x2420
+ snd_pcm_open+0x1ce/0x5e0
+ snd_pcm_capture_open+0x72/0xe0
+ chrdev_open+0x4cd/0x5e0
+ do_dentry_open+0x771/0x14d0
+ vfs_open+0x38/0x340
+ path_openat+0x2e26/0x37c0
+ do_file_open+0x23e/0x4a0
+ do_sys_openat2+0x113/0x200
+ __x64_sys_openat+0x138/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f60b45a62d5
+Code: 8b 55 d0 48 89 45 b0 75 a0 44 89 55 9c e8 e3 99 02 00 44 8b 55 9c 89 da 4c 89 e6 41 89 c0 bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 77 33 44 89 c7 89 45 9c e8 38 9a 02 00 8b 45 9c
+RSP: 002b:00007f60b27f5b40 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000200 RCX: 00007f60b45a62d5
+RDX: 0000000000000200 RSI: 00007f60b27f5be0 RDI: 00000000ffffff9c
+RBP: 00007f60b27f5bb0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f60b27f5be0
+R13: 00007f60b4836038 R14: 00007f60b4835fa0 R15: 00007ffcc45ab330
+ </TASK>
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

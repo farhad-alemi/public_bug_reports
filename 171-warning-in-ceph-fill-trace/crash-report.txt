@@ -1,0 +1,75 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+1
+WARNING: fs/ceph/inode.c:1632 at ceph_fill_trace+0x493/0x3a80 fs/ceph/inode.c:1632, CPU#1: kworker/1:5/11236
+Modules linked in:
+CPU: 1 UID: 0 PID: 11236 Comm: kworker/1:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: ceph-msgr ceph_con_workfn
+RIP: 0010:ceph_fill_trace+0x493/0x3a80 fs/ceph/inode.c:1632
+Code: 3e 24 00 00 8b 1b 45 31 f6 31 ff 89 de e8 85 37 8e fd 85 db 0f 84 f5 02 00 00 e8 38 33 8e fd e9 bb 0a 00 00 e8 2e 33 8e fd 90 <0f> 0b 90 45 31 f6 31 db 48 89 5c 24 10 48 8b 44 24 38 42 80 3c 28
+RSP: 0018:ffffc9002044ed80 EFLAGS: 00010293
+RAX: ffffffff8430941a RBX: 0000000000000000 RCX: ffff888107583600
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888122a23140
+RBP: ffffc9002044ef50 R08: ffffc9002044ee4f R09: 0000000000000000
+R10: ffffc9002044ee40 R11: fffff52004089dca R12: ffff888122a230c0
+R13: dffffc0000000000 R14: ffff888122911013 R15: ffff888122a23240
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d0dff8 CR3: 000000002508f000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ handle_reply fs/ceph/mds_client.c:4050 [inline]
+ mds_dispatch+0x4753/0x77d0 fs/ceph/mds_client.c:6384
+ ceph_con_process_message+0x14f/0x530 net/ceph/messenger.c:1425
+ ceph_con_v1_try_read+0x2f40/0x6f20 net/ceph/messenger_v1.c:1430
+ ceph_con_workfn+0x1f5/0x1440 net/ceph/messenger.c:1577
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 11236 Comm: kworker/1:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: ceph-msgr ceph_con_workfn
+RIP: 0010:ceph_fill_trace+0x493/0x3a80
+Code: 3e 24 00 00 8b 1b 45 31 f6 31 ff 89 de e8 85 37 8e fd 85 db 0f 84 f5 02 00 00 e8 38 33 8e fd e9 bb 0a 00 00 e8 2e 33 8e fd 90 <0f> 0b 90 45 31 f6 31 db 48 89 5c 24 10 48 8b 44 24 38 42 80 3c 28
+RSP: 0018:ffffc9002044ed80 EFLAGS: 00010293
+RAX: ffffffff8430941a RBX: 0000000000000000 RCX: ffff888107583600
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888122a23140
+RBP: ffffc9002044ef50 R08: ffffc9002044ee4f R09: 0000000000000000
+R10: ffffc9002044ee40 R11: fffff52004089dca R12: ffff888122a230c0
+R13: dffffc0000000000 R14: ffff888122911013 R15: ffff888122a23240
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d0dff8 CR3: 000000002508f000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mds_dispatch+0x4753/0x77d0
+ ceph_con_process_message+0x14f/0x530
+ ceph_con_v1_try_read+0x2f40/0x6f20
+ ceph_con_workfn+0x1f5/0x1440
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

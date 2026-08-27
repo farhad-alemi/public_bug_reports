@@ -1,0 +1,312 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+3 distinct call traces, each reproduced once.
+
+======================================================================
+[1/3]
+======================================================================
+
+smsc95xx 6-1:1.0 eth0: Error reading MII_ACCESS
+smsc95xx 6-1:1.0 eth0: smsc95xx_mdio_read: MII is busy
+------------[ cut here ]------------
+_phy_start_aneg+0x0/0x480: returned: -32
+WARNING: drivers/net/phy/phy.c:1352 at phy_error_precise drivers/net/phy/phy.c:1352 [inline], CPU#0: kworker/0:3/5063
+WARNING: drivers/net/phy/phy.c:1352 at _phy_state_machine+0x667/0xf20 drivers/net/phy/phy.c:1613, CPU#0: kworker/0:3/5063
+Modules linked in:
+CPU: 0 UID: 0 PID: 5063 Comm: kworker/0:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events_power_efficient phy_state_machine
+RIP: 0010:phy_error_precise drivers/net/phy/phy.c:1352 [inline]
+RIP: 0010:_phy_state_machine+0x66d/0xf20 drivers/net/phy/phy.c:1613
+Code: 89 64 5e fb 45 85 ed 78 14 e8 3f 60 5e fb 49 bd 00 00 00 00 00 fc ff df e9 8a 00 00 00 48 8d 3d 69 cc 52 09 4c 89 e6 44 89 ea <67> 48 0f b9 3a 49 8d be 40 05 00 00 e8 72 53 3c fb 84 c0 0f 84 fb
+RSP: 0018:ffffc900020cfae0 EFLAGS: 00010282
+RAX: ffffffff86606777 RBX: 1ffff92000419f64 RCX: 0000000000000000
+RDX: 00000000ffffffe0 RSI: ffffffff86603b50 RDI: ffffffff8fb33400
+RBP: ffffc900020cfbb8 R08: ffffc900020cf8e7 R09: 1ffff92000419f1c
+R10: dffffc0000000000 R11: fffff52000419f1d R12: ffffffff86603b50
+R13: 00000000ffffffe0 R14: ffff888026f7b000 R15: 0000000000000004
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000340 CR3: 000000010f238000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ phy_state_machine+0x2b/0x70 drivers/net/phy/phy.c:1652
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 64 5e fb          	mov    %esp,-0x5(%rsi,%rbx,2)
+   4:	45 85 ed             	test   %r13d,%r13d
+   7:	78 14                	js     0x1d
+   9:	e8 3f 60 5e fb       	call   0xfb5e604d
+   e:	49 bd 00 00 00 00 00 	movabs $0xdffffc0000000000,%r13
+  15:	fc ff df
+  18:	e9 8a 00 00 00       	jmp    0xa7
+  1d:	48 8d 3d 69 cc 52 09 	lea    0x952cc69(%rip),%rdi        # 0x952cc8d
+  24:	4c 89 e6             	mov    %r12,%rsi
+  27:	44 89 ea             	mov    %r13d,%edx
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	49 8d be 40 05 00 00 	lea    0x540(%r14),%rdi
+  36:	e8 72 53 3c fb       	call   0xfb3c53ad
+  3b:	84 c0                	test   %al,%al
+  3d:	0f                   	.byte 0xf
+  3e:	84 fb                	test   %bh,%bl
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 5063 Comm: kworker/0:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events_power_efficient phy_state_machine
+RIP: 0010:_phy_state_machine+0x66d/0xf20
+Code: 89 64 5e fb 45 85 ed 78 14 e8 3f 60 5e fb 49 bd 00 00 00 00 00 fc ff df e9 8a 00 00 00 48 8d 3d 69 cc 52 09 4c 89 e6 44 89 ea <67> 48 0f b9 3a 49 8d be 40 05 00 00 e8 72 53 3c fb 84 c0 0f 84 fb
+RSP: 0018:ffffc900020cfae0 EFLAGS: 00010282
+RAX: ffffffff86606777 RBX: 1ffff92000419f64 RCX: 0000000000000000
+RDX: 00000000ffffffe0 RSI: ffffffff86603b50 RDI: ffffffff8fb33400
+RBP: ffffc900020cfbb8 R08: ffffc900020cf8e7 R09: 1ffff92000419f1c
+R10: dffffc0000000000 R11: fffff52000419f1d R12: ffffffff86603b50
+R13: 00000000ffffffe0 R14: ffff888026f7b000 R15: 0000000000000004
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000340 CR3: 000000010f238000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ phy_state_machine+0x2b/0x70
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/3]
+======================================================================
+
+lan78xx 1-1:1.0 (unnamed net_device) (uninitialized): PHY [usb-001:006:01] driver [RTL8211DN Gigabit Ethernet] (irq=24)
+------------[ cut here ]------------
+called from state READY
+WARNING: drivers/net/phy/phy.c:1671 at phy_stop+0x218/0x6e0 drivers/net/phy/phy.c:1670, CPU#0: syz.0.129/14964
+Modules linked in:
+CPU: 0 UID: 0 PID: 14964 Comm: syz.0.129 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:phy_stop+0x3dd/0x6e0 drivers/net/phy/phy.c:1670
+Code: 1b 8c eb 23 e8 a4 53 5e fb 48 c7 c6 20 f4 1b 8c eb 15 e8 96 53 5e fb 48 c7 c6 e0 f3 1b 8c eb 07 e8 88 53 5e fb 31 f6 4c 89 f7 <67> 48 0f b9 3a 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 4b 75
+RSP: 0018:ffffc9000323fa60 EFLAGS: 00010283
+RAX: ffffffff866072bf RBX: 0000000000000001 RCX: 0000000000080000
+RDX: ffffc90034047000 RSI: ffffffff8c1bf380 RDI: ffffffff8fb33410
+RBP: dffffc0000000000 R08: ffff888035b8d100 R09: 0000000000000008
+R10: 0000000000000007 R11: 0000000000000002 R12: ffff88801bd613f8
+R13: ffff8880332ec000 R14: ffffffff8fb33410 R15: 0000000000000001
+FS:  00007fd782fd56c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000556d934483c0 CR3: 0000000118f32000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ phylink_stop+0x6a/0x290 drivers/net/phy/phylink.c:2507
+ lan78xx_disconnect+0x93/0x2c0 drivers/net/usb/lan78xx.c:4549
+ usb_unbind_interface+0x26e/0x910 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:621 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x4ce/0x860 drivers/base/dd.c:1375
+ unbind_store+0x1a1/0x1d0 drivers/base/bus.c:244
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd784da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd782fd5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fd785036090 RCX: 00007fd784da778d
+RDX: 0000000000000008 RSI: 0000200000000640 RDI: 0000000000000009
+RBP: 00007fd784e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fd785036128 R14: 00007fd785036090 R15: 00007ffffc20dd10
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	1b 8c eb 23 e8 a4 53 	sbb    0x53a4e823(%rbx,%rbp,8),%ecx
+   7:	5e                   	pop    %rsi
+   8:	fb                   	sti
+   9:	48 c7 c6 20 f4 1b 8c 	mov    $0xffffffff8c1bf420,%rsi
+  10:	eb 15                	jmp    0x27
+  12:	e8 96 53 5e fb       	call   0xfb5e53ad
+  17:	48 c7 c6 e0 f3 1b 8c 	mov    $0xffffffff8c1bf3e0,%rsi
+  1e:	eb 07                	jmp    0x27
+  20:	e8 88 53 5e fb       	call   0xfb5e53ad
+  25:	31 f6                	xor    %esi,%esi
+  27:	4c 89 f7             	mov    %r14,%rdi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	5b                   	pop    %rbx
+  34:	41 5c                	pop    %r12
+  36:	41 5d                	pop    %r13
+  38:	41 5e                	pop    %r14
+  3a:	41 5f                	pop    %r15
+  3c:	5d                   	pop    %rbp
+  3d:	e9                   	.byte 0xe9
+  3e:	4b                   	rex.WXB
+  3f:	75                   	.byte 0x75
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 14964 Comm: syz.0.129 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:phy_stop+0x3dd/0x6e0
+Code: 1b 8c eb 23 e8 a4 53 5e fb 48 c7 c6 20 f4 1b 8c eb 15 e8 96 53 5e fb 48 c7 c6 e0 f3 1b 8c eb 07 e8 88 53 5e fb 31 f6 4c 89 f7 <67> 48 0f b9 3a 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 4b 75
+RSP: 0018:ffffc9000323fa60 EFLAGS: 00010283
+RAX: ffffffff866072bf RBX: 0000000000000001 RCX: 0000000000080000
+RDX: ffffc90034047000 RSI: ffffffff8c1bf380 RDI: ffffffff8fb33410
+RBP: dffffc0000000000 R08: ffff888035b8d100 R09: 0000000000000008
+R10: 0000000000000007 R11: 0000000000000002 R12: ffff88801bd613f8
+R13: ffff8880332ec000 R14: ffffffff8fb33410 R15: 0000000000000001
+FS:  00007fd782fd56c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000556d934483c0 CR3: 0000000118f32000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ phylink_stop+0x6a/0x290
+ lan78xx_disconnect+0x93/0x2c0
+ usb_unbind_interface+0x26e/0x910
+ device_release_driver_internal+0x4ce/0x860
+ unbind_store+0x1a1/0x1d0
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd784da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd782fd5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fd785036090 RCX: 00007fd784da778d
+RDX: 0000000000000008 RSI: 0000200000000640 RDI: 0000000000000009
+RBP: 00007fd784e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fd785036128 R14: 00007fd785036090 R15: 00007ffffc20dd10
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/3]
+======================================================================
+
+usb 4-1: USB disconnect, device number 2
+------------[ cut here ]------------
+called from state READY
+WARNING: drivers/net/phy/phy.c:1671 at phy_stop+0x218/0x6e0 drivers/net/phy/phy.c:1670, CPU#0: kworker/0:1/10
+Modules linked in:
+CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:phy_stop+0x3dd/0x6e0 drivers/net/phy/phy.c:1670
+Code: 1b 8c eb 23 e8 a4 53 5e fb 48 c7 c6 20 f4 1b 8c eb 15 e8 96 53 5e fb 48 c7 c6 e0 f3 1b 8c eb 07 e8 88 53 5e fb 31 f6 4c 89 f7 <67> 48 0f b9 3a 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 4b 75
+RSP: 0018:ffffc900000d7480 EFLAGS: 00010287
+RAX: ffffffff866072bf RBX: 0000000000000001 RCX: 0000000000100000
+RDX: ffffc900263af000 RSI: ffffffff8c1bf380 RDI: ffffffff8fb33410
+RBP: dffffc0000000000 R08: ffff88801568b600 R09: 0000000000000008
+R10: 0000000000000007 R11: 0000000000000002 R12: ffff8880217a03f8
+R13: ffff888023878000 R14: ffffffff8fb33410 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff17229b685 CR3: 0000000108070000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ phylink_stop+0x6a/0x290 drivers/net/phy/phylink.c:2507
+ lan78xx_disconnect+0x93/0x2c0 drivers/net/usb/lan78xx.c:4549
+ usb_unbind_interface+0x26e/0x910 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:621 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x4ce/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ usb_disable_device+0x3d4/0x8d0 drivers/usb/core/message.c:1478
+ usb_disconnect+0x32d/0x980 drivers/usb/core/hub.c:2345
+ hub_port_connect drivers/usb/core/hub.c:5407 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x1cbc/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	1b 8c eb 23 e8 a4 53 	sbb    0x53a4e823(%rbx,%rbp,8),%ecx
+   7:	5e                   	pop    %rsi
+   8:	fb                   	sti
+   9:	48 c7 c6 20 f4 1b 8c 	mov    $0xffffffff8c1bf420,%rsi
+  10:	eb 15                	jmp    0x27
+  12:	e8 96 53 5e fb       	call   0xfb5e53ad
+  17:	48 c7 c6 e0 f3 1b 8c 	mov    $0xffffffff8c1bf3e0,%rsi
+  1e:	eb 07                	jmp    0x27
+  20:	e8 88 53 5e fb       	call   0xfb5e53ad
+  25:	31 f6                	xor    %esi,%esi
+  27:	4c 89 f7             	mov    %r14,%rdi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	5b                   	pop    %rbx
+  34:	41 5c                	pop    %r12
+  36:	41 5d                	pop    %r13
+  38:	41 5e                	pop    %r14
+  3a:	41 5f                	pop    %r15
+  3c:	5d                   	pop    %rbp
+  3d:	e9                   	.byte 0xe9
+  3e:	4b                   	rex.WXB
+  3f:	75                   	.byte 0x75
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:phy_stop+0x3dd/0x6e0
+Code: 1b 8c eb 23 e8 a4 53 5e fb 48 c7 c6 20 f4 1b 8c eb 15 e8 96 53 5e fb 48 c7 c6 e0 f3 1b 8c eb 07 e8 88 53 5e fb 31 f6 4c 89 f7 <67> 48 0f b9 3a 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 4b 75
+RSP: 0018:ffffc900000d7480 EFLAGS: 00010287
+RAX: ffffffff866072bf RBX: 0000000000000001 RCX: 0000000000100000
+RDX: ffffc900263af000 RSI: ffffffff8c1bf380 RDI: ffffffff8fb33410
+RBP: dffffc0000000000 R08: ffff88801568b600 R09: 0000000000000008
+R10: 0000000000000007 R11: 0000000000000002 R12: ffff8880217a03f8
+R13: ffff888023878000 R14: ffffffff8fb33410 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff17229b685 CR3: 0000000108070000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ phylink_stop+0x6a/0x290
+ lan78xx_disconnect+0x93/0x2c0
+ usb_unbind_interface+0x26e/0x910
+ device_release_driver_internal+0x4ce/0x860
+ bus_remove_device+0x451/0x570
+ device_del+0x4bf/0x860
+ usb_disable_device+0x3d4/0x8d0
+ usb_disconnect+0x32d/0x980
+ hub_event+0x1cbc/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

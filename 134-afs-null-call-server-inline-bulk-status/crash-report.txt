@@ -1,0 +1,6 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+BUG: KASAN: null-ptr-deref in afs_done_fs_inline_bulk_status+0xb9/0x180
+Write of size 8 at addr 00000000000000e8 by task syz.0.17/10557
+-> Kernel panic - not syncing: KASAN: panic_on_warn set

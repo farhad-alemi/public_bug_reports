@@ -1,0 +1,1402 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+10 distinct call traces, each reproduced once.
+
+======================================================================
+[1/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (6/0)
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#1: kworker/1:3/10687
+Modules linked in:
+CPU: 1 UID: 0 PID: 10687 Comm: kworker/1:3 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc90008f0ecf0 EFLAGS: 00010287
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90032b89000 RSI: 0000000000043959 RDI: 000000000004395a
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88812633a840 R15: ffff88812633aac8
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3c498069e0 CR3: 000000010f25f000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+CPU: 1 UID: 0 PID: 10687 Comm: kworker/1:3 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc90008f0ecf0 EFLAGS: 00010287
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90032b89000 RSI: 0000000000043959 RDI: 000000000004395a
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88812633a840 R15: ffff88812633aac8
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3c498069e0 CR3: 000000010f25f000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (6/0)
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#1: kworker/1:4/11091
+Modules linked in:
+CPU: 1 UID: 0 PID: 11091 Comm: kworker/1:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc9002053ecf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc9002e4d6000 RSI: 000000000003ef5c RDI: 000000000003ef5d
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88810c4e7040 R15: ffff88810c4e72c8
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055556ba7a808 CR3: 000000011a0da000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 11091 Comm: kworker/1:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc9002053ecf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc9002e4d6000 RSI: 000000000003ef5c RDI: 000000000003ef5d
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88810c4e7040 R15: ffff88810c4e72c8
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055556ba7a808 CR3: 000000011a0da000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#0: kworker/0:1/10
+Modules linked in:
+CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc900000d6cf0 EFLAGS: 00010287
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90032092000 RSI: 0000000000093171 RDI: 0000000000093172
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88804143a840 R15: ffff88804143aac8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f993c065da0 CR3: 0000000014aa9000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc900000d6cf0 EFLAGS: 00010287
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90032092000 RSI: 0000000000093171 RDI: 0000000000093172
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88804143a840 R15: ffff88804143aac8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f993c065da0 CR3: 0000000014aa9000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (6/0)
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#0: kworker/0:5/11046
+Modules linked in:
+CPU: 0 UID: 0 PID: 11046 Comm: kworker/0:5 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc90008d46cf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90033331000 RSI: 00000000000531eb RDI: 00000000000531ec
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff8880377ab040 R15: ffff8880377ab2c8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555558884808 CR3: 00000000262d9000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+CPU: 0 UID: 0 PID: 11046 Comm: kworker/0:5 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc90008d46cf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90033331000 RSI: 00000000000531eb RDI: 00000000000531ec
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff8880377ab040 R15: ffff8880377ab2c8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555558884808 CR3: 00000000262d9000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (6/0)
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#0: kworker/0:7/11106
+Modules linked in:
+CPU: 0 UID: 0 PID: 11106 Comm: kworker/0:7 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0000:ffffc90005986cf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc900328bb000 RSI: 0000000000040a9c RDI: 0000000000040a9d
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff888028a8a040 R15: ffff888028a8a2c8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9b90160300 CR3: 000000010b777000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[6/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (6/0)
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#1: kworker/1:1/46
+Modules linked in:
+CPU: 1 UID: 0 PID: 46 Comm: kworker/1:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc9000073ecf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90030d59000 RSI: 0000000000041e78 RDI: 0000000000041e79
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88810e07a840 R15: ffff88810e07aac8
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe49b7bafe8 CR3: 0000000114b49000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 46 Comm: kworker/1:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc9000073ecf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90030d59000 RSI: 0000000000041e78 RDI: 0000000000041e79
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88810e07a840 R15: ffff88810e07aac8
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe49b7bafe8 CR3: 0000000114b49000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[7/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (6/0)
+dvb-usb: bulk message failed: -71 (9/0)
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#0: kworker/0:4/10914
+Modules linked in:
+CPU: 0 UID: 0 PID: 10914 Comm: kworker/0:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0000:ffffc90020cbecf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90031ddc000 RSI: 00000000000448e9 RDI: 00000000000448ea
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88812be4d040 R15: ffff88812be4d2c8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f77229af000 CR3: 0000000026d2a000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 10914 Comm: kworker/0:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0000:ffffc90020cbecf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc90031ddc000 RSI: 00000000000448e9 RDI: 00000000000448ea
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88812be4d040 R15: ffff88812be4d2c8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f77229af000 CR3: 0000000026d2a000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[8/10]
+======================================================================
+
+dvb-usb: bulk message failed: -71 (9/0)
+------------[ cut here ]------------
+1
+WARNING: drivers/media/i2c/cx25840/cx25840-core.c:2313 at cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313, CPU#0: kworker/0:5/11102
+Modules linked in:
+CPU: 0 UID: 0 PID: 11102 Comm: kworker/0:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110 drivers/media/i2c/cx25840/cx25840-core.c:2313
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc9000f2d6cf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc900333a3000 RSI: 000000000004517b RDI: 000000000004517c
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff888027a80840 R15: ffff888027a80ac8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000200b1000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog_subdevs drivers/media/usb/dvb-usb/cxusb-analog.c:1730 [inline]
+ cxusb_medion_register_analog+0x2fa/0x1110 drivers/media/usb/dvb-usb/cxusb-analog.c:1793
+ cxusb_probe+0x664/0x710 drivers/media/usb/dvb-usb/cxusb.c:1615
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 11102 Comm: kworker/0:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cx25840_init+0xa3/0x110
+Code: 74 02 00 00 4c 89 f0 48 c1 e8 03 42 0f b6 04 20 84 c0 75 5e 41 c7 06 2a b5 2a 01 89 de e8 95 66 00 00 eb 09 e8 de df 0b fa 90 <0f> 0b 90 31 c0 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc 89 f9 80
+RSP: 0018:ffffc9000f2d6cf0 EFLAGS: 00010283
+RAX: ffffffff87b2e7e2 RBX: 00000000000ac8aa RCX: 0000000000100000
+RDX: ffffc900333a3000 RSI: 000000000004517b RDI: 000000000004517c
+RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: ffffffff87b2e740 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff888027a80840 R15: ffff888027a80ac8
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000200b1000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cxusb_medion_register_analog+0x2fa/0x1110
+ cxusb_probe+0x664/0x710
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[9/10]
+======================================================================
+
+videodev: could not get a free minor
+cx231xx 3-1:1.1: unable to register video device (error=-23).
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+BUG: KASAN: slab-use-after-free in atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+BUG: KASAN: slab-use-after-free in __mutex_trylock_fast kernel/locking/mutex.c:161 [inline]
+BUG: KASAN: slab-use-after-free in mutex_lock+0x90/0x100 kernel/locking/mutex.c:318
+Write of size 8 at addr ffff88810c409118 by task syz.2.72/12468
+
+CPU: 0 UID: 0 PID: 12468 Comm: syz.2.72 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+ atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+ __mutex_trylock_fast kernel/locking/mutex.c:161 [inline]
+ mutex_lock+0x90/0x100 kernel/locking/mutex.c:318
+ media_device_unregister_entity+0x4a/0x70 drivers/media/mc/mc-device.c:676
+ v4l2_device_unregister_subdev+0x28a/0x400 drivers/media/v4l2-core/v4l2-device.c:287
+ cx25840_remove+0x46/0x60 drivers/media/i2c/cx25840/cx25840-core.c:3987
+ i2c_device_remove+0x88/0x220 drivers/i2c/i2c-core-base.c:630
+ device_remove drivers/base/dd.c:619 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x464/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ device_unregister+0x21/0xf0 drivers/base/core.c:3936
+ __unregister_client+0x72/0x90 drivers/i2c/i2c-core-base.c:1729
+ device_for_each_child+0x10b/0x1a0 drivers/base/core.c:4035
+ i2c_del_adapter+0x36e/0x6b0 drivers/i2c/i2c-core-base.c:1792
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1512 [inline]
+ cx231xx_usb_probe+0x1127/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0689da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f068ad3a018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f068a036090 RCX: 00007f0689da778d
+RDX: 0000000000000016 RSI: 0000200000000a40 RDI: 0000000000000006
+RBP: 00007f0689e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f068a036128 R14: 00007f068a036090 R15: 00007ffc66dc3350
+ </TASK>
+
+Allocated by task 12468 on cpu 1 at 85.847156s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ cx231xx_media_device_init drivers/media/usb/cx231xx/cx231xx-cards.c:1382 [inline]
+ cx231xx_usb_probe+0x7ab/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1802
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 12468 on cpu 0 at 86.220192s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ cx231xx_unregister_media_device drivers/media/usb/cx231xx/cx231xx-cards.c:1345 [inline]
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1508 [inline]
+ cx231xx_usb_probe+0x10a6/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88810c409000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 280 bytes inside of
+ freed 1024-byte region [ffff88810c409000, ffff88810c409400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10c408
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 39, tgid 39 (kworker/u10:2), ts 78967638748, free_ts 78811588965
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ cleanup_offline_cgwb+0x65/0x440 fs/fs-writeback.c:728
+ cleanup_offline_cgwbs_workfn+0x2bc/0x5e0 mm/backing-dev.c:913
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+page last free pid 11065 tgid 11065 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ __kmalloc_cache_noprof+0x202/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ usb_control_msg+0x73/0x3e0 drivers/usb/core/message.c:157
+ get_port_status drivers/usb/core/hub.c:607 [inline]
+ hub_ext_port_status+0x114/0x820 drivers/usb/core/hub.c:624
+ usb_hub_port_status drivers/usb/core/hub.c:674 [inline]
+ port_event drivers/usb/core/hub.c:5761 [inline]
+ hub_event+0x76a/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88810c409000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88810c409080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88810c409100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff88810c409180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88810c409200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[10/10]
+======================================================================
+
+videodev: could not get a free minor
+cx231xx 1-1:1.1: unable to register video device (error=-23).
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+BUG: KASAN: slab-use-after-free in atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+BUG: KASAN: slab-use-after-free in __mutex_trylock_fast kernel/locking/mutex.c:161 [inline]
+BUG: KASAN: slab-use-after-free in mutex_lock+0x90/0x100 kernel/locking/mutex.c:318
+Write of size 8 at addr ffff888111189118 by task syz.4.51/12759
+
+CPU: 0 UID: 0 PID: 12759 Comm: syz.4.51 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+ atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4456 [inline]
+ __mutex_trylock_fast kernel/locking/mutex.c:161 [inline]
+ mutex_lock+0x90/0x100 kernel/locking/mutex.c:318
+ media_device_unregister_entity+0x4a/0x70 drivers/media/mc/mc-device.c:676
+ v4l2_device_unregister_subdev+0x28a/0x400 drivers/media/v4l2-core/v4l2-device.c:287
+ cx25840_remove+0x46/0x60 drivers/media/i2c/cx25840/cx25840-core.c:3987
+ i2c_device_remove+0x88/0x220 drivers/i2c/i2c-core-base.c:630
+ device_remove drivers/base/dd.c:619 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x464/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ device_unregister+0x21/0xf0 drivers/base/core.c:3936
+ __unregister_client+0x72/0x90 drivers/i2c/i2c-core-base.c:1729
+ device_for_each_child+0x10b/0x1a0 drivers/base/core.c:4035
+ i2c_del_adapter+0x36e/0x6b0 drivers/i2c/i2c-core-base.c:1792
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1512 [inline]
+ cx231xx_usb_probe+0x1127/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6c11da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6c0ffd5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6c12036090 RCX: 00007f6c11da778d
+RDX: 0000000000000008 RSI: 00002000000004c0 RDI: 0000000000000005
+RBP: 00007f6c11e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6c12036128 R14: 00007f6c12036090 R15: 00007ffd2dd241d0
+ </TASK>
+
+Allocated by task 12759 on cpu 1 at 79.895446s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ cx231xx_media_device_init drivers/media/usb/cx231xx/cx231xx-cards.c:1382 [inline]
+ cx231xx_usb_probe+0x7ab/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1802
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 12759 on cpu 0 at 80.242216s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ cx231xx_unregister_media_device drivers/media/usb/cx231xx/cx231xx-cards.c:1345 [inline]
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1508 [inline]
+ cx231xx_usb_probe+0x10a6/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888111189000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 280 bytes inside of
+ freed 1024-byte region [ffff888111189000, ffff888111189400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x111188
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 11251, tgid 11251 (syz.0.1), ts 67400608492, free_ts 64474039299
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ cgwb_create mm/backing-dev.c:693 [inline]
+ wb_get_create+0x2bc/0x1000 mm/backing-dev.c:829
+ wb_get_create_current include/linux/backing-dev.h:235 [inline]
+ balance_dirty_pages_ratelimited_flags+0x88c/0xe30 mm/page-writeback.c:2055
+ fault_dirty_shared_page+0x383/0x450 mm/memory.c:3741
+ do_shared_fault mm/memory.c:6001 [inline]
+ do_fault mm/memory.c:6047 [inline]
+ do_pte_missing+0xe12/0x3120 mm/memory.c:4566
+ handle_pte_fault mm/memory.c:6427 [inline]
+ __handle_mm_fault mm/memory.c:6565 [inline]
+ handle_mm_fault+0x1187/0x2dc0 mm/memory.c:6734
+ do_user_addr_fault+0x754/0x1310 arch/x86/mm/fault.c:1385
+ handle_page_fault arch/x86/mm/fault.c:1474 [inline]
+ exc_page_fault+0x6a/0xb0 arch/x86/mm/fault.c:1527
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:618
+page last free pid 9434 tgid 9434 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ __kmalloc_cache_noprof+0x202/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ ref_tracker_alloc+0x15a/0x4c0 lib/ref_tracker.c:270
+ register_netdevice+0x13b2/0x1a90 net/core/dev.c:11447
+ nsim_init_netdevsim drivers/net/netdevsim/netdev.c:1069 [inline]
+ nsim_create+0x929/0xd60 drivers/net/netdevsim/netdev.c:1151
+ __nsim_dev_port_add+0x7f1/0xc90 drivers/net/netdevsim/dev.c:1509
+ nsim_dev_port_add_all+0x37/0xf0 drivers/net/netdevsim/dev.c:1570
+ nsim_drv_probe+0x8fe/0xc40 drivers/net/netdevsim/dev.c:1731
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+
+Memory state around the buggy address:
+ ffff888111189000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888111189080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888111189100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff888111189180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888111189200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 11251, tgid 11251 (syz.0.1), ts 67400608492, free_ts 64474039299
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_noprof+0x2c3/0x560
+ wb_get_create+0x2bc/0x1000
+ balance_dirty_pages_ratelimited_flags+0x88c/0xe30
+ fault_dirty_shared_page+0x383/0x450
+ do_pte_missing+0xe12/0x3120
+ handle_mm_fault+0x1187/0x2dc0
+ do_user_addr_fault+0x754/0x1310
+ exc_page_fault+0x6a/0xb0
+ asm_exc_page_fault+0x26/0x30
+page last free pid 9434 tgid 9434 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ __kmalloc_cache_noprof+0x202/0x560
+ ref_tracker_alloc+0x15a/0x4c0
+ register_netdevice+0x13b2/0x1a90
+ nsim_create+0x929/0xd60
+ __nsim_dev_port_add+0x7f1/0xc90
+ nsim_dev_port_add_all+0x37/0xf0
+ nsim_drv_probe+0x8fe/0xc40
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+Memory state around the buggy address:
+ ffff888111189000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888111189080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888111189100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff888111189180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888111189200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

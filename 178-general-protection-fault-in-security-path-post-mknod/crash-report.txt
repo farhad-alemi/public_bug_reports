@@ -1,0 +1,85 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+2 distinct call traces.
+
+======================================================================
+[1/2]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 11515 Comm: syz.4.37 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:security_path_post_mknod+0x49/0x1e0 security/security.c:1430
+Code: 75 fd 4c 8d 7b 30 4c 89 f8 48 c1 e8 03 42 80 3c 20 00 74 08 4c 89 ff e8 35 87 dc fd 4d 8b 3f 49 83 c7 04 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 93 00 00 00 41 8b 2f 89 ee 81 e6 00 02
+RSP: 0018:ffffc90007917db0 EFLAGS: 00010247
+RAX: 0000000000000000 RBX: ffff8880288ba600 RCX: 0000000000080000
+RDX: ffffc900234d3000 RSI: 00000000000006f2 RDI: 00000000000006f3
+RBP: ffffc90007917ea8 R08: 0000000022c0d327 R09: 00000000bcdcf2bb
+R10: 000000000000000a R11: ffffffff81aac100 R12: dffffc0000000000
+R13: dffffc0000000000 R14: ffffffff8e4394e0 R15: 0000000000000004
+FS:  00007fcd3ea786c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f33f2f8b320 CR3: 000000004077d000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ filename_mknodat+0x40e/0x660 fs/namei.c:5172
+ __do_sys_mknod fs/namei.c:5207 [inline]
+ __se_sys_mknod+0x3a/0x150 fs/namei.c:5204
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fcd3dba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fcd3ea78018 EFLAGS: 00000246 ORIG_RAX: 0000000000000085
+RAX: ffffffffffffffda RBX: 00007fcd3de35fa0 RCX: 00007fcd3dba778d
+RDX: 0000000000000000 RSI: 00000000000001a4 RDI: 0000200000001a80
+RBP: 00007fcd3dc4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fcd3de36038 R14: 00007fcd3de35fa0 R15: 00007ffcdb9998f0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[2/2]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 14137 Comm: syz.5.370 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:security_path_post_mknod+0x49/0x1e0 security/security.c:1430
+Code: 75 fd 4c 8d 7b 30 4c 89 f8 48 c1 e8 03 42 80 3c 20 00 74 08 4c 89 ff e8 35 87 dc fd 4d 8b 3f 49 83 c7 04 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 93 00 00 00 41 8b 2f 89 ee 81 e6 00 02
+RSP: 0018:ffffc90001e4fdb0 EFLAGS: 00010247
+RAX: 0000000000000000 RBX: ffff88802a5e2c00 RCX: 0000000000080000
+RDX: ffffc90024933000 RSI: 00000000000008cf RDI: 00000000000008d0
+RBP: ffffc90001e4fea8 R08: 000000003eb2de24 R09: 000000003ca7ccbf
+R10: 000000000000000a R11: ffffffff81aac100 R12: dffffc0000000000
+R13: dffffc0000000000 R14: ffffffff8e4394e0 R15: 0000000000000004
+FS:  00007f5d46f986c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000001000 CR3: 0000000123bab000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ filename_mknodat+0x40e/0x660 fs/namei.c:5172
+ __do_sys_mknodat fs/namei.c:5201 [inline]
+ __se_sys_mknodat+0x3b/0x150 fs/namei.c:5197
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5d461a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5d46f98018 EFLAGS: 00000246 ORIG_RAX: 0000000000000103
+RAX: ffffffffffffffda RBX: 00007f5d46436090 RCX: 00007f5d461a778d
+RDX: 0000000000000100 RSI: 0000200000000000 RDI: 0000000000000007
+RBP: 00007f5d4624eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5d46436128 R14: 00007f5d46436090 R15: 00007ffef10f8f40
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

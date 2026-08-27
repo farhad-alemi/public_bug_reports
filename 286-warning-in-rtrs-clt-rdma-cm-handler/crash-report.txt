@@ -1,0 +1,76 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+!clt_path->queue_depth
+WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:1695 at create_con_cq_qp drivers/infiniband/ulp/rtrs/rtrs-clt.c:1695 [inline], CPU#1: kworker/u8:3/10333
+WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:1695 at rtrs_rdma_addr_resolved drivers/infiniband/ulp/rtrs/rtrs-clt.c:1778 [inline], CPU#1: kworker/u8:3/10333
+WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:1695 at rtrs_clt_rdma_cm_handler+0x18fe/0x1fa0 drivers/infiniband/ulp/rtrs/rtrs-clt.c:1986, CPU#1: kworker/u8:3/10333
+Modules linked in:
+CPU: 1 UID: 0 PID: 10333 Comm: kworker/u8:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: ib_addr process_one_req
+RIP: 0010:create_con_cq_qp drivers/infiniband/ulp/rtrs/rtrs-clt.c:1695 [inline]
+RIP: 0010:rtrs_rdma_addr_resolved drivers/infiniband/ulp/rtrs/rtrs-clt.c:1778 [inline]
+RIP: 0010:rtrs_clt_rdma_cm_handler+0x18fe/0x1fa0 drivers/infiniband/ulp/rtrs/rtrs-clt.c:1986
+Code: ea 48 8b 4c 24 10 4d 89 f8 e8 ee 04 89 f8 eb bc e8 c7 34 20 f9 90 0f 0b 90 41 bf ea ff ff ff e9 5f fd ff ff e8 b3 34 20 f9 90 <0f> 0b 90 41 bf ea ff ff ff e9 4b fd ff ff e8 9f 34 20 f9 90 0f 0b
+RSP: 0018:ffffc90032def7c0 EFLAGS: 00010293
+RAX: ffffffff889e930d RBX: dffffc0000000000 RCX: ffff888025040000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90032def958 R08: ffffc90032def747 R09: 1ffff920065bdee8
+R10: dffffc0000000000 R11: fffff520065bdee9 R12: 0000000000000000
+R13: ffff88810739d780 R14: ffff888118b273d8 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000006000 CR3: 0000000117482000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cma_cm_event_handler+0x4d/0x290 drivers/infiniband/core/cma.c:2181
+ addr_handler+0x325/0x750 drivers/infiniband/core/cma.c:3550
+ process_one_req+0x2f3/0x540 drivers/infiniband/core/addr.c:624
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 10333 Comm: kworker/u8:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: ib_addr process_one_req
+RIP: 0010:rtrs_clt_rdma_cm_handler+0x18fe/0x1fa0
+Code: ea 48 8b 4c 24 10 4d 89 f8 e8 ee 04 89 f8 eb bc e8 c7 34 20 f9 90 0f 0b 90 41 bf ea ff ff ff e9 5f fd ff ff e8 b3 34 20 f9 90 <0f> 0b 90 41 bf ea ff ff ff e9 4b fd ff ff e8 9f 34 20 f9 90 0f 0b
+RSP: 0018:ffffc90032def7c0 EFLAGS: 00010293
+RAX: ffffffff889e930d RBX: dffffc0000000000 RCX: ffff888025040000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90032def958 R08: ffffc90032def747 R09: 1ffff920065bdee8
+R10: dffffc0000000000 R11: fffff520065bdee9 R12: 0000000000000000
+R13: ffff88810739d780 R14: ffff888118b273d8 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000006000 CR3: 0000000117482000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ cma_cm_event_handler+0x4d/0x290
+ addr_handler+0x325/0x750
+ process_one_req+0x2f3/0x540
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

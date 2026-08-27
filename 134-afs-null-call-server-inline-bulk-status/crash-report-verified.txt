@@ -1,0 +1,137 @@
+Recovered console capture for 134-afs-null-call-server-inline-bulk-status
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: log names afs_done_fs_inline_bulk_status, a crash site of the entry.
+Source log: console_try-134-afs-null-call-server-inline-bulk-sta-cand3.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   51.054141][ T9497] ==================================================================
+[   51.055146][ T9497] BUG: KASAN: null-ptr-deref in afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.056989][ T9497] Write of size 8 at addr 00000000000001a8 by task repro/9497
+[   51.057872][ T9497] 
+[   51.058171][ T9497] CPU: 0 UID: 0 PID: 9497 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.058182][ T9497] Tainted: [W]=WARN
+[   51.058185][ T9497] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.058194][ T9497] Call Trace:
+[   51.058200][ T9497]  <TASK>
+[   51.058203][ T9497]  dump_stack_lvl+0xe8/0x150
+[   51.058213][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.058222][ T9497]  kasan_report+0x117/0x150
+[   51.058231][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.058241][ T9497]  kasan_check_range+0x264/0x2c0
+[   51.058250][ T9497]  afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.058259][ T9497]  ? __pfx_afs_done_fs_inline_bulk_status+0x10/0x10
+[   51.058267][ T9497]  afs_deliver_to_call+0xbf6/0xfc0
+[   51.058276][ T9497]  ? __pfx_afs_deliver_to_call+0x10/0x10
+[   51.058283][ T9497]  ? schedule+0x90/0x2b0
+[   51.059038][ T9497]  ? schedule+0x16e/0x2b0
+[   51.059045][ T9497]  afs_wait_for_call_to_complete+0x2de/0xb00
+[   51.059054][ T9497]  ? afs_wait_for_call_to_complete+0x16a/0xb00
+[   51.059062][ T9497]  ? __pfx_afs_wait_for_call_to_complete+0x10/0x10
+[   51.059070][ T9497]  ? __pfx_default_wake_function+0x10/0x10
+[   51.059082][ T9497]  ? trace_afs_call+0x8a/0x230
+[   51.059088][ T9497]  ? afs_put_call+0x114/0x180
+[   51.059095][ T9497]  afs_wait_for_operation+0x244/0x8d0
+[   51.059106][ T9497]  afs_lookup+0x1245/0x1700
+[   51.059116][ T9497]  ? __pfx_afs_lookup+0x10/0x10
+[   51.059123][ T9497]  ? __pfx_d_alloc_parallel+0x10/0x10
+[   51.059134][ T9497]  ? lookup_slow+0x46/0x70
+[   51.059146][ T9497]  __lookup_slow+0x1fb/0x2f0
+[   51.059155][ T9497]  lookup_slow+0x53/0x70
+[   51.059164][ T9497]  path_lookupat+0x3f5/0x8c0
+[   51.059175][ T9497]  filename_lookup+0x256/0x5d0
+[   51.059185][ T9497]  ? __pfx_filename_lookup+0x10/0x10
+[   51.059196][ T9497]  ? __might_fault+0xaf/0x130
+[   51.059208][ T9497]  vfs_statx+0xfc/0x200
+[   51.059216][ T9497]  ? __pfx_vfs_statx+0x10/0x10
+[   51.059223][ T9497]  ? strncpy_from_user+0x150/0x2b0
+[   51.059235][ T9497]  ? do_getname+0x151/0x250
+[   51.059243][ T9497]  vfs_fstatat+0x11b/0x170
+[   51.059251][ T9497]  __x64_sys_newfstatat+0x151/0x200
+[   51.059259][ T9497]  ? __pfx___x64_sys_newfstatat+0x10/0x10
+[   51.059270][ T9497]  ? __pfx_ksys_write+0x10/0x10
+[   51.059282][ T9497]  do_syscall_64+0x155/0x510
+[   51.059290][ T9497]  ? trace_irq_disable+0x3b/0x140
+[   51.059298][ T9497]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.059306][ T9497]  ? clear_bhb_loop+0x30/0x80
+[   51.059314][ T9497]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.059321][ T9497] RIP: 0033:0x474bce
+[   51.059331][ T9497] Code: 30 24 03 00 48 8d 3d d6 54 03 00 e8 9c 23 f9 ff 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 41 89 ca b8 06 01 00 00 0f 05 <3d> 00 f0 ff ff 77 0b 31 c0 c3 0f 1f 84 00 00 00 00 00 48 c7 c2 e8
+[   51.059341][ T9497] RSP: 002b:00007ffe40f385d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000106
+[   51.059353][ T9497] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000474bce
+[   51.059358][ T9497] RDX: 00007ffe40f38600 RSI: 00007ffe40f38790 RDI: 00000000ffffff9c
+[   51.059363][ T9497] RBP: 00007ffe40f389a0 R08: 00007ffe40f384b0 R09: 000000000000001a
+[   51.059368][ T9497] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe40f38ac8
+[   51.059373][ T9497] R13: 00007ffe40f38ad8 R14: 0000000000000002 R15: 00000000004cea40
+[   51.059380][ T9497]  </TASK>
+[   51.059383][ T9497] ==================================================================
+[   51.103993][ T9497] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   51.104959][ T9497] CPU: 0 UID: 0 PID: 9497 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.106573][ T9497] Tainted: [W]=WARN
+[   51.107081][ T9497] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.108595][ T9497] Call Trace:
+[   51.109035][ T9497]  <TASK>
+[   51.109426][ T9497]  vpanic+0x56d/0xa60
+[   51.109964][ T9497]  ? __pfx_vpanic+0x10/0x10
+[   51.110561][ T9497]  panic+0xc5/0xd0
+[   51.111063][ T9497]  ? __pfx_panic+0x10/0x10
+[   51.111681][ T9497]  ? preempt_schedule_thunk+0x16/0x40
+[   51.112482][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.113324][ T9497]  ? preempt_schedule_thunk+0x16/0x40
+[   51.114023][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.114820][ T9497]  check_panic_on_warn+0x89/0xb0
+[   51.115571][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.116394][ T9497]  end_report+0x73/0x170
+[   51.116976][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.117821][ T9497]  kasan_report+0x128/0x150
+[   51.118414][ T9497]  ? afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.119220][ T9497]  kasan_check_range+0x264/0x2c0
+[   51.119875][ T9497]  afs_done_fs_inline_bulk_status+0xb4/0x180
+[   51.120655][ T9497]  ? __pfx_afs_done_fs_inline_bulk_status+0x10/0x10
+[   51.121520][ T9497]  afs_deliver_to_call+0xbf6/0xfc0
+[   51.122213][ T9497]  ? __pfx_afs_deliver_to_call+0x10/0x10
+[   51.122983][ T9497]  ? schedule+0x90/0x2b0
+[   51.123549][ T9497]  ? schedule+0x16e/0x2b0
+[   51.124152][ T9497]  afs_wait_for_call_to_complete+0x2de/0xb00
+[   51.124965][ T9497]  ? afs_wait_for_call_to_complete+0x16a/0xb00
+[   51.125870][ T9497]  ? __pfx_afs_wait_for_call_to_complete+0x10/0x10
+[   51.126766][ T9497]  ? __pfx_default_wake_function+0x10/0x10
+[   51.127544][ T9497]  ? trace_afs_call+0x8a/0x230
+[   51.128204][ T9497]  ? afs_put_call+0x114/0x180
+[   51.128848][ T9497]  afs_wait_for_operation+0x244/0x8d0
+[   51.129596][ T9497]  afs_lookup+0x1245/0x1700
+[   51.130213][ T9497]  ? __pfx_afs_lookup+0x10/0x10
+[   51.130876][ T9497]  ? __pfx_d_alloc_parallel+0x10/0x10
+[   51.131578][ T9497]  ? lookup_slow+0x46/0x70
+[   51.132196][ T9497]  __lookup_slow+0x1fb/0x2f0
+[   51.132852][ T9497]  lookup_slow+0x53/0x70
+[   51.133426][ T9497]  path_lookupat+0x3f5/0x8c0
+[   51.134034][ T9497]  filename_lookup+0x256/0x5d0
+[   51.134697][ T9497]  ? __pfx_filename_lookup+0x10/0x10
+[   51.135481][ T9497]  ? __might_fault+0xaf/0x130
+[   51.136122][ T9497]  vfs_statx+0xfc/0x200
+[   51.136680][ T9497]  ? __pfx_vfs_statx+0x10/0x10
+[   51.137333][ T9497]  ? strncpy_from_user+0x150/0x2b0
+[   51.138039][ T9497]  ? do_getname+0x151/0x250
+[   51.138692][ T9497]  vfs_fstatat+0x11b/0x170
+[   51.139286][ T9497]  __x64_sys_newfstatat+0x151/0x200
+[   51.139986][ T9497]  ? __pfx___x64_sys_newfstatat+0x10/0x10
+[   51.140771][ T9497]  ? __pfx_ksys_write+0x10/0x10
+[   51.141423][ T9497]  do_syscall_64+0x155/0x510
+[   51.142031][ T9497]  ? trace_irq_disable+0x3b/0x140
+[   51.142687][ T9497]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.143524][ T9497]  ? clear_bhb_loop+0x30/0x80
+[   51.144177][ T9497]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.144988][ T9497] RIP: 0033:0x474bce
+[   51.145596][ T9497] Code: 30 24 03 00 48 8d 3d d6 54 03 00 e8 9c 23 f9 ff 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 41 89 ca b8 06 01 00 00 0f 05 <3d> 00 f0 ff ff 77 0b 31 c0 c3 0f 1f 84 00 00 00 00 00 48 c7 c2 e8
+[   51.148203][ T9497] RSP: 002b:00007ffe40f385d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000106
+[   51.149343][ T9497] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000474bce
+[   51.150408][ T9497] RDX: 00007ffe40f38600 RSI: 00007ffe40f38790 RDI: 00000000ffffff9c
+[   51.151432][ T9497] RBP: 00007ffe40f389a0 R08: 00007ffe40f384b0 R09: 000000000000001a
+[   51.152491][ T9497] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe40f38ac8
+[   51.153589][ T9497] R13: 00007ffe40f38ad8 R14: 0000000000000002 R15: 00000000004cea40
+[   51.154690][ T9497]  </TASK>
+[   51.155336][ T9497] Kernel Offset: disabled
+[   51.155932][ T9497] Rebooting in 86400 seconds..

@@ -1,0 +1,1992 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+19 distinct call traces.
+
+======================================================================
+[1/19]
+======================================================================
+
+greybus 1-2.2: DDBL1 Manufacturer=0x00000126, Product=0x00001000
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88810a9ead70 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:3/10201
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:3/10201
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:3/10201
+Modules linked in:
+CPU: 1 UID: 0 PID: 10201 Comm: kworker/u8:3 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000362f730 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b56da0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88810a9ead70 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88810a9eadc0
+R13: ffffffff8fb18ba0 R14: ffff88810a9ea000 R15: ffff88810a9ead70
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005584baf80588 CR3: 0000000019bc4000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_dme_peer_get+0x10a/0x250 drivers/greybus/svc.c:428
+ gb_interface_read_and_clear_init_status drivers/greybus/interface.c:380 [inline]
+ gb_interface_enable+0x146/0x900 drivers/greybus/interface.c:1075
+ gb_module_register_interface drivers/greybus/module.c:162 [inline]
+ gb_module_add+0x1b3/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 10201 Comm: kworker/u8:3 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000362f730 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b56da0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88810a9ead70 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88810a9eadc0
+R13: ffffffff8fb18ba0 R14: ffff88810a9ea000 R15: ffff88810a9ead70
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005584baf80588 CR3: 0000000019bc4000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_dme_peer_get+0x10a/0x250
+ gb_interface_enable+0x146/0x900
+ gb_module_add+0x1b3/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/19]
+======================================================================
+
+greybus 1-2.2: DDBL1 Manufacturer=0x00000126, Product=0x00000126
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888036332970 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:3/10774
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:3/10774
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:3/10774
+Modules linked in:
+CPU: 0 UID: 0 PID: 10774 Comm: kworker/u8:3 Tainted: G     U              7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900339ef730 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b5b3f0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888036332970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8880363329c0
+R13: ffffffff8fb18ba0 R14: ffff888036332000 R15: ffff888036332970
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d1eff8 CR3: 0000000024695000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_dme_peer_set+0x10c/0x210 drivers/greybus/svc.c:463
+ gb_interface_read_and_clear_init_status drivers/greybus/interface.c:434 [inline]
+ gb_interface_enable+0x270/0x900 drivers/greybus/interface.c:1075
+ gb_module_register_interface drivers/greybus/module.c:162 [inline]
+ gb_module_add+0x1b3/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 10774 Comm: kworker/u8:3 Tainted: G     U              7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [U]=USER
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900339ef730 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b5b3f0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888036332970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8880363329c0
+R13: ffffffff8fb18ba0 R14: ffff888036332000 R15: ffff888036332970
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d1eff8 CR3: 0000000024695000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_dme_peer_set+0x10c/0x210
+ gb_interface_enable+0x270/0x900
+ gb_module_add+0x1b3/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888027b4a970 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:0/12
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:0/12
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:0/12
+Modules linked in:
+CPU: 0 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:0 gb_operation_work
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900000f78f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b37870 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888027b4a970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888027b4a9c0
+R13: ffffffff8fb18ba0 R14: ffff888027b4a000 R15: ffff888027b4a970
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000ff1008 CR3: 0000000021012000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_pwrmon_rail_count_get drivers/greybus/svc.c:137 [inline]
+ gb_svc_pwrmon_debugfs_init drivers/greybus/svc.c:772 [inline]
+ gb_svc_debugfs_init drivers/greybus/svc.c:827 [inline]
+ gb_svc_hello drivers/greybus/svc.c:875 [inline]
+ gb_svc_request_handler+0x1023/0x1a90 drivers/greybus/svc.c:1276
+ gb_operation_request_handle drivers/greybus/operation.c:243 [inline]
+ gb_operation_work+0xf3/0x9d0 drivers/greybus/operation.c:280
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:0 gb_operation_work
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900000f78f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b37870 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888027b4a970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888027b4a9c0
+R13: ffffffff8fb18ba0 R14: ffff888027b4a000 R15: ffff888027b4a970
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000ff1008 CR3: 0000000021012000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_request_handler+0x1023/0x1a90
+ gb_operation_work+0xf3/0x9d0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[4/19]
+======================================================================
+
+greybus greybus1: 1/2:0: failed to set connected state: -110
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88812dc0f370 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:4/11074
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:4/11074
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:4/11074
+Modules linked in:
+CPU: 1 UID: 0 PID: 11074 Comm: kworker/u8:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90033b9f5f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b2d0b0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88812dc0f370 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88812dc0f3c0
+R13: ffffffff8fb18ba0 R14: ffff88812dc0f000 R15: ffff88812dc0f370
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000558e73ec9168 CR3: 0000000026cd6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_connection_destroy+0xeb/0x180 drivers/greybus/svc.c:512
+ gb_connection_svc_connection_destroy drivers/greybus/connection.c:444 [inline]
+ _gb_connection_enable+0x764/0xbc0 drivers/greybus/connection.c:728
+ gb_connection_enable_tx+0x7b/0x1e0 drivers/greybus/connection.c:771
+ gb_control_enable+0xa5/0x5a0 drivers/greybus/control.c:485
+ gb_interface_enable+0x2cb/0x900 drivers/greybus/interface.c:1090
+ gb_module_register_interface drivers/greybus/module.c:162 [inline]
+ gb_module_add+0x1b3/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 11074 Comm: kworker/u8:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90033b9f5f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b2d0b0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88812dc0f370 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88812dc0f3c0
+R13: ffffffff8fb18ba0 R14: ffff88812dc0f000 R15: ffff88812dc0f370
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000558e73ec9168 CR3: 0000000026cd6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_connection_destroy+0xeb/0x180
+ _gb_connection_enable+0x764/0xbc0
+ gb_connection_enable_tx+0x7b/0x1e0
+ gb_control_enable+0xa5/0x5a0
+ gb_interface_enable+0x2cb/0x900
+ gb_module_add+0x1b3/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[5/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff8880179e2670 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:0/12
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:0/12
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:0/12
+Modules linked in:
+CPU: 0 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0000:ffffc900000f77b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b35760 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff8880179e2670 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8880179e26c0
+R13: ffffffff8fb18ba0 R14: ffff8880179e2000 R15: ffff8880179e2670
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000fe0000 CR3: 000000002781a000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_refclk_set+0xcd/0x150 drivers/greybus/svc.c:329
+ gb_interface_refclk_set drivers/greybus/interface.c:848 [inline]
+ _gb_interface_activate+0x19c/0x830 drivers/greybus/interface.c:931
+ _gb_interface_activate_es3_hack drivers/greybus/interface.c:990 [inline]
+ gb_interface_activate+0x8f/0x250 drivers/greybus/interface.c:1013
+ gb_module_register_interface drivers/greybus/module.c:146 [inline]
+ gb_module_add+0x128/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0000:ffffc900000f77b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b35760 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff8880179e2670 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8880179e26c0
+R13: ffffffff8fb18ba0 R14: ffff8880179e2000 R15: ffff8880179e2670
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000fe0000 CR3: 000000002781a000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_intf_refclk_set+0xcd/0x150
+ _gb_interface_activate+0x19c/0x830
+ gb_interface_activate+0x8f/0x250
+ gb_module_add+0x128/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[6/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888014747a70 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:0/12
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:0/12
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:0/12
+Modules linked in:
+CPU: 0 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900000f7950 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b5dcd0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888014747a70 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888014747ac0
+R13: ffffffff8fb18ba0 R14: ffff888014747000 R15: ffff888014747a70
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f01acff8000 CR3: 000000011206c000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_set_power_mode drivers/greybus/svc.c:584 [inline]
+ gb_svc_process_hello_deferred drivers/greybus/svc.c:936 [inline]
+ gb_svc_process_deferred_request+0x5f3/0x1150 drivers/greybus/svc.c:1102
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900000f7950 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b5dcd0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888014747a70 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888014747ac0
+R13: ffffffff8fb18ba0 R14: ffff888014747000 R15: ffff888014747a70
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f01acff8000 CR3: 000000011206c000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_process_deferred_request+0x5f3/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[7/19]
+======================================================================
+
+greybus 1-svc: power mode change failed on AP to switch link: -5
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888114ddb670 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:4/10900
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:4/10900
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:4/10900
+Modules linked in:
+CPU: 1 UID: 0 PID: 10900 Comm: kworker/u8:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900327477b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b45ac0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888114ddb670 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888114ddb6c0
+R13: ffffffff8fb18ba0 R14: ffff888114ddb000 R15: ffff888114ddb670
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8137a3c000 CR3: 000000011495d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_vsys_set+0xcd/0x150 drivers/greybus/svc.c:306
+ gb_interface_vsys_set drivers/greybus/interface.c:832 [inline]
+ _gb_interface_activate+0x123/0x830 drivers/greybus/interface.c:927
+ _gb_interface_activate_es3_hack drivers/greybus/interface.c:990 [inline]
+ gb_interface_activate+0x8f/0x250 drivers/greybus/interface.c:1013
+ gb_module_register_interface drivers/greybus/module.c:146 [inline]
+ gb_module_add+0x128/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 10900 Comm: kworker/u8:4 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900327477b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b45ac0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888114ddb670 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888114ddb6c0
+R13: ffffffff8fb18ba0 R14: ffff888114ddb000 R15: ffff888114ddb670
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8137a3c000 CR3: 000000011495d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_intf_vsys_set+0xcd/0x150
+ _gb_interface_activate+0x123/0x830
+ gb_interface_activate+0x8f/0x250
+ gb_module_add+0x128/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[8/19]
+======================================================================
+
+greybus 1-svc: power mode change failed on AP to switch link: -5
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88813839c370 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:2/8992
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:2/8992
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:2/8992
+Modules linked in:
+CPU: 1 UID: 0 PID: 8992 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900080ff770 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b57cd0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88813839c370 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88813839c3c0
+R13: ffffffff8fb18ba0 R14: ffff88813839c000 R15: ffff88813839c370
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000564337575cd8 CR3: 0000000130e7f000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_device_id+0xbc/0x100 drivers/greybus/svc.c:266
+ gb_interface_route_create+0xc8/0x220 drivers/greybus/interface.c:142
+ _gb_interface_activate+0x420/0x830 drivers/greybus/interface.c:954
+ _gb_interface_activate_es3_hack drivers/greybus/interface.c:990 [inline]
+ gb_interface_activate+0x8f/0x250 drivers/greybus/interface.c:1013
+ gb_module_register_interface drivers/greybus/module.c:146 [inline]
+ gb_module_add+0x128/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 8992 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900080ff770 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b57cd0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88813839c370 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88813839c3c0
+R13: ffffffff8fb18ba0 R14: ffff88813839c000 R15: ffff88813839c370
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000564337575cd8 CR3: 0000000130e7f000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_intf_device_id+0xbc/0x100
+ gb_interface_route_create+0xc8/0x220
+ _gb_interface_activate+0x420/0x830
+ gb_interface_activate+0x8f/0x250
+ gb_module_add+0x128/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[9/19]
+======================================================================
+
+greybus 1-2: failed to enable interface 2: -110
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88801f7b0270 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:6/14742
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:6/14742
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:6/14742
+Modules linked in:
+CPU: 0 UID: 0 PID: 14742 Comm: kworker/u8:6 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000531f7f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b5bb10 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88801f7b0270 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88801f7b02c0
+R13: ffffffff8fb18ba0 R14: ffff88801f7b0000 R15: ffff88801f7b0270
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2e5b5fa000 CR3: 000000013705d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_refclk_set+0xcd/0x150 drivers/greybus/svc.c:329
+ gb_interface_refclk_set drivers/greybus/interface.c:848 [inline]
+ gb_interface_deactivate+0x2f7/0x7b0 drivers/greybus/interface.c:1055
+ gb_module_register_interface drivers/greybus/module.c:174 [inline]
+ gb_module_add+0x1a9/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 14742 Comm: kworker/u8:6 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000531f7f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b5bb10 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88801f7b0270 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88801f7b02c0
+R13: ffffffff8fb18ba0 R14: ffff88801f7b0000 R15: ffff88801f7b0270
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2e5b5fa000 CR3: 000000013705d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_intf_refclk_set+0xcd/0x150
+ gb_interface_deactivate+0x2f7/0x7b0
+ gb_module_add+0x1a9/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[10/19]
+======================================================================
+
+greybus 1-2.2: failed to enable interface: -32
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88802f891070 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: syz.3.1207/23661
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: syz.3.1207/23661
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: syz.3.1207/23661
+Modules linked in:
+CPU: 0 UID: 0 PID: 23661 Comm: syz.3.1207 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000298f910 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b39920 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88802f891070 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88802f8910c0
+R13: ffffffff8fb18ba0 R14: ffff88802f891000 R15: ffff88802f891070
+FS:  00007fa04fff46c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff3afe37dac CR3: 000000002e807000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_route_destroy+0xcc/0x150 drivers/greybus/svc.c:544
+ gb_interface_route_destroy drivers/greybus/interface.c:179 [inline]
+ gb_interface_deactivate+0x17b/0x7b0 drivers/greybus/interface.c:1052
+ power_state_store+0x204/0x240 drivers/greybus/interface.c:552
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa0521a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa04fff4018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fa052436270 RCX: 00007fa0521a778d
+RDX: 0000000000000001 RSI: 00002000000003c0 RDI: 0000000000000005
+RBP: 00007fa05224eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fa052436308 R14: 00007fa052436270 R15: 00007ffc3ee9a810
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 23661 Comm: syz.3.1207 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000298f910 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b39920 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88802f891070 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88802f8910c0
+R13: ffffffff8fb18ba0 R14: ffff88802f891000 R15: ffff88802f891070
+FS:  00007fa04fff46c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff3afe37dac CR3: 000000002e807000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_route_destroy+0xcc/0x150
+ gb_interface_deactivate+0x17b/0x7b0
+ power_state_store+0x204/0x240
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa0521a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa04fff4018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fa052436270 RCX: 00007fa0521a778d
+RDX: 0000000000000001 RSI: 00002000000003c0 RDI: 0000000000000005
+RBP: 00007fa05224eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fa052436308 R14: 00007fa052436270 R15: 00007ffc3ee9a810
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[11/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff8881165f9970 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:3/10667
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:3/10667
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:3/10667
+Modules linked in:
+CPU: 1 UID: 0 PID: 10667 Comm: kworker/u8:3 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900213ef690 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b56310 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff8881165f9970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8881165f99c0
+R13: ffffffff8fb18ba0 R14: ffff8881165f9000 R15: ffff8881165f9970
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b31d23ffc CR3: 000000002224b000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_dme_peer_get+0x10a/0x250 drivers/greybus/svc.c:428
+ gb_interface_dme_attr_get drivers/greybus/interface.c:51 [inline]
+ gb_interface_read_dme+0x136/0x750 drivers/greybus/interface.c:101
+ _gb_interface_activate+0x28b/0x830 drivers/greybus/interface.c:950
+ _gb_interface_activate_es3_hack drivers/greybus/interface.c:990 [inline]
+ gb_interface_activate+0x8f/0x250 drivers/greybus/interface.c:1013
+ gb_module_register_interface drivers/greybus/module.c:146 [inline]
+ gb_module_add+0x128/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 10667 Comm: kworker/u8:3 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900213ef690 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b56310 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff8881165f9970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8881165f99c0
+R13: ffffffff8fb18ba0 R14: ffff8881165f9000 R15: ffff8881165f9970
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b31d23ffc CR3: 000000002224b000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_dme_peer_get+0x10a/0x250
+ gb_interface_read_dme+0x136/0x750
+ _gb_interface_activate+0x28b/0x830
+ gb_interface_activate+0x8f/0x250
+ gb_module_add+0x128/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[12/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888114fb9770 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:2/8972
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:2/8972
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:2/8972
+Modules linked in:
+CPU: 1 UID: 0 PID: 8972 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90020ef7770 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b2ac60 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888114fb9770 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888114fb97c0
+R13: ffffffff8fb18ba0 R14: ffff888114fb9000 R15: ffff888114fb9770
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30913ff8 CR3: 000000002a376000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_control_get_manifest_size_operation+0xd8/0x170 drivers/greybus/control.c:110
+ gb_interface_enable+0x358/0x900 drivers/greybus/interface.c:1095
+ gb_module_register_interface drivers/greybus/module.c:162 [inline]
+ gb_module_add+0x1b3/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 8972 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90020ef7770 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b2ac60 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888114fb9770 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888114fb97c0
+R13: ffffffff8fb18ba0 R14: ffff888114fb9000 R15: ffff888114fb9770
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30913ff8 CR3: 000000002a376000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_control_get_manifest_size_operation+0xd8/0x170
+ gb_interface_enable+0x358/0x900
+ gb_module_add+0x1b3/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[13/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888024dc0770 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: syz.7.271/15256
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: syz.7.271/15256
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: syz.7.271/15256
+Modules linked in:
+CPU: 0 UID: 0 PID: 15256 Comm: syz.7.271 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90001e6f950 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b3a1a0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888024dc0770 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888024dc07c0
+R13: ffffffff8fb18ba0 R14: ffff888024dc0000 R15: ffff888024dc0770
+FS:  00007fd25b5a56c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005555782669e8 CR3: 0000000019b15000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_control_bundle_deactivate+0xd7/0x200 drivers/greybus/control.c:272
+ greybus_remove+0x273/0x460 drivers/greybus/core.c:280
+ device_remove drivers/base/dd.c:619 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x464/0x860 drivers/base/dd.c:1375
+ unbind_store+0x1a1/0x1d0 drivers/base/bus.c:244
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd25a7a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd25b5a5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fd25aa36180 RCX: 00007fd25a7a778d
+RDX: 0000000000000007 RSI: 0000200000000f80 RDI: 0000000000000007
+RBP: 00007fd25a84eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fd25aa36218 R14: 00007fd25aa36180 R15: 00007ffe995fa190
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 15256 Comm: syz.7.271 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90001e6f950 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b3a1a0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff888024dc0770 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff888024dc07c0
+R13: ffffffff8fb18ba0 R14: ffff888024dc0000 R15: ffff888024dc0770
+FS:  00007fd25b5a56c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005555782669e8 CR3: 0000000019b15000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_control_bundle_deactivate+0xd7/0x200
+ greybus_remove+0x273/0x460
+ device_release_driver_internal+0x464/0x860
+ unbind_store+0x1a1/0x1d0
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd25a7a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd25b5a5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fd25aa36180 RCX: 00007fd25a7a778d
+RDX: 0000000000000007 RSI: 0000200000000f80 RDI: 0000000000000007
+RBP: 00007fd25a84eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fd25aa36218 R14: 00007fd25aa36180 R15: 00007ffe995fa190
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[14/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88812e1fd070 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:3/10312
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:3/10312
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:3/10312
+Modules linked in:
+CPU: 1 UID: 0 PID: 10312 Comm: kworker/u8:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:0 gb_operation_work
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000684f8f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b61ce0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88812e1fd070 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88812e1fd0c0
+R13: ffffffff8fb18ba0 R14: ffff88812e1fd000 R15: ffff88812e1fd070
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000ff1008 CR3: 000000001cbdd000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_pwrmon_rail_count_get drivers/greybus/svc.c:137 [inline]
+ gb_svc_pwrmon_debugfs_init drivers/greybus/svc.c:772 [inline]
+ gb_svc_debugfs_init drivers/greybus/svc.c:827 [inline]
+ gb_svc_hello drivers/greybus/svc.c:875 [inline]
+ gb_svc_request_handler+0x1023/0x1a90 drivers/greybus/svc.c:1276
+ gb_operation_request_handle drivers/greybus/operation.c:243 [inline]
+ gb_operation_work+0xf3/0x9d0 drivers/greybus/operation.c:280
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[15/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88802affe770 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:2/9237
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:2/9237
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:2/9237
+Modules linked in:
+CPU: 0 UID: 0 PID: 9237 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9002046f7b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b56980 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88802affe770 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88802affe7c0
+R13: ffffffff8fb18ba0 R14: ffff88802affe000 R15: ffff88802affe770
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000ff4000 CR3: 0000000110f92000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_vsys_set+0xcd/0x150 drivers/greybus/svc.c:306
+ gb_interface_vsys_set drivers/greybus/interface.c:832 [inline]
+ _gb_interface_activate+0x123/0x830 drivers/greybus/interface.c:927
+ _gb_interface_activate_es3_hack drivers/greybus/interface.c:990 [inline]
+ gb_interface_activate+0x8f/0x250 drivers/greybus/interface.c:1013
+ gb_module_register_interface drivers/greybus/module.c:146 [inline]
+ gb_module_add+0x128/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 9237 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9002046f7b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b56980 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88802affe770 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88802affe7c0
+R13: ffffffff8fb18ba0 R14: ffff88802affe000 R15: ffff88802affe770
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000ff4000 CR3: 0000000110f92000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_intf_vsys_set+0xcd/0x150
+ _gb_interface_activate+0x123/0x830
+ gb_interface_activate+0x8f/0x250
+ gb_module_add+0x128/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[16/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff8880434c9570 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: syz.6.1084/18231
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: syz.6.1084/18231
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: syz.6.1084/18231
+Modules linked in:
+CPU: 0 UID: 0 PID: 18231 Comm: syz.6.1084 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90004a776f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b33f90 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff8880434c9570 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8880434c95c0
+R13: ffffffff8fb18ba0 R14: ffff8880434c9000 R15: ffff8880434c9570
+FS:  00007ffb2210e6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b33220ff8 CR3: 0000000055044000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_control_bundle_suspend+0xd7/0x200 drivers/greybus/control.c:222
+ gb_bundle_suspend+0x180/0x280 drivers/greybus/bundle.c:122
+ __rpm_callback+0x3dd/0xa50 drivers/base/power/runtime.c:406
+ rpm_callback drivers/base/power/runtime.c:460 [inline]
+ rpm_suspend+0x7e5/0x1790 drivers/base/power/runtime.c:698
+ __pm_runtime_idle+0x117/0x2a0 drivers/base/power/runtime.c:1129
+ pm_runtime_put_sync include/linux/pm_runtime.h:679 [inline]
+ __device_release_driver drivers/base/dd.c:1350 [inline]
+ device_release_driver_internal+0x3af/0x860 drivers/base/dd.c:1375
+ unbind_store+0x1a1/0x1d0 drivers/base/bus.c:244
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ffb211a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffb2210e018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ffb21436090 RCX: 00007ffb211a778d
+RDX: 0000000000000007 RSI: 0000200000001080 RDI: 0000000000000006
+RBP: 00007ffb2124eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ffb21436128 R14: 00007ffb21436090 R15: 00007ffc113b8c00
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 18231 Comm: syz.6.1084 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90004a776f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b33f90 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff8880434c9570 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff8880434c95c0
+R13: ffffffff8fb18ba0 R14: ffff8880434c9000 R15: ffff8880434c9570
+FS:  00007ffb2210e6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b33220ff8 CR3: 0000000055044000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_control_bundle_suspend+0xd7/0x200
+ gb_bundle_suspend+0x180/0x280
+ __rpm_callback+0x3dd/0xa50
+ rpm_suspend+0x7e5/0x1790
+ __pm_runtime_idle+0x117/0x2a0
+ device_release_driver_internal+0x3af/0x860
+ unbind_store+0x1a1/0x1d0
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ffb211a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffb2210e018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ffb21436090 RCX: 00007ffb211a778d
+RDX: 0000000000000007 RSI: 0000200000001080 RDI: 0000000000000006
+RBP: 00007ffb2124eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ffb21436128 R14: 00007ffb21436090 R15: 00007ffc113b8c00
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[17/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88812e3aeb70 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: kworker/u8:1/13
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: kworker/u8:1/13
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: kworker/u8:1/13
+Modules linked in:
+CPU: 1 UID: 0 PID: 13 Comm: kworker/u8:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900001075f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b3ad90 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88812e3aeb70 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88812e3aebc0
+R13: ffffffff8fb18ba0 R14: ffff88812e3ae000 R15: ffff88812e3aeb70
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f15b6a8e001 CR3: 000000001d3bb000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_connection_create+0xf4/0x140 drivers/greybus/svc.c:496
+ gb_connection_svc_connection_create drivers/greybus/connection.c:422 [inline]
+ _gb_connection_enable+0x2f6/0xbc0 drivers/greybus/connection.c:691
+ gb_connection_enable_tx+0x7b/0x1e0 drivers/greybus/connection.c:771
+ gb_control_enable+0xa5/0x5a0 drivers/greybus/control.c:485
+ gb_interface_enable+0x2cb/0x900 drivers/greybus/interface.c:1090
+ gb_module_register_interface drivers/greybus/module.c:162 [inline]
+ gb_module_add+0x1b3/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 13 Comm: kworker/u8:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc900001075f0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b3ad90 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88812e3aeb70 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88812e3aebc0
+R13: ffffffff8fb18ba0 R14: ffff88812e3ae000 R15: ffff88812e3aeb70
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f15b6a8e001 CR3: 000000001d3bb000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_connection_create+0xf4/0x140
+ _gb_connection_enable+0x2f6/0xbc0
+ gb_connection_enable_tx+0x7b/0x1e0
+ gb_control_enable+0xa5/0x5a0
+ gb_interface_enable+0x2cb/0x900
+ gb_module_add+0x1b3/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[18/19]
+======================================================================
+
+greybus 1-2.2: failed to enable interface: -32
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88813b83d870 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#1: syz.0.447/18277
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#1: syz.0.447/18277
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#1: syz.0.447/18277
+Modules linked in:
+CPU: 1 UID: 0 PID: 18277 Comm: syz.0.447 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90006bff8b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b26660 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88813b83d870 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88813b83d8c0
+R13: ffffffff8fb18ba0 R14: ffff88813b83d000 R15: ffff88813b83d870
+FS:  00007fce74fb46c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f84e7f30000 CR3: 000000011fcd6000 CR4: 0000000000752ff0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_svc_intf_set_power_mode_hibernate+0x12b/0x220 drivers/greybus/svc.c:614
+ gb_interface_hibernate_link drivers/greybus/interface.c:914 [inline]
+ gb_interface_deactivate+0x229/0x7b0 drivers/greybus/interface.c:1053
+ power_state_store+0x204/0x240 drivers/greybus/interface.c:552
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fce741a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fce74fb4018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fce74436090 RCX: 00007fce741a778d
+RDX: 0000000000000001 RSI: 00002000000003c0 RDI: 0000000000000009
+RBP: 00007fce7424eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fce74436128 R14: 00007fce74436090 R15: 00007ffe6f0afa90
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 18277 Comm: syz.0.447 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc90006bff8b0 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b26660 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88813b83d870 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88813b83d8c0
+R13: ffffffff8fb18ba0 R14: ffff88813b83d000 R15: ffff88813b83d870
+FS:  00007fce74fb46c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f84e7f30000 CR3: 000000011fcd6000 CR4: 0000000000752ff0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_svc_intf_set_power_mode_hibernate+0x12b/0x220
+ gb_interface_deactivate+0x229/0x7b0
+ power_state_store+0x204/0x240
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fce741a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fce74fb4018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fce74436090 RCX: 00007fce741a778d
+RDX: 0000000000000001 RSI: 00002000000003c0 RDI: 0000000000000009
+RBP: 00007fce7424eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fce74436128 R14: 00007fce74436090 R15: 00007ffe6f0afa90
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[19/19]
+======================================================================
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff88801cfe2970 object type: timer_list hint: gb_operation_timeout+0x0/0x100 drivers/greybus/operation.c:1265
+WARNING: lib/debugobjects.c:632 at debug_print_object lib/debugobjects.c:629 [inline], CPU#0: kworker/u8:2/9239
+WARNING: lib/debugobjects.c:632 at __debug_check_no_obj_freed lib/debugobjects.c:1126 [inline], CPU#0: kworker/u8:2/9239
+WARNING: lib/debugobjects.c:632 at debug_check_no_obj_freed+0x3fd/0x540 lib/debugobjects.c:1156, CPU#0: kworker/u8:2/9239
+Modules linked in:
+CPU: 0 UID: 0 PID: 9239 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_print_object lib/debugobjects.c:629 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:1126 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540 lib/debugobjects.c:1156
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000361f750 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b4cbd0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88801cfe2970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88801cfe29c0
+R13: ffffffff8fb18ba0 R14: ffff88801cfe2000 R15: ffff88801cfe2970
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd599a7a490 CR3: 0000000031c41000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ slab_free_hook mm/slub.c:2620 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kmem_cache_free+0xcb/0x4d0 mm/slub.c:6378
+ gb_operation_sync_timeout+0x1c7/0x270 drivers/greybus/operation.c:1172
+ gb_operation_sync include/linux/greybus/operation.h:203 [inline]
+ gb_control_get_version drivers/greybus/control.c:28 [inline]
+ gb_control_enable+0x148/0x5a0 drivers/greybus/control.c:493
+ gb_interface_enable+0x2cb/0x900 drivers/greybus/interface.c:1090
+ gb_module_register_interface drivers/greybus/module.c:162 [inline]
+ gb_module_add+0x1b3/0x3d0 drivers/greybus/module.c:209
+ gb_svc_process_module_inserted drivers/greybus/svc.c:992 [inline]
+ gb_svc_process_deferred_request+0x8c6/0x1150 drivers/greybus/svc.c:1105
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 20          	mov    %eax,0x20(%rsp)
+   4:	e8 ef 12 84 fd       	call   0xfd8412f8
+   9:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   e:	4c 8b 4d 00          	mov    0x0(%rbp),%r9
+  12:	4c 89 ef             	mov    %r13,%rdi
+  15:	48 c7 c6 20 5d e1 8b 	mov    $0xffffffff8be15d20,%rsi
+  1c:	48 c7 c2 60 61 e1 8b 	mov    $0xffffffff8be16160,%rdx
+  23:	8b 0c 24             	mov    (%rsp),%ecx
+  26:	4d 89 f8             	mov    %r15,%r8
+  29:	50                   	push   %rax
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	48 83 c4 08          	add    $0x8,%rsp
+  33:	4c 8b 6c 24 18       	mov    0x18(%rsp),%r13
+  38:	48                   	rex.W
+  39:	b9 00 00 00 00       	mov    $0x0,%ecx
+  3e:	00 fc                	add    %bh,%ah
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 9239 Comm: kworker/u8:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: greybus1:svc gb_svc_process_deferred_request
+RIP: 0010:debug_check_no_obj_freed+0x442/0x540
+Code: 89 44 24 20 e8 ef 12 84 fd 48 8b 44 24 20 4c 8b 4d 00 4c 89 ef 48 c7 c6 20 5d e1 8b 48 c7 c2 60 61 e1 8b 8b 0c 24 4d 89 f8 50 <67> 48 0f b9 3a 48 83 c4 08 4c 8b 6c 24 18 48 b9 00 00 00 00 00 fc
+RSP: 0018:ffffc9000361f750 EFLAGS: 00010246
+RAX: ffffffff88deea90 RBX: ffffffff92b4cbd0 RCX: 0000000000000000
+RDX: ffffffff8be16160 RSI: ffffffff8be15d20 RDI: ffffffff8fb18ba0
+RBP: ffffffff8b8dcd20 R08: ffff88801cfe2970 R09: ffffffff8b8dde60
+R10: dffffc0000000000 R11: ffffffff81ac0340 R12: ffff88801cfe29c0
+R13: ffffffff8fb18ba0 R14: ffff88801cfe2000 R15: ffff88801cfe2970
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd599a7a490 CR3: 0000000031c41000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ kmem_cache_free+0xcb/0x4d0
+ gb_operation_sync_timeout+0x1c7/0x270
+ gb_control_enable+0x148/0x5a0
+ gb_interface_enable+0x2cb/0x900
+ gb_module_add+0x1b3/0x3d0
+ gb_svc_process_deferred_request+0x8c6/0x1150
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

@@ -1,0 +1,130 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+bochs-drm 0000:00:01.0: [drm] drm_WARN_ON(refcount_read(&shmem->vmap_use_count))
+WARNING: drivers/gpu/drm/drm_gem_shmem_helper.c:177 at drm_gem_shmem_release+0x2d2/0x6d0 drivers/gpu/drm/drm_gem_shmem_helper.c:177, CPU#1: syz.1.397/14947
+Modules linked in:
+CPU: 1 UID: 0 PID: 14947 Comm: syz.1.397 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:drm_gem_shmem_release+0x5bb/0x6d0 drivers/gpu/drm/drm_gem_shmem_helper.c:177
+Code: 89 e8 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 ef e8 8a 71 d4 fc 49 8b 6d 00 48 8b 3c 24 4c 89 e6 48 89 ea 48 c7 c1 40 2d f6 8b <67> 48 0f b9 3a 4d 89 fd e9 23 fb ff ff e8 63 07 6d fc 4c 89 e8 48
+RSP: 0018:ffffc900074d7998 EFLAGS: 00010246
+RAX: 1ffff11020c23c1a RBX: ffff888019ce3c00 RCX: ffffffff8bf62d40
+RDX: ffff888105527450 RSI: ffffffff8c09a780 RDI: ffffffff8fb217d0
+RBP: ffff888105527450 R08: ffff888019ce3db3 R09: 1ffff1100339c7b6
+R10: dffffc0000000000 R11: ffffed100339c7b7 R12: ffffffff8c09a780
+R13: ffff88810611e0d0 R14: ffff888019ce3d00 R15: dffffc0000000000
+FS:  00007f3863b516c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000002040 CR3: 000000010e287000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ drm_gem_shmem_free drivers/gpu/drm/drm_gem_shmem_helper.c:207 [inline]
+ drm_gem_shmem_object_free+0x15/0x20 include/drm/drm_gem_shmem_helper.h:161
+ kref_put include/linux/kref.h:65 [inline]
+ __drm_gem_object_put include/drm/drm_gem.h:562 [inline]
+ drm_gem_object_put include/drm/drm_gem.h:575 [inline]
+ drm_client_buffer_delete+0x189/0x2d0 drivers/gpu/drm/drm_client.c:201
+ drm_fbdev_shmem_fb_destroy+0xac/0xd0 drivers/gpu/drm/drm_fbdev_shmem.c:67
+ put_fb_info drivers/video/fbdev/core/fbmem.c:61 [inline]
+ do_unregister_framebuffer drivers/video/fbdev/core/fbmem.c:561 [inline]
+ unregister_framebuffer+0x2bd/0x3b0 drivers/video/fbdev/core/fbmem.c:606
+ drm_client_dev_unregister+0x223/0x2d0 drivers/gpu/drm/drm_client_event.c:46
+ drm_dev_unregister+0x44/0x730 drivers/gpu/drm/drm_drv.c:1155
+ drm_dev_unplug+0x45/0xa0 drivers/gpu/drm/drm_drv.c:497
+ bochs_pci_remove+0x3e/0x50 drivers/gpu/drm/tiny/bochs.c:785
+ pci_device_remove+0xa3/0x250 drivers/pci/pci-driver.c:512
+ device_remove drivers/base/dd.c:619 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x464/0x860 drivers/base/dd.c:1375
+ unbind_store+0x1a1/0x1d0 drivers/base/bus.c:244
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3862ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3863b51018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3862e35fa0 RCX: 00007f3862ba778d
+RDX: 000000000000000d RSI: 0000200000002080 RDI: 0000000000000003
+RBP: 00007f3862c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3862e36038 R14: 00007f3862e35fa0 R15: 00007ffe822f5b60
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	89 e8                	mov    %ebp,%eax
+   2:	48 c1 e8 03          	shr    $0x3,%rax
+   6:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1)
+   b:	74 08                	je     0x15
+   d:	4c 89 ef             	mov    %r13,%rdi
+  10:	e8 8a 71 d4 fc       	call   0xfcd4719f
+  15:	49 8b 6d 00          	mov    0x0(%r13),%rbp
+  19:	48 8b 3c 24          	mov    (%rsp),%rdi
+  1d:	4c 89 e6             	mov    %r12,%rsi
+  20:	48 89 ea             	mov    %rbp,%rdx
+  23:	48 c7 c1 40 2d f6 8b 	mov    $0xffffffff8bf62d40,%rcx
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	4d 89 fd             	mov    %r15,%r13
+  32:	e9 23 fb ff ff       	jmp    0xfffffb5a
+  37:	e8 63 07 6d fc       	call   0xfc6d079f
+  3c:	4c 89 e8             	mov    %r13,%rax
+  3f:	48                   	rex.W
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 14947 Comm: syz.1.397 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:drm_gem_shmem_release+0x5bb/0x6d0
+Code: 89 e8 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 ef e8 8a 71 d4 fc 49 8b 6d 00 48 8b 3c 24 4c 89 e6 48 89 ea 48 c7 c1 40 2d f6 8b <67> 48 0f b9 3a 4d 89 fd e9 23 fb ff ff e8 63 07 6d fc 4c 89 e8 48
+RSP: 0018:ffffc900074d7998 EFLAGS: 00010246
+RAX: 1ffff11020c23c1a RBX: ffff888019ce3c00 RCX: ffffffff8bf62d40
+RDX: ffff888105527450 RSI: ffffffff8c09a780 RDI: ffffffff8fb217d0
+RBP: ffff888105527450 R08: ffff888019ce3db3 R09: 1ffff1100339c7b6
+R10: dffffc0000000000 R11: ffffed100339c7b7 R12: ffffffff8c09a780
+R13: ffff88810611e0d0 R14: ffff888019ce3d00 R15: dffffc0000000000
+FS:  00007f3863b516c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000002040 CR3: 000000010e287000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ drm_gem_shmem_object_free+0x15/0x20
+ drm_client_buffer_delete+0x189/0x2d0
+ drm_fbdev_shmem_fb_destroy+0xac/0xd0
+ unregister_framebuffer+0x2bd/0x3b0
+ drm_client_dev_unregister+0x223/0x2d0
+ drm_dev_unregister+0x44/0x730
+ drm_dev_unplug+0x45/0xa0
+ bochs_pci_remove+0x3e/0x50
+ pci_device_remove+0xa3/0x250
+ device_release_driver_internal+0x464/0x860
+ unbind_store+0x1a1/0x1d0
+ kernfs_fop_write_iter+0x2fa/0x480
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3862ba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3863b51018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f3862e35fa0 RCX: 00007f3862ba778d
+RDX: 000000000000000d RSI: 0000200000002080 RDI: 0000000000000003
+RBP: 00007f3862c4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3862e36038 R14: 00007f3862e35fa0 R15: 00007ffe822f5b60
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

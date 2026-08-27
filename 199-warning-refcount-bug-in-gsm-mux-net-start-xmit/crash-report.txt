@@ -1,0 +1,118 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: lib/refcount.c:25 at refcount_warn_saturate+0x9f/0x110 lib/refcount.c:25, CPU#0: kworker/u8:1/14
+Modules linked in:
+CPU: 0 UID: 0 PID: 14 Comm: kworker/u8:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: ipv6_addrconf addrconf_dad_work
+RIP: 0010:refcount_warn_saturate+0x9f/0x110 lib/refcount.c:25
+Code: eb 66 85 db 74 3e 83 fb 01 75 4c e8 db 45 27 fd 48 8d 3d 04 03 1a 0b 67 48 0f b9 3a eb 4a e8 c8 45 27 fd 48 8d 3d 01 03 1a 0b <67> 48 0f b9 3a eb 37 e8 b5 45 27 fd 48 8d 3d fe 02 1a 0b 67 48 0f
+RSP: 0018:ffffc90000116ff8 EFLAGS: 00010293
+RAX: ffffffff849781f8 RBX: 0000000000000002 RCX: ffff888015a9b600
+RDX: 0000000000000000 RSI: ffffffff8e9ec540 RDI: ffffffff8fb18500
+RBP: 0000000000000000 R08: ffff888015a9b600 R09: 0000000000000005
+R10: 0000000000000004 R11: 0000000000000000 R12: ffff88802cb708c0
+R13: ffff888035c28000 R14: ffff88810d882b00 R15: ffff88810d882000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c45436a CR3: 0000000110e75000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __refcount_inc include/linux/refcount.h:366 [inline]
+ refcount_inc include/linux/refcount.h:383 [inline]
+ kref_get include/linux/kref.h:45 [inline]
+ muxnet_get drivers/tty/n_gsm.c:3938 [inline]
+ gsm_mux_net_start_xmit+0x3af/0x440 drivers/tty/n_gsm.c:3951
+ __netdev_start_xmit include/linux/netdevice.h:5368 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5377 [inline]
+ xmit_one net/core/dev.c:3888 [inline]
+ dev_hard_start_xmit+0x23b/0x620 net/core/dev.c:3904
+ sch_direct_xmit+0x251/0x4c0 net/sched/sch_generic.c:372
+ __dev_xmit_skb net/core/dev.c:4276 [inline]
+ __dev_queue_xmit+0x160b/0x3250 net/core/dev.c:4831
+ neigh_output include/net/neighbour.h:560 [inline]
+ ip6_finish_output2+0xfd4/0x19b0 net/ipv6/ip6_output.c:136
+ NF_HOOK_COND include/linux/netfilter.h:307 [inline]
+ ip6_output+0x215/0x460 net/ipv6/ip6_output.c:246
+ dst_output include/net/dst.h:470 [inline]
+ NF_HOOK include/linux/netfilter.h:318 [inline]
+ mld_sendpack+0x820/0xe00 net/ipv6/mcast.c:1855
+ ipv6_mc_dad_complete+0x85/0x470 net/ipv6/mcast.c:2279
+ addrconf_dad_completed+0x73a/0xec0 net/ipv6/addrconf.c:4352
+ addrconf_dad_work+0xc42/0x14a0
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	eb 66                	jmp    0x68
+   2:	85 db                	test   %ebx,%ebx
+   4:	74 3e                	je     0x44
+   6:	83 fb 01             	cmp    $0x1,%ebx
+   9:	75 4c                	jne    0x57
+   b:	e8 db 45 27 fd       	call   0xfd2745eb
+  10:	48 8d 3d 04 03 1a 0b 	lea    0xb1a0304(%rip),%rdi        # 0xb1a031b
+  17:	67 48 0f b9 3a       	ud1    (%edx),%rdi
+  1c:	eb 4a                	jmp    0x68
+  1e:	e8 c8 45 27 fd       	call   0xfd2745eb
+  23:	48 8d 3d 01 03 1a 0b 	lea    0xb1a0301(%rip),%rdi        # 0xb1a032b
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	eb 37                	jmp    0x68
+  31:	e8 b5 45 27 fd       	call   0xfd2745eb
+  36:	48 8d 3d fe 02 1a 0b 	lea    0xb1a02fe(%rip),%rdi        # 0xb1a033b
+  3d:	67                   	addr32
+  3e:	48                   	rex.W
+  3f:	0f                   	.byte 0xf
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 14 Comm: kworker/u8:1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: ipv6_addrconf addrconf_dad_work
+RIP: 0010:refcount_warn_saturate+0x9f/0x110
+Code: eb 66 85 db 74 3e 83 fb 01 75 4c e8 db 45 27 fd 48 8d 3d 04 03 1a 0b 67 48 0f b9 3a eb 4a e8 c8 45 27 fd 48 8d 3d 01 03 1a 0b <67> 48 0f b9 3a eb 37 e8 b5 45 27 fd 48 8d 3d fe 02 1a 0b 67 48 0f
+RSP: 0018:ffffc90000116ff8 EFLAGS: 00010293
+RAX: ffffffff849781f8 RBX: 0000000000000002 RCX: ffff888015a9b600
+RDX: 0000000000000000 RSI: ffffffff8e9ec540 RDI: ffffffff8fb18500
+RBP: 0000000000000000 R08: ffff888015a9b600 R09: 0000000000000005
+R10: 0000000000000004 R11: 0000000000000000 R12: ffff88802cb708c0
+R13: ffff888035c28000 R14: ffff88810d882b00 R15: ffff88810d882000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c45436a CR3: 0000000110e75000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ gsm_mux_net_start_xmit+0x3af/0x440
+ dev_hard_start_xmit+0x23b/0x620
+ sch_direct_xmit+0x251/0x4c0
+ __dev_queue_xmit+0x160b/0x3250
+ ip6_finish_output2+0xfd4/0x19b0
+ ip6_output+0x215/0x460
+ mld_sendpack+0x820/0xe00
+ ipv6_mc_dad_complete+0x85/0x470
+ addrconf_dad_completed+0x73a/0xec0
+ addrconf_dad_work+0xc42/0x14a0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

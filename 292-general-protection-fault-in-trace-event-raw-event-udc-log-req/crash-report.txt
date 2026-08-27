@@ -1,0 +1,129 @@
+Linux 7.1.0-rc5, x86_64, QEMU i440FX with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+CONFIG_FAULT_INJECTION enabled; the failslab injector fired on this run.
+The usb_ep_alloc_request tracepoint was enabled.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+FAULT_INJECTION: forcing a failure.
+name failslab, interval 1, probability 0, space 0, times 0
+CPU: 0 UID: 0 PID: 23095 Comm: syz.2.2 Not tainted 7.1.0-rc5 #1 PREEMPT(full) 
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ fail_dump lib/fault-inject.c:73 [inline]
+ should_fail_ex+0x40c/0x560 lib/fault-inject.c:174
+ should_failslab+0xa8/0x100 mm/failslab.c:46
+ slab_pre_alloc_hook mm/slub.c:4523 [inline]
+ slab_alloc_node mm/slub.c:4876 [inline]
+ __kmalloc_cache_noprof+0x63/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ dummy_alloc_request+0x7f/0x130 drivers/usb/gadget/udc/dummy_hcd.c:674
+ usb_ep_alloc_request+0x67/0x1d0 drivers/usb/gadget/udc/core.c:195
+ gadget_bind+0xdb/0x5e0 drivers/usb/gadget/legacy/raw_gadget.c:294
+ gadget_bind_driver+0x2c2/0x9c0 drivers/usb/gadget/udc/core.c:1630
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ bus_add_driver+0x33f/0x660 drivers/base/bus.c:756
+ driver_register+0x23a/0x320 drivers/base/driver.c:249
+ usb_gadget_register_driver_owner+0xf9/0x270 drivers/usb/gadget/udc/core.c:1720
+ raw_ioctl_run drivers/usb/gadget/legacy/raw_gadget.c:596 [inline]
+ raw_ioctl+0x154d/0x41a0 drivers/usb/gadget/legacy/raw_gadget.c:1307
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f12d3dbb43f
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 77 1f 48 8b 44 24 18 64 48 2b 04 25 28 00
+RSP: 002b:00007f12d4c5be60 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f12d4c5cf10 RCX: 00007f12d3dbb43f
+RDX: 0000000000000000 RSI: 0000000000005501 RDI: 0000000000000005
+RBP: 0000000000000005 R08: 0000000000000000 R09: 00322e6364755f79
+R10: 000000000000000a R11: 0000000000000246 R12: 0000000000000000
+R13: 0000200000000040 R14: 000020000000006d R15: 00007f12d4170320
+ </TASK>
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 UID: 0 PID: 23095 Comm: syz.2.2 Not tainted 7.1.0-rc5 #1 PREEMPT(full) 
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:do_trace_event_raw_event_udc_log_req drivers/usb/gadget/udc/trace.h:223 [inline]
+RIP: 0010:trace_event_raw_event_udc_log_req+0x1c8/0x710 drivers/usb/gadget/udc/trace.h:223
+Code: c6 3f 4c 89 f0 48 c1 e8 03 42 0f b6 04 38 84 c0 0f 85 ff 02 00 00 41 c6 06 00 48 8b 54 24 08 4c 8d 72 10 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 38 84 c0 0f 85 f9 02 00 00 41 8b 1e 4d 8d 74 24 0c 4c
+RSP: 0018:ffffc9000900f680 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000004 RCX: 0000000000000065
+RDX: 0000000000000000 RSI: ffffffff8c42f060 RDI: ffff888022d00e58
+RBP: ffffc9000900f768 R08: 0000000000000070 R09: 0000000000000030
+R10: dffffc0000000000 R11: ffffed10045a01cc R12: ffff888022d00e18
+R13: ffffffff8c42f060 R14: 0000000000000010 R15: dffffc0000000000
+FS:  00007f12d4c5e640(0000) GS:ffff8880d0edc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f12d4170300 CR3: 000000002cb50000 CR4: 0000000000752ef0
+DR0: 0000200000000100 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __do_trace_usb_ep_alloc_request drivers/usb/gadget/udc/trace.h:264 [inline]
+ trace_usb_ep_alloc_request drivers/usb/gadget/udc/trace.h:264 [inline]
+ usb_ep_alloc_request+0x19a/0x1d0 drivers/usb/gadget/udc/core.c:200
+ gadget_bind+0xdb/0x5e0 drivers/usb/gadget/legacy/raw_gadget.c:294
+ gadget_bind_driver+0x2c2/0x9c0 drivers/usb/gadget/udc/core.c:1630
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ bus_add_driver+0x33f/0x660 drivers/base/bus.c:756
+ driver_register+0x23a/0x320 drivers/base/driver.c:249
+ usb_gadget_register_driver_owner+0xf9/0x270 drivers/usb/gadget/udc/core.c:1720
+ raw_ioctl_run drivers/usb/gadget/legacy/raw_gadget.c:596 [inline]
+ raw_ioctl+0x154d/0x41a0 drivers/usb/gadget/legacy/raw_gadget.c:1307
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f12d3dbb43f
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 77 1f 48 8b 44 24 18 64 48 2b 04 25 28 00
+RSP: 002b:00007f12d4c5be60 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f12d4c5cf10 RCX: 00007f12d3dbb43f
+RDX: 0000000000000000 RSI: 0000000000005501 RDI: 0000000000000005
+RBP: 0000000000000005 R08: 0000000000000000 R09: 00322e6364755f79
+R10: 000000000000000a R11: 0000000000000246 R12: 0000000000000000
+R13: 0000200000000040 R14: 000020000000006d R15: 00007f12d4170320
+ </TASK>
+Modules linked in:
+
+[ 38301 lines of ftrace ring-buffer dump omitted. The trailing
+  "Code disassembly (best guess)" block for the faulting RIP follows. ]
+
+----------------
+Code disassembly (best guess), 2 bytes skipped:
+   0:	4c 89 f0             	mov    %r14,%rax
+   3:	48 c1 e8 03          	shr    $0x3,%rax
+   7:	42 0f b6 04 38       	movzbl (%rax,%r15,1),%eax
+   c:	84 c0                	test   %al,%al
+   e:	0f 85 ff 02 00 00    	jne    0x313
+  14:	41 c6 06 00          	movb   $0x0,(%r14)
+  18:	48 8b 54 24 08       	mov    0x8(%rsp),%rdx
+  1d:	4c 8d 72 10          	lea    0x10(%rdx),%r14
+  21:	4c 89 f0             	mov    %r14,%rax
+  24:	48 c1 e8 03          	shr    $0x3,%rax
+* 28:	42 0f b6 04 38       	movzbl (%rax,%r15,1),%eax <-- trapping instruction
+  2d:	84 c0                	test   %al,%al
+  2f:	0f 85 f9 02 00 00    	jne    0x32e
+  35:	41 8b 1e             	mov    (%r14),%ebx
+  38:	4d 8d 74 24 0c       	lea    0xc(%r12),%r14
+  3d:	4c                   	rex.WR

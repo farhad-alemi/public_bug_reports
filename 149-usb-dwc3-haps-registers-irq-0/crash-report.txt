@@ -1,0 +1,4 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+WARNING: drivers/base/platform.c:492 at platform_get_irq_byname_optional

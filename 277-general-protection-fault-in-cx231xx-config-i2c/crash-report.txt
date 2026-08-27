@@ -1,0 +1,674 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+3 distinct call traces.
+
+======================================================================
+[1/3]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in cx231xx_config_i2c+0x119/0x150 drivers/media/usb/cx231xx/cx231xx-cards.c:1336
+Read of size 8 at addr ffff8880600a30b8 by task v4l_id/21860
+
+CPU: 0 UID: 0 PID: 21860 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ cx231xx_config_i2c+0x119/0x150 drivers/media/usb/cx231xx/cx231xx-cards.c:1336
+ cx231xx_v4l2_open+0x13b/0x430 drivers/media/usb/cx231xx/cx231xx-video.c:1522
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1578e9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffefded88c0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f1578c539c0 RCX: 00007f1578e9b687
+RDX: 0000000000080100 RSI: 00007ffefded8f07 RDI: ffffffffffffff9c
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffefded8960
+R13: 00007ffefded8b10 R14: 00007f15794a1000 R15: 000056309b9a2c58
+ </TASK>
+
+Allocated by task 902 on cpu 0 at 213.747542s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __do_kmalloc_node mm/slub.c:5296 [inline]
+ __kmalloc_node_track_caller_noprof+0x45a/0x710 mm/slub.c:5408
+ alloc_dr drivers/base/devres.c:141 [inline]
+ devm_kmalloc+0x7f/0x370 drivers/base/devres.c:951
+ devm_kzalloc include/linux/device/devres.h:50 [inline]
+ cx25840_probe+0xe2d/0x2200 drivers/media/i2c/cx25840/cx25840-core.c:3829
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ v4l2_i2c_new_subdev_board+0x86/0x250 drivers/media/v4l2-core/v4l2-i2c.c:81
+ v4l2_i2c_new_subdev+0x167/0x210 drivers/media/v4l2-core/v4l2-i2c.c:136
+ cx231xx_card_setup+0x2d8/0xff0 drivers/media/usb/cx231xx/cx231xx-cards.c:1261
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1459 [inline]
+ cx231xx_usb_probe+0xc65/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 902 on cpu 0 at 214.550699s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ free_node drivers/base/devres.c:50 [inline]
+ release_nodes drivers/base/devres.c:547 [inline]
+ devres_release_group+0x295/0x370 drivers/base/devres.c:739
+ i2c_device_remove+0xde/0x220 drivers/i2c/i2c-core-base.c:635
+ device_remove drivers/base/dd.c:619 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x464/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ device_unregister+0x21/0xf0 drivers/base/core.c:3936
+ v4l2_device_unregister+0x18f/0x270 drivers/media/v4l2-core/v4l2-device.c:102
+ cx231xx_usb_probe+0x1134/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1910
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
+ insert_work+0x3d/0x240 kernel/workqueue.c:2226
+ __queue_work+0xa72/0xe10 kernel/workqueue.c:2393
+ queue_work_on+0xcd/0x170 kernel/workqueue.c:2444
+ queue_work include/linux/workqueue.h:698 [inline]
+ cx25840_initialize drivers/media/i2c/cx25840/cx25840-core.c:726 [inline]
+ cx25840_reset+0x27c6/0x4cc0 drivers/media/i2c/cx25840/cx25840-core.c:2331
+ cx25840_load_fw+0x54/0x80 drivers/media/i2c/cx25840/cx25840-core.c:2358
+ cx231xx_card_setup+0x400/0xff0 drivers/media/usb/cx231xx/cx231xx-cards.c:1267
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1459 [inline]
+ cx231xx_usb_probe+0xc65/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880600a3000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 184 bytes inside of
+ freed 1024-byte region [ffff8880600a3000, ffff8880600a3400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x600a0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1118, tgid 1118 (kworker/u9:5), ts 204920865525, free_ts 151694034523
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ ieee802_11_parse_elems_full+0x14a/0x29f0 net/mac80211/parse.c:1058
+ ieee802_11_parse_elems net/mac80211/ieee80211_i.h:2518 [inline]
+ ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1565 [inline]
+ ieee80211_ibss_rx_queued_mgmt+0x44c/0x2610 net/mac80211/ibss.c:1596
+ ieee80211_iface_process_skb net/mac80211/iface.c:1795 [inline]
+ ieee80211_iface_work+0x7b3/0x11b0 net/mac80211/iface.c:1849
+ cfg80211_wiphy_work+0x252/0x4b0 net/wireless/core.c:513
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+page last free pid 11097 tgid 11097 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ kasan_depopulate_vmalloc_pte+0x6d/0x90 mm/kasan/shadow.c:484
+ apply_to_pte_range mm/memory.c:3338 [inline]
+ apply_to_pmd_range mm/memory.c:3382 [inline]
+ apply_to_pud_range mm/memory.c:3418 [inline]
+ apply_to_p4d_range mm/memory.c:3454 [inline]
+ __apply_to_page_range+0xbd9/0x1390 mm/memory.c:3490
+ __kasan_release_vmalloc+0xa2/0xd0 mm/kasan/shadow.c:602
+ kasan_release_vmalloc include/linux/kasan.h:593 [inline]
+ kasan_release_vmalloc_node mm/vmalloc.c:2284 [inline]
+ purge_vmap_node+0x225/0x950 mm/vmalloc.c:2306
+ __purge_vmap_area_lazy+0x704/0x9b0 mm/vmalloc.c:2396
+ drain_vmap_area_work+0x25/0x40 mm/vmalloc.c:2430
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff8880600a2f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880600a3000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880600a3080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff8880600a3100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880600a3180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x600a0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1118, tgid 1118 (kworker/u9:5), ts 204920865525, free_ts 151694034523
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ ieee802_11_parse_elems_full+0x14a/0x29f0
+ ieee80211_ibss_rx_queued_mgmt+0x44c/0x2610
+ ieee80211_iface_work+0x7b3/0x11b0
+ cfg80211_wiphy_work+0x252/0x4b0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+page last free pid 11097 tgid 11097 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ kasan_depopulate_vmalloc_pte+0x6d/0x90
+ __apply_to_page_range+0xbd9/0x1390
+ __kasan_release_vmalloc+0xa2/0xd0
+ purge_vmap_node+0x225/0x950
+ __purge_vmap_area_lazy+0x704/0x9b0
+ drain_vmap_area_work+0x25/0x40
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff8880600a2f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880600a3000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880600a3080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff8880600a3100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880600a3180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[2/3]
+======================================================================
+
+cx231xx 1-1:1.1: cannot change alt number to 3 (error=-22)
+==================================================================
+BUG: KASAN: slab-use-after-free in cx231xx_config_i2c+0x119/0x150 drivers/media/usb/cx231xx/cx231xx-cards.c:1336
+Read of size 8 at addr ffff88801ca680b8 by task v4l_id/14359
+
+CPU: 1 UID: 0 PID: 14359 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ cx231xx_config_i2c+0x119/0x150 drivers/media/usb/cx231xx/cx231xx-cards.c:1336
+ cx231xx_v4l2_open+0x13b/0x430 drivers/media/usb/cx231xx/cx231xx-video.c:1522
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f64db89b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffefe8d2ac0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f64dbe439c0 RCX: 00007f64db89b687
+RDX: 0000000000080100 RSI: 00007ffefe8d4f08 RDI: ffffffffffffff9c
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffefe8d2b60
+R13: 00007ffefe8d2d10 R14: 00007f64dbfd2000 R15: 000055b432337c58
+ </TASK>
+
+Allocated by task 14301 on cpu 0 at 85.962338s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __do_kmalloc_node mm/slub.c:5296 [inline]
+ __kmalloc_node_track_caller_noprof+0x45a/0x710 mm/slub.c:5408
+ alloc_dr drivers/base/devres.c:141 [inline]
+ devm_kmalloc+0x7f/0x370 drivers/base/devres.c:951
+ devm_kzalloc include/linux/device/devres.h:50 [inline]
+ cx25840_probe+0xe2d/0x2200 drivers/media/i2c/cx25840/cx25840-core.c:3829
+ i2c_device_probe+0x893/0xc00 drivers/i2c/i2c-core-base.c:591
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ i2c_new_client_device+0xa18/0x1150 drivers/i2c/i2c-core-base.c:1018
+ v4l2_i2c_new_subdev_board+0x86/0x250 drivers/media/v4l2-core/v4l2-i2c.c:81
+ v4l2_i2c_new_subdev+0x167/0x210 drivers/media/v4l2-core/v4l2-i2c.c:136
+ cx231xx_card_setup+0x2d8/0xff0 drivers/media/usb/cx231xx/cx231xx-cards.c:1261
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1459 [inline]
+ cx231xx_usb_probe+0xc65/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 14301 on cpu 0 at 86.217454s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ free_node drivers/base/devres.c:50 [inline]
+ release_nodes drivers/base/devres.c:547 [inline]
+ devres_release_group+0x295/0x370 drivers/base/devres.c:739
+ i2c_device_remove+0xde/0x220 drivers/i2c/i2c-core-base.c:635
+ device_remove drivers/base/dd.c:619 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x464/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ device_unregister+0x21/0xf0 drivers/base/core.c:3936
+ v4l2_device_unregister+0x18f/0x270 drivers/media/v4l2-core/v4l2-device.c:102
+ cx231xx_usb_probe+0x1134/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1910
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
+ insert_work+0x3d/0x240 kernel/workqueue.c:2226
+ __queue_work+0xa72/0xe10 kernel/workqueue.c:2393
+ queue_work_on+0xcd/0x170 kernel/workqueue.c:2444
+ queue_work include/linux/workqueue.h:698 [inline]
+ cx25840_initialize drivers/media/i2c/cx25840/cx25840-core.c:726 [inline]
+ cx25840_reset+0x27c6/0x4cc0 drivers/media/i2c/cx25840/cx25840-core.c:2331
+ cx25840_load_fw+0x54/0x80 drivers/media/i2c/cx25840/cx25840-core.c:2358
+ cx231xx_card_setup+0x400/0xff0 drivers/media/usb/cx231xx/cx231xx-cards.c:1267
+ cx231xx_init_dev drivers/media/usb/cx231xx/cx231xx-cards.c:1459 [inline]
+ cx231xx_usb_probe+0xc65/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1819
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ device_driver_attach+0xdc/0x1d0 drivers/base/dd.c:1206
+ bind_store+0x1d0/0x220 drivers/base/bus.c:267
+ kernfs_fop_write_iter+0x2fa/0x480 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88801ca68000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 184 bytes inside of
+ freed 1024-byte region [ffff88801ca68000, ffff88801ca68400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1ca68
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5025, tgid 5025 (selinux-autorel), ts 13309891754, free_ts 12601027971
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ tomoyo_init_log+0x1840/0x1d40 security/tomoyo/audit.c:273
+ tomoyo_supervisor+0x353/0x1560 security/tomoyo/common.c:2232
+ tomoyo_audit_env_log security/tomoyo/environ.c:37 [inline]
+ tomoyo_env_perm+0x151/0x1f0 security/tomoyo/environ.c:64
+ tomoyo_environ security/tomoyo/domain.c:673 [inline]
+ tomoyo_find_next_domain+0x15cb/0x1aa0 security/tomoyo/domain.c:889
+ tomoyo_bprm_check_security+0xdf/0x130 security/tomoyo/tomoyo.c:102
+ security_bprm_check+0x85/0x240 security/security.c:820
+ search_binary_handler fs/exec.c:1654 [inline]
+ exec_binprm fs/exec.c:1696 [inline]
+ bprm_execve+0x681/0x1260 fs/exec.c:1748
+ do_execveat_common+0x86f/0xa10 fs/exec.c:1846
+ __do_sys_execve fs/exec.c:1930 [inline]
+ __se_sys_execve fs/exec.c:1924 [inline]
+ __x64_sys_execve+0x97/0xc0 fs/exec.c:1924
+page last free pid 1 tgid 1 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ destroy_args+0x509/0x570 mm/debug_vm_pgtable.c:1002
+ debug_vm_pgtable+0x388/0x3a0 mm/debug_vm_pgtable.c:1368
+ do_one_initcall+0x1d9/0x6f0 init/main.c:1392
+ do_initcall_level+0x10a/0x230 init/main.c:1454
+ do_initcalls+0x59/0xa0 init/main.c:1470
+ kernel_init_freeable+0x1e5/0x2f0 init/main.c:1703
+ kernel_init+0x1d/0x1d0 init/main.c:1593
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88801ca67f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88801ca68000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88801ca68080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff88801ca68100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88801ca68180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ freed 1024-byte region [ffff88801ca68000, ffff88801ca68400)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1ca68
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5025, tgid 5025 (selinux-autorel), ts 13309891754, free_ts 12601027971
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ tomoyo_init_log+0x1840/0x1d40
+ tomoyo_supervisor+0x353/0x1560
+ tomoyo_env_perm+0x151/0x1f0
+ tomoyo_find_next_domain+0x15cb/0x1aa0
+ tomoyo_bprm_check_security+0xdf/0x130
+ security_bprm_check+0x85/0x240
+ bprm_execve+0x681/0x1260
+ do_execveat_common+0x86f/0xa10
+ __x64_sys_execve+0x97/0xc0
+page last free pid 1 tgid 1 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ destroy_args+0x509/0x570
+ debug_vm_pgtable+0x388/0x3a0
+ do_one_initcall+0x1d9/0x6f0
+ do_initcall_level+0x10a/0x230
+ do_initcalls+0x59/0xa0
+ kernel_init_freeable+0x1e5/0x2f0
+ kernel_init+0x1d/0x1d0
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff88801ca67f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88801ca68000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88801ca68080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff88801ca68100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88801ca68180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[3/3]
+======================================================================
+
+usb 5-1: selecting invalid altsetting 3
+cx231xx 5-1:1.1: cannot change alt number to 3 (error=-22)
+Oops: general protection fault, probably for non-canonical address 0xfbd59c0000000025: 0000 [#1] SMP KASAN NOPTI
+KASAN: maybe wild-memory-access in range [0xdead000000000128-0xdead00000000012f]
+CPU: 1 UID: 0 PID: 16801 Comm: syz.4.495 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:cx231xx_config_i2c+0x56/0x150 drivers/media/usb/cx231xx/cx231xx-cards.c:1336
+Code: 03 42 80 3c 28 00 74 08 48 89 df e8 74 0b 1f fa 4c 8b 33 49 39 de 0f 84 ea 00 00 00 45 31 ff 4d 8d 66 28 4c 89 e0 48 c1 e8 03 <42> 80 3c 28 00 74 08 4c 89 e7 e8 4b 0b 1f fa 4d 8b 24 24 49 83 c4
+RSP: 0018:ffffc90001f6f730 EFLAGS: 00010a02
+RAX: 1bd5a00000000025 RBX: ffff888019fdc1c0 RCX: 0000000000080000
+RDX: ffffc9002de6d000 RSI: 0000000000001324 RDI: 0000000000001325
+RBP: 0000000000000020 R08: ffff888101ff1b00 R09: 0000000000000002
+R10: fffffffffffffdfd R11: 0000000000000002 R12: dead000000000128
+R13: dffffc0000000000 R14: dead000000000100 R15: 0000000000000000
+FS:  00007f89004046c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2613f656c8 CR3: 000000012913b000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ cx231xx_v4l2_open+0x13b/0x430 drivers/media/usb/cx231xx/cx231xx-video.c:1522
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f88ff5a62d5
+Code: 8b 55 d0 48 89 45 b0 75 a0 44 89 55 9c e8 e3 99 02 00 44 8b 55 9c 89 da 4c 89 e6 41 89 c0 bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 77 33 44 89 c7 89 45 9c e8 38 9a 02 00 8b 45 9c
+RSP: 002b:00007f8900403b40 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f88ff5a62d5
+RDX: 0000000000000002 RSI: 00007f8900403be0 RDI: 00000000ffffff9c
+RBP: 00007f8900403bb0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f8900403be0
+R13: 00007f88ff8365d8 R14: 00007f88ff836540 R15: 00007ffe425be4f0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

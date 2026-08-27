@@ -1,0 +1,96 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+failed to drain recv queue: -12
+WARNING: drivers/infiniband/core/verbs.c:2948 at __ib_drain_rq drivers/infiniband/core/verbs.c:2948 [inline], CPU#1: kworker/1:3/5056
+WARNING: drivers/infiniband/core/verbs.c:2948 at ib_drain_rq+0x30c/0x590 drivers/infiniband/core/verbs.c:3078, CPU#1: kworker/1:3/5056
+Modules linked in:
+CPU: 1 UID: 0 PID: 5056 Comm: kworker/1:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: rtrs_client_wq rtrs_clt_err_recovery_work
+RIP: 0010:__ib_drain_rq drivers/infiniband/core/verbs.c:2948 [inline]
+RIP: 0010:ib_drain_rq+0x30f/0x590 drivers/infiniband/core/verbs.c:3078
+Code: 2e e8 11 78 88 17 41 89 c4 c6 43 04 f8 31 ff 89 c6 e8 55 52 45 f9 45 85 e4 74 16 e8 0b 4e 45 f9 48 8d 3d 04 df 3a 07 44 89 e6 <67> 48 0f b9 3a eb 6f 48 8b 44 24 10 4c 8d 60 34 4c 89 e0 48 c1 e8
+RSP: 0018:ffffc90005437520 EFLAGS: 00010293
+RAX: ffffffff887979b5 RBX: fffff52000a86ea8 RCX: ffff888102360000
+RDX: 0000000000000000 RSI: 00000000fffffff4 RDI: ffffffff8fb458c0
+RBP: ffffc90005437790 R08: ffff888102360000 R09: 0000000000000002
+R10: 0000000000000001 R11: 0000000000000000 R12: 00000000fffffff4
+R13: dffffc0000000000 R14: ffff888110aa8000 R15: ffffc900054376a0
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6c6d155d30 CR3: 0000000037767000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ib_drain_qp+0x1bb/0x430 drivers/infiniband/core/verbs.c:3102
+ stop_cm drivers/infiniband/ulp/rtrs/rtrs-clt.c:1763 [inline]
+ rtrs_clt_stop_and_destroy_conns+0x216/0x1650 drivers/infiniband/ulp/rtrs/rtrs-clt.c:2210
+ rtrs_clt_err_recovery_work+0x67/0xc0 drivers/infiniband/ulp/rtrs/rtrs-clt.c:1524
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	2e e8 11 78 88 17    	cs call 0x17887817
+   6:	41 89 c4             	mov    %eax,%r12d
+   9:	c6 43 04 f8          	movb   $0xf8,0x4(%rbx)
+   d:	31 ff                	xor    %edi,%edi
+   f:	89 c6                	mov    %eax,%esi
+  11:	e8 55 52 45 f9       	call   0xf945526b
+  16:	45 85 e4             	test   %r12d,%r12d
+  19:	74 16                	je     0x31
+  1b:	e8 0b 4e 45 f9       	call   0xf9454e2b
+  20:	48 8d 3d 04 df 3a 07 	lea    0x73adf04(%rip),%rdi        # 0x73adf2b
+  27:	44 89 e6             	mov    %r12d,%esi
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	eb 6f                	jmp    0xa0
+  31:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+  36:	4c 8d 60 34          	lea    0x34(%rax),%r12
+  3a:	4c 89 e0             	mov    %r12,%rax
+  3d:	48                   	rex.W
+  3e:	c1                   	.byte 0xc1
+  3f:	e8                   	.byte 0xe8
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 5056 Comm: kworker/1:3 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: rtrs_client_wq rtrs_clt_err_recovery_work
+RIP: 0010:ib_drain_rq+0x30f/0x590
+Code: 2e e8 11 78 88 17 41 89 c4 c6 43 04 f8 31 ff 89 c6 e8 55 52 45 f9 45 85 e4 74 16 e8 0b 4e 45 f9 48 8d 3d 04 df 3a 07 44 89 e6 <67> 48 0f b9 3a eb 6f 48 8b 44 24 10 4c 8d 60 34 4c 89 e0 48 c1 e8
+RSP: 0018:ffffc90005437520 EFLAGS: 00010293
+RAX: ffffffff887979b5 RBX: fffff52000a86ea8 RCX: ffff888102360000
+RDX: 0000000000000000 RSI: 00000000fffffff4 RDI: ffffffff8fb458c0
+RBP: ffffc90005437790 R08: ffff888102360000 R09: 0000000000000002
+R10: 0000000000000001 R11: 0000000000000000 R12: 00000000fffffff4
+R13: dffffc0000000000 R14: ffff888110aa8000 R15: ffffc900054376a0
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6c6d155d30 CR3: 0000000037767000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ib_drain_qp+0x1bb/0x430
+ rtrs_clt_stop_and_destroy_conns+0x216/0x1650
+ rtrs_clt_err_recovery_work+0x67/0xc0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

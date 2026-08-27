@@ -1,0 +1,117 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+1 distinct call trace, each reproduced once.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+!dev->cfg
+WARNING: drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c:989 at kvaser_usb_probe+0x14a9/0x15e0 drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c:989, CPU#0: kworker/0:5/11016
+Modules linked in:
+CPU: 0 UID: 0 PID: 11016 Comm: kworker/0:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:kvaser_usb_probe+0x14a9/0x15e0 drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c:989
+Code: 8b 44 24 10 48 8b 38 48 83 c7 50 48 c7 c6 60 cd 1e 8c e8 ea 5c b3 fa 48 89 ef e8 72 48 00 00 e9 e4 fe ff ff e8 48 0a 46 fb 90 <0f> 0b 90 41 bf ed ff ff ff e9 dc ee ff ff 44 89 f9 80 e1 07 80 c1
+RSP: 0018:ffffc90031efee10 EFLAGS: 00010287
+RAX: ffffffff8678bd78 RBX: ffff888016aaa9f8 RCX: 0000000000100000
+RDX: ffffc9000c4d6000 RSI: 00000000000090bf RDI: 00000000000090c0
+RBP: ffffffff8c1ed9c0 R08: ffff888039993600 R09: 0000000000000004
+R10: 0000000000000003 R11: 0000000000000000 R12: ffff888016aaaa6c
+R13: ffff888027e3d050 R14: ffff888016aaa9c0 R15: ffff888016aaaa00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f00a09cdfe0 CR3: 00000000226bd000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_set_configuration+0x1a32/0x20c0 drivers/usb/core/message.c:2268
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __device_attach_driver+0x279/0x430 drivers/base/dd.c:1029
+ bus_for_each_drv+0x257/0x2f0 drivers/base/bus.c:500
+ __device_attach+0x2c3/0x450 drivers/base/dd.c:1101
+ device_initial_probe+0xa1/0xd0 drivers/base/dd.c:1156
+ bus_probe_device+0x12a/0x220 drivers/base/bus.c:613
+ device_add+0x7e7/0xba0 drivers/base/core.c:3706
+ usb_new_device+0xa05/0x16f0 drivers/usb/core/hub.c:2695
+ hub_port_connect drivers/usb/core/hub.c:5567 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2a04/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 11016 Comm: kworker/0:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:kvaser_usb_probe+0x14a9/0x15e0
+Code: 8b 44 24 10 48 8b 38 48 83 c7 50 48 c7 c6 60 cd 1e 8c e8 ea 5c b3 fa 48 89 ef e8 72 48 00 00 e9 e4 fe ff ff e8 48 0a 46 fb 90 <0f> 0b 90 41 bf ed ff ff ff e9 dc ee ff ff 44 89 f9 80 e1 07 80 c1
+RSP: 0018:ffffc90031efee10 EFLAGS: 00010287
+RAX: ffffffff8678bd78 RBX: ffff888016aaa9f8 RCX: 0000000000100000
+RDX: ffffc9000c4d6000 RSI: 00000000000090bf RDI: 00000000000090c0
+RBP: ffffffff8c1ed9c0 R08: ffff888039993600 R09: 0000000000000004
+R10: 0000000000000003 R11: 0000000000000000 R12: ffff888016aaaa6c
+R13: ffff888027e3d050 R14: ffff888016aaa9c0 R15: ffff888016aaaa00
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f00a09cdfe0 CR3: 00000000226bd000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_set_configuration+0x1a32/0x20c0
+ usb_generic_driver_probe+0x8d/0x150
+ usb_probe_device+0x1c4/0x3b0
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __device_attach_driver+0x279/0x430
+ bus_for_each_drv+0x257/0x2f0
+ __device_attach+0x2c3/0x450
+ device_initial_probe+0xa1/0xd0
+ bus_probe_device+0x12a/0x220
+ device_add+0x7e7/0xba0
+ usb_new_device+0xa05/0x16f0
+ hub_event+0x2a04/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

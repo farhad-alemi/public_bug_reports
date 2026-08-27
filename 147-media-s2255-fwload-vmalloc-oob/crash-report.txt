@@ -1,0 +1,9 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+__asan_memcpy+0x29/0x70
+s2255_fwload_start+0x1ab/0x410
+s2255_probe+0xd14/0x11e0
+usb_probe_interface+0x65c/0xc80        (Workqueue: usb_hub_wq hub_event)
+-> Kernel panic - not syncing: KASAN: panic_on_warn set ...
+BUG: KASAN: vmalloc-out-of-bounds in s2255_fwload_start+0x1ab/0x410

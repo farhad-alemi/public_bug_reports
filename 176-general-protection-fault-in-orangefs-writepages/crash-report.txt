@@ -1,0 +1,271 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+5 distinct call traces.
+
+======================================================================
+[1/5]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 UID: 0 PID: 19163 Comm: syz.0.848 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:orangefs_writepages_callback fs/orangefs/inode.c:144 [inline]
+RIP: 0010:orangefs_writepages+0x642/0xc60 fs/orangefs/inode.c:205
+Code: 4c 89 ff e8 40 18 e2 fe 4d 8b 3f 43 0f b6 04 26 84 c0 0f 85 72 03 00 00 48 8b 44 24 10 c7 00 01 00 00 00 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 08 4c 89 ff e8 ff 18 e2 fe 4d 89 2f 43 0f b6 04
+RSP: 0018:ffffc90007307520 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffff8880361e8000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88801eacf300
+RBP: ffffc900073076e0 R08: 1ffff11003d59e61 R09: 1ffff11006f4a0e4
+R10: dffffc0000000000 R11: ffffed1006f4a0e5 R12: dffffc0000000000
+R13: ffffea0004de64c0 R14: 1ffff11003d59e63 R15: 0000000000000010
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8b50f1dc90 CR3: 000000001d164000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ do_writepages+0x328/0x550 mm/page-writeback.c:2571
+ filemap_writeback mm/filemap.c:388 [inline]
+ filemap_fdatawrite_range mm/filemap.c:413 [inline]
+ filemap_write_and_wait_range+0x332/0x3f0 mm/filemap.c:685
+ orangefs_flush+0x44/0x60 fs/orangefs/file.c:566
+ filp_flush+0xbd/0x190 fs/open.c:1467
+ filp_close+0x1d/0x40 fs/open.c:1480
+ close_files fs/file.c:494 [inline]
+ put_files_struct+0x1b6/0x340 fs/file.c:509
+ do_exit+0x6a8/0x2360 kernel/exit.c:971
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5355fa778d
+Code: Unable to access opcode bytes at 0x7f5355fa7763.
+RSP: 002b:00007f5356e47018 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: fffffffffffffe00 RBX: 00007f5356236090 RCX: 00007f5355fa778d
+RDX: 000000000000001c RSI: 00002000000000c0 RDI: 0000000000000005
+RBP: 00007f535604eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5356236128 R14: 00007f5356236090 R15: 00007ffc431f9620
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[2/5]
+======================================================================
+
+PMOm=OK
+PMOa=OK
+PMOp=OK
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 UID: 0 PID: 12209 Comm: syz.4.85 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:orangefs_writepages_callback fs/orangefs/inode.c:144 [inline]
+RIP: 0010:orangefs_writepages+0x642/0xc60 fs/orangefs/inode.c:205
+Code: 4c 89 ff e8 40 18 e2 fe 4d 8b 3f 43 0f b6 04 26 84 c0 0f 85 72 03 00 00 48 8b 44 24 10 c7 00 01 00 00 00 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 08 4c 89 ff e8 ff 18 e2 fe 4d 89 2f 43 0f b6 04
+RSP: 0018:ffffc90020a7f7e0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffff88803718b600
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88801d6a3000
+RBP: ffffc90020a7f9a0 R08: 1ffff11003ad4601 R09: 1ffff11022e258e4
+R10: dffffc0000000000 R11: ffffed1022e258e5 R12: dffffc0000000000
+R13: ffffea0000f5b800 R14: 1ffff11003ad4603 R15: 0000000000000010
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f5e4b237dac CR3: 00000000225a4000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ do_writepages+0x328/0x550 mm/page-writeback.c:2571
+ filemap_writeback mm/filemap.c:388 [inline]
+ filemap_fdatawrite_range mm/filemap.c:413 [inline]
+ filemap_write_and_wait_range+0x332/0x3f0 mm/filemap.c:685
+ orangefs_flush+0x44/0x60 fs/orangefs/file.c:566
+ filp_flush+0xbd/0x190 fs/open.c:1467
+ filp_close+0x1d/0x40 fs/open.c:1480
+ close_files fs/file.c:494 [inline]
+ put_files_struct+0x1b6/0x340 fs/file.c:509
+ do_exit+0x6a8/0x2360 kernel/exit.c:971
+ __do_sys_exit kernel/exit.c:1086 [inline]
+ __se_sys_exit kernel/exit.c:1084 [inline]
+ __x64_sys_exit+0x40/0x40 kernel/exit.c:1084
+ x64_sys_call+0x2231/0x2240 arch/x86/include/generated/asm/syscalls_64.h:61
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x2000000009d0
+Code: Unable to access opcode bytes at 0x2000000009a6.
+RSP: 002b:00007f5e4bdee308 EFLAGS: 00000246 ORIG_RAX: 000000000000003c
+RAX: ffffffffffffffda RBX: 0000200000440000 RCX: 00002000000009d0
+RDX: 0000000000000008 RSI: 0000200000461000 RDI: 0000000000000000
+RBP: 0000000000000006 R08: 0000000000000008 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
+R13: 0000000000001000 R14: 0000200000400000 R15: fffffffffffffff3
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[3/5]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 1 UID: 0 PID: 14027 Comm: syz.6.316 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:orangefs_writepages_callback fs/orangefs/inode.c:144 [inline]
+RIP: 0010:orangefs_writepages+0x642/0xc60 fs/orangefs/inode.c:205
+Code: 4c 89 ff e8 40 18 e2 fe 4d 8b 3f 43 0f b6 04 26 84 c0 0f 85 72 03 00 00 48 8b 44 24 10 c7 00 01 00 00 00 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 08 4c 89 ff e8 ff 18 e2 fe 4d 89 2f 43 0f b6 04
+RSP: 0018:ffffc90005ce7980 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc90007771000 RSI: 000000000000015e RDI: ffff888107fdb780
+RBP: ffffc90005ce7b40 R08: 1ffff11020ffb6f1 R09: 1ffffffff1c01a87
+R10: dffffc0000000000 R11: fffffbfff1c01a88 R12: dffffc0000000000
+R13: ffffea000124c040 R14: 1ffff11020ffb6f3 R15: 0000000000000010
+FS:  00007f15d9fa06c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f15d9f9ffe8 CR3: 0000000108dcc000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ do_writepages+0x328/0x550 mm/page-writeback.c:2571
+ filemap_writeback mm/filemap.c:388 [inline]
+ filemap_fdatawrite_range mm/filemap.c:413 [inline]
+ filemap_write_and_wait_range+0x332/0x3f0 mm/filemap.c:685
+ orangefs_fsync+0x75/0x1e0 fs/orangefs/file.c:468
+ vfs_fsync_range fs/sync.c:186 [inline]
+ vfs_fsync fs/sync.c:200 [inline]
+ do_fsync fs/sync.c:211 [inline]
+ __do_sys_fsync fs/sync.c:216 [inline]
+ __se_sys_fsync fs/sync.c:214 [inline]
+ __x64_sys_fsync+0x12a/0x180 fs/sync.c:214
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f15d91a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f15d9fa0018 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
+RAX: ffffffffffffffda RBX: 00007f15d9436090 RCX: 00007f15d91a778d
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 00007f15d924eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f15d9436128 R14: 00007f15d9436090 R15: 00007fff60197ce0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[4/5]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 UID: 0 PID: 25365 Comm: syz.1.1710 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:orangefs_writepages_callback fs/orangefs/inode.c:144 [inline]
+RIP: 0010:orangefs_writepages+0x642/0xc60 fs/orangefs/inode.c:205
+Code: 4c 89 ff e8 40 18 e2 fe 4d 8b 3f 43 0f b6 04 26 84 c0 0f 85 72 03 00 00 48 8b 44 24 10 c7 00 01 00 00 00 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 08 4c 89 ff e8 ff 18 e2 fe 4d 89 2f 43 0f b6 04
+RSP: 0018:ffffc90003baf2e0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc9002700d000 RSI: 0000000000001e72 RDI: ffff888011a41400
+RBP: ffffc90003baf490 R08: 1ffff11002348281 R09: 1ffff110028dc6e4
+R10: dffffc0000000000 R11: ffffed10028dc6e5 R12: dffffc0000000000
+R13: ffffea0000a809c0 R14: 1ffff11002348283 R15: 0000000000000010
+FS:  00007fa3642f66c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa6b6a79000 CR3: 0000000022454000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ do_writepages+0x328/0x550 mm/page-writeback.c:2571
+ __writeback_single_inode+0xc1/0xb20 fs/fs-writeback.c:1764
+ writeback_single_inode+0x1f9/0x6a0 fs/fs-writeback.c:1883
+ write_inode_now+0x1b1/0x280 fs/fs-writeback.c:2974
+ orangefs_inode_getattr+0xed/0xfa0 fs/orangefs/orangefs-utils.c:253
+ orangefs_getattr+0xb9/0x170 fs/orangefs/inode.c:861
+ vfs_getattr_nosec+0x2e1/0x430 fs/stat.c:213
+ ima_detect_file_change security/integrity/ima/ima_main.c:194 [inline]
+ ima_check_last_writer security/integrity/ima/ima_main.c:223 [inline]
+ ima_file_free+0x2a0/0x5b0 security/integrity/ima/ima_main.c:251
+ security_file_release+0x85/0x110 security/security.c:2424
+ __fput+0x39c/0xa40 fs/file_table.c:504
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ get_signal+0x1218/0x1410 kernel/signal.c:2809
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa3661a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa3642f6018 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+RAX: fffffffffffffffc RBX: 00007fa366436180 RCX: 00007fa3661a778d
+RDX: 0000000000000006 RSI: 0000000000000000 RDI: 0000000000000009
+RBP: 00007fa36624eb3d R08: 0000000000000004 R09: 0000000000000000
+R10: 0000200000000a00 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fa366436218 R14: 00007fa366436180 R15: 00007ffc2d220c40
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[5/5]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 1 UID: 0 PID: 13932 Comm: syz-executor Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:orangefs_writepages_callback fs/orangefs/inode.c:144 [inline]
+RIP: 0010:orangefs_writepages+0x642/0xc60 fs/orangefs/inode.c:205
+Code: 4c 89 ff e8 40 18 e2 fe 4d 8b 3f 43 0f b6 04 26 84 c0 0f 85 72 03 00 00 48 8b 44 24 10 c7 00 01 00 00 00 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 08 4c 89 ff e8 ff 18 e2 fe 4d 89 2f 43 0f b6 04
+RSP: 0018:ffffc9000361f4a0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffff888109f05100
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88810cfe8e00
+RBP: ffffc9000361f650 R08: 1ffff110219fd1c1 R09: 1ffff110043e00e4
+R10: dffffc0000000000 R11: ffffed10043e00e5 R12: dffffc0000000000
+R13: ffffea00053d8c00 R14: 1ffff110219fd1c3 R15: 0000000000000010
+FS:  000055557ebc4500(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffcbf4dada0 CR3: 000000010e0e9000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ do_writepages+0x328/0x550 mm/page-writeback.c:2571
+ __writeback_single_inode+0xc1/0xb20 fs/fs-writeback.c:1764
+ writeback_single_inode+0x1f9/0x6a0 fs/fs-writeback.c:1883
+ write_inode_now+0x1b1/0x280 fs/fs-writeback.c:2974
+ orangefs_inode_getattr+0xed/0xfa0 fs/orangefs/orangefs-utils.c:253
+ orangefs_getattr+0xb9/0x170 fs/orangefs/inode.c:861
+ vfs_getattr_nosec+0x2e1/0x430 fs/stat.c:213
+ vfs_statx_path+0x2b/0x230 fs/stat.c:299
+ vfs_statx+0x12e/0x200 fs/stat.c:356
+ vfs_fstatat+0x118/0x170 fs/stat.c:373
+ __do_sys_newfstatat fs/stat.c:538 [inline]
+ __se_sys_newfstatat+0x118/0x3a0 fs/stat.c:532
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f23bd7a588e
+Code: 0f 1f 40 00 48 c7 c2 b0 ff ff ff f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 41 89 ca b8 06 01 00 00 0f 05 <3d> 00 f0 ff ff 77 0b 31 c0 c3 0f 1f 84 00 00 00 00 00 48 c7 c2 b0
+RSP: 002b:00007ffcbf4db468 EFLAGS: 00000286 ORIG_RAX: 0000000000000106
+RAX: ffffffffffffffda RBX: 00007f23bd84dfed RCX: 00007f23bd7a588e
+RDX: 00007ffcbf4db490 RSI: 00007ffcbf4db520 RDI: 00000000ffffff9c
+RBP: 00007ffcbf4db520 R08: 0000000000000073 R09: 0000000000000000
+R10: 0000000000000100 R11: 0000000000000286 R12: 00007ffcbf4dc5f0
+R13: 00007f23bd84dfed R14: 0000000000000032 R15: 00000000000290a6
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

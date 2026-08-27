@@ -1,0 +1,53 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 UID: 0 PID: 11604 Comm: syz.5.12 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:opera1_xilinx_rw+0x138/0x2f0 drivers/media/usb/dvb-usb/opera1.c:66
+Code: bf b1 00 00 00 89 de e8 86 d9 e3 f9 80 fb b1 0f 85 e8 00 00 00 89 6c 24 04 4d 89 f5 49 c1 ed 03 48 bd 00 00 00 00 00 fc ff df <41> 0f b6 44 2d 00 84 c0 0f 85 28 01 00 00 41 0f b6 06 88 04 24 48
+RSP: 0018:ffffc900096cf8d8 EFLAGS: 00010202
+RAX: ffffffff87daf13a RBX: 00000000000000b1 RCX: 0000000000000002
+RDX: ffff888021dfd100 RSI: 00000000000000b1 RDI: 00000000000000b1
+RBP: dffffc0000000000 R08: ffffffff8225f9bf R09: ffffffff82262a66
+R10: ffffffff82262a66 R11: ffffffff8225fe5c R12: 0000000000000000
+R13: 0000000000000002 R14: 0000000000000010 R15: 0000000000000001
+FS:  00007efe6ca606c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6ec70ef908 CR3: 000000012ddc6000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ opera1_usb_i2c_msgxfer drivers/media/usb/dvb-usb/opera1.c:119 [inline]
+ opera1_i2c_xfer+0x23a/0x3b0 drivers/media/usb/dvb-usb/opera1.c:139
+ __i2c_transfer+0x791/0x1c60
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:471 [inline]
+ __i2c_smbus_xfer+0xfbf/0x1cb0 drivers/i2c/i2c-core-smbus.c:621
+ i2c_smbus_xfer+0x1f4/0x310 drivers/i2c/i2c-core-smbus.c:547
+ i2cdev_ioctl_smbus+0x226/0x740 drivers/i2c/i2c-dev.c:356
+ i2cdev_ioctl+0x5f9/0x860 drivers/i2c/i2c-dev.c:478
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7efe6bba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007efe6ca60018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007efe6be36090 RCX: 00007efe6bba778d
+RDX: 0000200000000720 RSI: 0000000000000720 RDI: 0000000000000007
+RBP: 00007efe6bc4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007efe6be36128 R14: 00007efe6be36090 R15: 00007ffc421af450
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

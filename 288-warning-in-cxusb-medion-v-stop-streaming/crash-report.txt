@@ -1,0 +1,99 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+cxdev->stop_streaming
+WARNING: drivers/media/usb/dvb-usb/cxusb-analog.c:907 at cxusb_medion_v_stop_streaming+0x688/0x710 drivers/media/usb/dvb-usb/cxusb-analog.c:907, CPU#0: kworker/0:7/11113
+Modules linked in:
+CPU: 0 UID: 0 PID: 11113 Comm: kworker/0:7 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cxusb_medion_v_stop_streaming+0x688/0x710 drivers/media/usb/dvb-usb/cxusb-analog.c:907
+Code: 84 c0 0f 85 81 00 00 00 48 8b 44 24 08 c6 00 00 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 c9 66 e5 f9 90 <0f> 0b 90 eb e1 48 c7 c1 00 14 bb 92 80 e1 07 80 c1 03 38 c1 0f 8c
+RSP: 0018:ffffc90007ecf330 EFLAGS: 00010283
+RAX: ffffffff87d960f7 RBX: 1ffff11020ec7d5a RCX: 0000000000100000
+RDX: ffffc90030024000 RSI: 0000000000003ba6 RDI: 0000000000003ba7
+RBP: ffff88810763ead4 R08: ffff88810763e95f R09: 1ffff11020ec7d2b
+R10: dffffc0000000000 R11: ffffffff87d95a70 R12: dffffc0000000000
+R13: 1ffff11020ec7d53 R14: dffffc0000000000 R15: ffff88811a7a0000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000560b72b1ee28 CR3: 00000000114c6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __vb2_queue_cancel+0xba/0xdb0 drivers/media/common/videobuf2/videobuf2-core.c:2199
+ vb2_core_streamoff drivers/media/common/videobuf2/videobuf2-core.c:2376 [inline]
+ __vb2_cleanup_fileio+0x4e/0x1f0 drivers/media/common/videobuf2/videobuf2-core.c:2974
+ vb2_core_queue_release+0x27/0x150 drivers/media/common/videobuf2/videobuf2-core.c:2676
+ vb2_queue_release drivers/media/common/videobuf2/videobuf2-v4l2.c:956 [inline]
+ vb2_video_unregister_device+0x159/0x200 drivers/media/common/videobuf2/videobuf2-v4l2.c:1292
+ cxusb_medion_unregister_analog+0xc2/0x1c0 drivers/media/usb/dvb-usb/cxusb-analog.c:1830
+ cxusb_disconnect+0x9b/0x1a0 drivers/media/usb/dvb-usb/cxusb.c:1675
+ usb_unbind_interface+0x26e/0x910 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:621 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x4ce/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ usb_disable_device+0x3d4/0x8d0 drivers/usb/core/message.c:1478
+ usb_disconnect+0x32d/0x980 drivers/usb/core/hub.c:2345
+ hub_port_connect drivers/usb/core/hub.c:5407 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x1cbc/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 11113 Comm: kworker/0:7 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:cxusb_medion_v_stop_streaming+0x688/0x710
+Code: 84 c0 0f 85 81 00 00 00 48 8b 44 24 08 c6 00 00 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 c9 66 e5 f9 90 <0f> 0b 90 eb e1 48 c7 c1 00 14 bb 92 80 e1 07 80 c1 03 38 c1 0f 8c
+RSP: 0018:ffffc90007ecf330 EFLAGS: 00010283
+RAX: ffffffff87d960f7 RBX: 1ffff11020ec7d5a RCX: 0000000000100000
+RDX: ffffc90030024000 RSI: 0000000000003ba6 RDI: 0000000000003ba7
+RBP: ffff88810763ead4 R08: ffff88810763e95f R09: 1ffff11020ec7d2b
+R10: dffffc0000000000 R11: ffffffff87d95a70 R12: dffffc0000000000
+R13: 1ffff11020ec7d53 R14: dffffc0000000000 R15: ffff88811a7a0000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000560b72b1ee28 CR3: 00000000114c6000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __vb2_queue_cancel+0xba/0xdb0
+ __vb2_cleanup_fileio+0x4e/0x1f0
+ vb2_core_queue_release+0x27/0x150
+ vb2_video_unregister_device+0x159/0x200
+ cxusb_medion_unregister_analog+0xc2/0x1c0
+ cxusb_disconnect+0x9b/0x1a0
+ usb_unbind_interface+0x26e/0x910
+ device_release_driver_internal+0x4ce/0x860
+ bus_remove_device+0x451/0x570
+ device_del+0x4bf/0x860
+ usb_disable_device+0x3d4/0x8d0
+ usb_disconnect+0x32d/0x980
+ hub_event+0x1cbc/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

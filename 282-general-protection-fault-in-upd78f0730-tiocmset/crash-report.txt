@@ -1,0 +1,59 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+usb 3-1: USB disconnect, device number 14
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000044: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000220-0x0000000000000227]
+CPU: 1 UID: 0 PID: 45 Comm: kworker/1:1 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:upd78f0730_tiocmset+0x86/0x490 drivers/usb/serial/upd78f0730.c:207
+Code: 48 c1 e9 03 48 b8 f1 f1 f1 f1 f8 f3 f3 f3 48 89 4c 24 18 4a 89 04 31 e8 e8 40 5e fa 48 81 c3 20 02 00 00 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 cb aa c5 fa 48 8b 1b 48 b9 00 00
+RSP: 0018:ffffc9000072f2e0 EFLAGS: 00010206
+RAX: 0000000000000044 RBX: 0000000000000220 RCX: 0000000000100000
+RDX: ffffc90003501000 RSI: 00000000000049a7 RDI: 00000000000049a8
+RBP: ffffc9000072f390 R08: ffff88801bf740ff R09: 1ffff110037ee81f
+R10: dffffc0000000000 R11: ffffffff87608b00 R12: ffff88801bf740f8
+R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000006
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000001280 CR3: 0000000122819000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ tty_port_lower_dtr_rts drivers/tty/tty_port.c:471 [inline]
+ tty_port_shutdown+0x175/0x250 drivers/tty/tty_port.c:369
+ tty_port_hangup+0x106/0x170 drivers/tty/tty_port.c:397
+ __tty_hangup+0x793/0x840 drivers/tty/tty_io.c:644
+ __tty_port_tty_hangup+0x14f/0x1e0 drivers/tty/tty_port.c:413
+ tty_port_tty_vhangup include/linux/tty_port.h:283 [inline]
+ usb_serial_disconnect+0x138/0x4b0 drivers/usb/serial/usb-serial.c:1193
+ usb_unbind_interface+0x26e/0x910 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:621 [inline]
+ __device_release_driver drivers/base/dd.c:1352 [inline]
+ device_release_driver_internal+0x4ce/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ usb_disable_device+0x3d4/0x8d0 drivers/usb/core/message.c:1478
+ usb_disconnect+0x32d/0x980 drivers/usb/core/hub.c:2345
+ hub_port_connect drivers/usb/core/hub.c:5407 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x1cbc/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

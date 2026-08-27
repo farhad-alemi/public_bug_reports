@@ -1,0 +1,98 @@
+Linux 7.1.0-rc5, x86_64, QEMU i440FX with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+CONFIG_FAULT_INJECTION enabled; the fail_page_alloc injector fired on this run.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+FAULT_INJECTION: forcing a failure.
+name fail_page_alloc, interval 1, probability 0, space 0, times 0
+CPU: 0 UID: 0 PID: 12375 Comm: syz.0.0 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full) 
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ fail_dump lib/fault-inject.c:73 [inline]
+ should_fail_ex+0x40c/0x560 lib/fault-inject.c:174
+ prepare_alloc_pages+0x1bd/0x5c0 mm/page_alloc.c:5002
+ __alloc_frozen_pages_noprof+0x136/0x460 mm/page_alloc.c:5215
+ alloc_pages_mpol+0x235/0x490 mm/mempolicy.c:2490
+ alloc_frozen_pages_noprof mm/mempolicy.c:2561 [inline]
+ alloc_pages_noprof+0xac/0x2a0 mm/mempolicy.c:2581
+ pipe_to_sg+0x391/0x8b0 drivers/char/virtio_console.c:875
+ splice_from_pipe_feed fs/splice.c:463 [inline]
+ __splice_from_pipe+0x32e/0x8f0 fs/splice.c:606
+ port_fops_splice_write+0x483/0x5f0 drivers/char/virtio_console.c:947
+ do_splice_from fs/splice.c:936 [inline]
+ direct_splice_actor+0x236/0x4a0 fs/splice.c:1159
+ splice_direct_to_actor+0x52e/0xc60 fs/splice.c:1103
+ do_splice_direct_actor fs/splice.c:1202 [inline]
+ do_splice_direct+0x195/0x290 fs/splice.c:1228
+ do_sendfile+0x52f/0x7c0 fs/read_write.c:1372
+ __do_sys_sendfile64 fs/read_write.c:1427 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1419 [inline]
+ __x64_sys_sendfile64+0x14d/0x200 fs/read_write.c:1419
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fafaa9bb8bd
+Code: 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fafab8dbf98 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007fafaac460a0 RCX: 00007fafaa9bb8bd
+RDX: 0000200000000040 RSI: 0000000000000003 RDI: 0000000000000000
+RBP: 00007fafab8dc010 R08: 0000000000000000 R09: 0000000000000000
+R10: 6df890228be82f0a R11: 0000000000000246 R12: 0000000000000002
+R13: 00007fafaac46138 R14: 00007fafaac460a0 R15: 00007fafab8bc000
+ </TASK>
+------------[ cut here ]------------
+!pfn_valid(__pfn)
+WARNING: ./include/linux/scatterlist.h:412 at sg_phys+0x1fe/0x3a0 include/linux/scatterlist.h:412, CPU#0: syz.0.0/12375
+Modules linked in:
+CPU: 0 UID: 0 PID: 12375 Comm: syz.0.0 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full) 
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:sg_phys+0x1fe/0x3a0 include/linux/scatterlist.h:412
+Code: 3d b7 e0 80 0d 31 ed 31 ff 44 89 fe e8 7b 6c ab fc 45 85 ff 0f 84 27 01 00 00 e8 2d 68 ab fc 48 bd 00 00 00 00 00 fc ff df 90 <0f> 0b 90 49 c1 e6 06 48 83 c3 08 48 89 d8 48 c1 e8 03 0f b6 04 28
+RSP: 0018:ffffc900073473c8 EFLAGS: 00010083
+RAX: ffffffff85135f08 RBX: ffff888023a9b068 RCX: 0000000000080000
+RDX: ffffc900100c9000 RSI: 0000000000011c9c RDI: 0000000000011c9d
+RBP: dffffc0000000000 R08: ffffc9000734752c R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000002 R12: 0000000000b00000
+R13: 0000000000080000 R14: 0000160000000000 R15: 0000005800000000
+FS:  00007fafab8dc640(0000) GS:ffff8880d0edc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fafab8dbff0 CR3: 0000000108105000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ vring_map_one_sg+0x282/0x590 drivers/virtio/virtio_ring.c:464
+ virtqueue_add_split+0x3a3/0x2010 drivers/virtio/virtio_ring.c:680
+ virtqueue_add+0x100/0x2960 drivers/virtio/virtio_ring.c:2796
+ virtqueue_add_outbuf+0xa5/0xf0 drivers/virtio/virtio_ring.c:2858
+ __send_to_port+0x205/0x3a0 drivers/char/virtio_console.c:611
+ port_fops_splice_write+0x4bc/0x5f0 drivers/char/virtio_console.c:950
+ do_splice_from fs/splice.c:936 [inline]
+ direct_splice_actor+0x236/0x4a0 fs/splice.c:1159
+ splice_direct_to_actor+0x52e/0xc60 fs/splice.c:1103
+ do_splice_direct_actor fs/splice.c:1202 [inline]
+ do_splice_direct+0x195/0x290 fs/splice.c:1228
+ do_sendfile+0x52f/0x7c0 fs/read_write.c:1372
+ __do_sys_sendfile64 fs/read_write.c:1427 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1419 [inline]
+ __x64_sys_sendfile64+0x14d/0x200 fs/read_write.c:1419
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fafaa9bb8bd
+Code: 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fafab8dbf98 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007fafaac460a0 RCX: 00007fafaa9bb8bd
+RDX: 0000200000000040 RSI: 0000000000000003 RDI: 0000000000000000
+RBP: 00007fafab8dc010 R08: 0000000000000000 R09: 0000000000000000
+R10: 6df890228be82f0a R11: 0000000000000246 R12: 0000000000000002
+R13: 00007fafaac46138 R14: 00007fafaac460a0 R15: 00007fafab8bc000
+ </TASK>

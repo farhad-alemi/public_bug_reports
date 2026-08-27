@@ -1,0 +1,8 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+WARNING: drivers/infiniband/ulp/rtrs/rtrs-clt.c:673 at rtrs_clt_rdma_done...
+-> Kernel panic - not syncing: kernel: panic_on_warn set
+Oops: general protection fault ... KASAN: null-ptr-deref in range [0x58-0x5f]
+RIP: 0010:rtrs_clt_rdma_done+0x737/0x1450   RBX = 0x0000000000000058
+-> Kernel panic - not syncing: Fatal exception in interrupt

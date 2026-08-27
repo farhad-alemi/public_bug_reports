@@ -1,0 +1,36 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+------------[ cut here ]------------
+kernel BUG at drivers/md/bcache/super.c:660!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 16493 Comm: bcache_allocato Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:bch_prio_write+0x10a6/0x10c0 drivers/md/bcache/super.c:660
+Code: f9 e9 b1 f5 ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 98 f3 ff ff 4c 89 f7 e8 e5 62 e8 f9 e9 8b f3 ff ff e8 0b f9 80 f9 90 <0f> 0b e8 03 f9 80 f9 e8 ee fe f4 f8 e9 0e f2 ff ff 66 0f 1f 84 00
+RSP: 0000:ffffc90006657a40 EFLAGS: 00010293
+RAX: ffffffff883dceb5 RBX: ffffffffffffffff RCX: ffff88801d0c9b00
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: ffffffffffffffff
+RBP: ffffc90006657bb0 R08: ffff888034860327 R09: 1ffff1100690c064
+R10: dffffc0000000000 R11: ffffed100690c065 R12: ffff8880375000a0
+R13: ffff888037500000 R14: 1ffff11006ea013c R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fecfc7b6000 CR3: 000000003bb25000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ bch_allocator_thread+0x420c/0x4420 drivers/md/bcache/alloc.c:363
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

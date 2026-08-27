@@ -1,0 +1,505 @@
+Linux 7.1.0-rc5-dirty, 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.  The kernel version string each
+trace was captured under is given with that trace.
+
+3 distinct call traces.
+
+======================================================================
+[1/3]   Linux 7.1.0-rc5-dirty
+======================================================================
+
+==================================================================
+BUG: KASAN: use-after-free in gfs2_bit_search fs/gfs2/rgrp.c:188 [inline]
+BUG: KASAN: use-after-free in gfs2_bitfit fs/gfs2/rgrp.c:249 [inline]
+BUG: KASAN: use-after-free in count_unlinked fs/gfs2/rgrp.c:1159 [inline]
+BUG: KASAN: use-after-free in gfs2_rgrp_go_instantiate+0xb0d/0x1340 fs/gfs2/rgrp.c:1238
+Read of size 8 at addr ffff888011445000 by task syz-executor/17182
+
+CPU: 0 UID: 0 PID: 17182 Comm: syz-executor Tainted: G             L      7.1.0-rc5-dirty #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ gfs2_bit_search fs/gfs2/rgrp.c:188 [inline]
+ gfs2_bitfit fs/gfs2/rgrp.c:249 [inline]
+ count_unlinked fs/gfs2/rgrp.c:1159 [inline]
+ gfs2_rgrp_go_instantiate+0xb0d/0x1340 fs/gfs2/rgrp.c:1238
+ gfs2_instantiate+0x151/0x210 fs/gfs2/glock.c:442
+ gfs2_glock_holder_ready fs/gfs2/glock.c:1250 [inline]
+ gfs2_glock_wait+0x1b2/0x280 fs/gfs2/glock.c:1270
+ gfs2_glock_nq_init fs/gfs2/glock.h:253 [inline]
+ gfs2_inplace_reserve+0xc43/0x3420 fs/gfs2/rgrp.c:2093
+ do_sync+0x64b/0xca0 fs/gfs2/quota.c:948
+ gfs2_quota_sync+0x368/0x460 fs/gfs2/quota.c:1358
+ gfs2_sync_fs+0x4c/0xb0 fs/gfs2/super.c:661
+ sync_filesystem+0xee/0x230 fs/sync.c:56
+ generic_shutdown_super+0x77/0x2d0 fs/super.c:625
+ kill_block_super+0x44/0x90 fs/super.c:1725
+ deactivate_locked_super+0xbc/0x290 fs/super.c:476
+ cleanup_mnt+0x464/0x4f0 fs/namespace.c:1312
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f73f5fa994b
+Code: 3b 16 00 00 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 c7 c2 b0 ff ff ff f7 d8
+RSP: 002b:00007ffd8f2c4b18 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 00007f73f604efed RCX: 00007f73f5fa994b
+RDX: 00007f73f5e535e1 RSI: 0000000000000009 RDI: 00007ffd8f2c4bd0
+RBP: 00007ffd8f2c4bd0 R08: 0000000000000073 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffd8f2c5ca0
+R13: 00007f73f604efed R14: 0000000000000032 R15: 000000000005018d
+ </TASK>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xab pfn:0x11445
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 ffffea0001430588 ffffea0000451188 0000000000000000
+raw: 00000000000000ab 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Movable, gfp_mask 0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), pid 18239, tgid 18237 (syz.2.1255), ts 329603636904, free_ts 329904243073
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_pages_mpol+0x235/0x490 mm/mempolicy.c:2490
+ folio_alloc_mpol_noprof+0x39/0x160 mm/mempolicy.c:2509
+ shmem_alloc_folio mm/shmem.c:1933 [inline]
+ shmem_alloc_and_add_folio+0x442/0xf50 mm/shmem.c:1975
+ shmem_get_folio_gfp+0x59d/0x1680 mm/shmem.c:2564
+ shmem_get_folio mm/shmem.c:2670 [inline]
+ shmem_write_begin+0x16a/0x320 mm/shmem.c:3303
+ generic_perform_write+0x2d3/0x8d0 mm/filemap.c:4325
+ shmem_file_write_iter+0xf8/0x120 mm/shmem.c:3478
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 18239 tgid 18237 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ free_unref_folios+0xe3d/0x1690 mm/page_alloc.c:3004
+ folios_put_refs+0x798/0x8d0 mm/swap.c:1008
+ folio_batch_release include/linux/folio_batch.h:101 [inline]
+ shmem_undo_range+0x52c/0x1610 mm/shmem.c:1149
+ shmem_truncate_range mm/shmem.c:1277 [inline]
+ shmem_evict_inode+0x281/0xac0 mm/shmem.c:1407
+ evict+0x492/0x930 fs/inode.c:841
+ __dentry_kill+0x199/0x660 fs/dcache.c:718
+ finish_dput+0x39/0x280 fs/dcache.c:927
+ __fput+0x677/0xa40 fs/file_table.c:518
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff888011444f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888011444f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888011445000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                   ^
+ ffff888011445080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888011445100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RSP: 002b:00007ffd8f2c4b18 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 00007f73f604efed RCX: 00007f73f5fa994b
+RDX: 00007f73f5e535e1 RSI: 0000000000000009 RDI: 00007ffd8f2c4bd0
+RBP: 00007ffd8f2c4bd0 R08: 0000000000000073 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffd8f2c5ca0
+R13: 00007f73f604efed R14: 0000000000000032 R15: 000000000005018d
+ </TASK>
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xab pfn:0x11445
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 ffffea0001430588 ffffea0000451188 0000000000000000
+raw: 00000000000000ab 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Movable, gfp_mask 0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), pid 18239, tgid 18237 (syz.2.1255), ts 329603636904, free_ts 329904243073
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ alloc_pages_mpol+0x235/0x490
+ folio_alloc_mpol_noprof+0x39/0x160
+ shmem_alloc_and_add_folio+0x442/0xf50
+ shmem_get_folio_gfp+0x59d/0x1680
+ shmem_write_begin+0x16a/0x320
+ generic_perform_write+0x2d3/0x8d0
+ shmem_file_write_iter+0xf8/0x120
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 18239 tgid 18237 stack trace:
+ free_unref_folios+0xe3d/0x1690
+ folios_put_refs+0x798/0x8d0
+ shmem_undo_range+0x52c/0x1610
+ shmem_evict_inode+0x281/0xac0
+ evict+0x492/0x930
+ __dentry_kill+0x199/0x660
+ finish_dput+0x39/0x280
+ __fput+0x677/0xa40
+ fput_close_sync+0x11f/0x240
+ __x64_sys_close+0x7e/0x110
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Memory state around the buggy address:
+ ffff888011444f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888011444f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888011445000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                   ^
+ ffff888011445080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888011445100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[2/3]   Linux 7.1.0-rc5
+======================================================================
+
+gfs2: fsid=syz:syz.0: first mount done, others may mount
+==================================================================
+BUG: KASAN: use-after-free in gfs2_bit_search fs/gfs2/rgrp.c:188 [inline]
+BUG: KASAN: use-after-free in gfs2_bitfit fs/gfs2/rgrp.c:249 [inline]
+BUG: KASAN: use-after-free in count_unlinked fs/gfs2/rgrp.c:1159 [inline]
+BUG: KASAN: use-after-free in gfs2_rgrp_go_instantiate+0xb0d/0x1340 fs/gfs2/rgrp.c:1238
+Read of size 8 at addr ffff888117840000 by task syz.9.1296/33575
+
+CPU: 1 UID: 0 PID: 33575 Comm: syz.9.1296 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ gfs2_bit_search fs/gfs2/rgrp.c:188 [inline]
+ gfs2_bitfit fs/gfs2/rgrp.c:249 [inline]
+ count_unlinked fs/gfs2/rgrp.c:1159 [inline]
+ gfs2_rgrp_go_instantiate+0xb0d/0x1340 fs/gfs2/rgrp.c:1238
+ gfs2_instantiate+0x151/0x210 fs/gfs2/glock.c:442
+ update_rgrp_lvb fs/gfs2/rgrp.c:1270 [inline]
+ gfs2_inplace_reserve+0xf8c/0x3420 fs/gfs2/rgrp.c:2103
+ alloc_dinode+0x171/0x560 fs/gfs2/inode.c:428
+ gfs2_create_inode+0xc48/0x1620 fs/gfs2/inode.c:822
+ gfs2_atomic_open+0x116/0x200 fs/gfs2/inode.c:1401
+ atomic_open+0x149/0x370 fs/namei.c:4364
+ lookup_open fs/namei.c:4477 [inline]
+ open_last_lookups fs/namei.c:4611 [inline]
+ path_openat+0x10fb/0x37c0 fs/namei.c:4855
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f739aba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f739ba6f018 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f739ae36090 RCX: 00007f739aba778d
+RDX: 0000000000000042 RSI: 000020000006a4c0 RDI: ffffffffffffff9c
+RBP: 00007f739ac4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000000001ff R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f739ae36128 R14: 00007f739ae36090 R15: 00007fff19c15780
+ </TASK>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xfc9 pfn:0x117840
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: f0(buddy)
+raw: 057ff00000000000 ffffea0004609008 ffffea0005065008 0000000000000000
+raw: 0000000000000fc9 0000000000000003 00000000f0000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Movable, gfp_mask 0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), pid 33394, tgid 33255 (syz.9.1270), ts 288988514169, free_ts 290923933423
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_pages_mpol+0x235/0x490 mm/mempolicy.c:2490
+ folio_alloc_mpol_noprof+0x39/0x160 mm/mempolicy.c:2509
+ shmem_alloc_folio mm/shmem.c:1933 [inline]
+ shmem_alloc_and_add_folio+0x442/0xf50 mm/shmem.c:1975
+ shmem_get_folio_gfp+0x59d/0x1680 mm/shmem.c:2564
+ shmem_get_folio mm/shmem.c:2670 [inline]
+ shmem_write_begin+0x16a/0x320 mm/shmem.c:3303
+ generic_perform_write+0x2d3/0x8d0 mm/filemap.c:4325
+ shmem_file_write_iter+0xf8/0x120 mm/shmem.c:3478
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 9487 tgid 9487 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ free_unref_folios+0xe3d/0x1690 mm/page_alloc.c:3004
+ folios_put_refs+0x798/0x8d0 mm/swap.c:1008
+ folio_batch_release include/linux/folio_batch.h:101 [inline]
+ shmem_undo_range+0x52c/0x1610 mm/shmem.c:1149
+ shmem_truncate_range mm/shmem.c:1277 [inline]
+ shmem_evict_inode+0x281/0xac0 mm/shmem.c:1407
+ evict+0x492/0x930 fs/inode.c:841
+ __dentry_kill+0x199/0x660 fs/dcache.c:718
+ finish_dput+0x39/0x280 fs/dcache.c:927
+ __fput+0x677/0xa40 fs/file_table.c:518
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88811783ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88811783ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888117840000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                   ^
+ ffff888117840080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888117840100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RAX: ffffffffffffffda RBX: 00007f739ae36090 RCX: 00007f739aba778d
+RDX: 0000000000000042 RSI: 000020000006a4c0 RDI: ffffffffffffff9c
+RBP: 00007f739ac4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000000001ff R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f739ae36128 R14: 00007f739ae36090 R15: 00007fff19c15780
+ </TASK>
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xfc9 pfn:0x117840
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: f0(buddy)
+raw: 057ff00000000000 ffffea0004609008 ffffea0005065008 0000000000000000
+raw: 0000000000000fc9 0000000000000003 00000000f0000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Movable, gfp_mask 0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), pid 33394, tgid 33255 (syz.9.1270), ts 288988514169, free_ts 290923933423
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ alloc_pages_mpol+0x235/0x490
+ folio_alloc_mpol_noprof+0x39/0x160
+ shmem_alloc_and_add_folio+0x442/0xf50
+ shmem_get_folio_gfp+0x59d/0x1680
+ shmem_write_begin+0x16a/0x320
+ generic_perform_write+0x2d3/0x8d0
+ shmem_file_write_iter+0xf8/0x120
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 9487 tgid 9487 stack trace:
+ free_unref_folios+0xe3d/0x1690
+ folios_put_refs+0x798/0x8d0
+ shmem_undo_range+0x52c/0x1610
+ shmem_evict_inode+0x281/0xac0
+ evict+0x492/0x930
+ __dentry_kill+0x199/0x660
+ finish_dput+0x39/0x280
+ __fput+0x677/0xa40
+ task_work_run+0x1d5/0x250
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Memory state around the buggy address:
+ ffff88811783ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88811783ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888117840000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                   ^
+ ffff888117840080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888117840100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[3/3]   Linux 7.1.0-rc5-dirty
+======================================================================
+
+gfs2: fsid=syz:syz.0: first mount done, others may mount
+==================================================================
+BUG: KASAN: use-after-free in gfs2_bit_search fs/gfs2/rgrp.c:188 [inline]
+BUG: KASAN: use-after-free in gfs2_bitfit fs/gfs2/rgrp.c:249 [inline]
+BUG: KASAN: use-after-free in count_unlinked fs/gfs2/rgrp.c:1159 [inline]
+BUG: KASAN: use-after-free in gfs2_rgrp_go_instantiate+0x73b/0xa60 fs/gfs2/rgrp.c:1238
+Read of size 8 at addr ffff88802573c000 by task syz.5.715/25957
+
+CPU: 0 UID: 0 PID: 25957 Comm: syz.5.715 Tainted: G             L      7.1.0-rc5-dirty #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ gfs2_bit_search fs/gfs2/rgrp.c:188 [inline]
+ gfs2_bitfit fs/gfs2/rgrp.c:249 [inline]
+ count_unlinked fs/gfs2/rgrp.c:1159 [inline]
+ gfs2_rgrp_go_instantiate+0x73b/0xa60 fs/gfs2/rgrp.c:1238
+ gfs2_instantiate+0x105/0x1b0 fs/gfs2/glock.c:442
+ update_rgrp_lvb fs/gfs2/rgrp.c:1270 [inline]
+ gfs2_inplace_reserve+0xe46/0x1fe0 fs/gfs2/rgrp.c:2103
+ alloc_dinode+0x138/0x3b0 fs/gfs2/inode.c:428
+ gfs2_create_inode+0xab2/0x1150 fs/gfs2/inode.c:822
+ gfs2_mkdir+0x72/0x90 fs/gfs2/inode.c:1351
+ vfs_mkdir+0x294/0x3e0 fs/namei.c:5261
+ filename_mkdirat+0x1fb/0x3f0 fs/namei.c:5294
+ __do_sys_mkdirat fs/namei.c:5315 [inline]
+ __se_sys_mkdirat+0x32/0xf0 fs/namei.c:5312
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc6d69aa78d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fc6d7799ff8 EFLAGS: 00000246 ORIG_RAX: 0000000000000102
+RAX: ffffffffffffffda RBX: 00007fc6d6c35fa0 RCX: 00007fc6d69aa78d
+RDX: 0000000000000000 RSI: 0000200000002000 RDI: ffffffffffffff9c
+RBP: 00007fc6d6a51bb5 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fc6d6c35fac R14: 00007fc6d6c35fa0 R15: 00007fc6d6a51c33
+ </TASK>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xbe pfn:0x2573c
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f0(buddy)
+raw: 00fff00000000000 ffffea0000909908 ffffea00012f3208 0000000000000000
+raw: 00000000000000be 0000000000000002 00000000f0000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Movable, gfp_mask 0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), pid 25743, tgid 25742 (syz.7.702), ts 378929217407, free_ts 381879470859
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1cc/0x220 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x1a8d/0x1b50 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x16e/0x3c0 mm/page_alloc.c:5226
+ alloc_pages_mpol+0x1fc/0x400 mm/mempolicy.c:2490
+ folio_alloc_mpol_noprof+0x39/0x100 mm/mempolicy.c:2509
+ shmem_alloc_folio mm/shmem.c:1933 [inline]
+ shmem_alloc_and_add_folio+0x363/0xc40 mm/shmem.c:1975
+ shmem_get_folio_gfp+0x430/0xfc0 mm/shmem.c:2564
+ shmem_get_folio mm/shmem.c:2670 [inline]
+ shmem_write_begin+0x106/0x250 mm/shmem.c:3303
+ generic_perform_write+0x21e/0x750 mm/filemap.c:4325
+ shmem_file_write_iter+0xc5/0xf0 mm/shmem.c:3478
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x5bd/0x9e0 fs/read_write.c:688
+ ksys_write+0x130/0x220 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 12729 tgid 12729 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ free_unref_folios+0x891/0xe30 mm/page_alloc.c:3004
+ folios_put_refs+0x5f5/0x6b0 mm/swap.c:1008
+ folio_batch_release include/linux/folio_batch.h:101 [inline]
+ shmem_undo_range+0x47e/0x11d0 mm/shmem.c:1149
+ shmem_truncate_range mm/shmem.c:1277 [inline]
+ shmem_evict_inode+0x1a5/0x670 mm/shmem.c:1407
+ evict+0x376/0x620 fs/inode.c:841
+ __dentry_kill+0x12f/0x3e0 fs/dcache.c:718
+ finish_dput+0x2b/0x1f0 fs/dcache.c:927
+ __fput+0x478/0x680 fs/file_table.c:518
+ task_work_run+0x172/0x1f0 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88802573bf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88802573bf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff88802573c000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                   ^
+ ffff88802573c080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88802573c100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RAX: ffffffffffffffda RBX: 00007fc6d6c35fa0 RCX: 00007fc6d69aa78d
+RDX: 0000000000000000 RSI: 0000200000002000 RDI: ffffffffffffff9c
+RBP: 00007fc6d6a51bb5 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fc6d6c35fac R14: 00007fc6d6c35fa0 R15: 00007fc6d6a51c33
+ </TASK>
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xbe pfn:0x2573c
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f0(buddy)
+raw: 00fff00000000000 ffffea0000909908 ffffea00012f3208 0000000000000000
+raw: 00000000000000be 0000000000000002 00000000f0000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Movable, gfp_mask 0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), pid 25743, tgid 25742 (syz.7.702), ts 378929217407, free_ts 381879470859
+ post_alloc_hook+0x1cc/0x220
+ get_page_from_freelist+0x1a8d/0x1b50
+ __alloc_frozen_pages_noprof+0x16e/0x3c0
+ alloc_pages_mpol+0x1fc/0x400
+ folio_alloc_mpol_noprof+0x39/0x100
+ shmem_alloc_and_add_folio+0x363/0xc40
+ shmem_get_folio_gfp+0x430/0xfc0
+ shmem_write_begin+0x106/0x250
+ generic_perform_write+0x21e/0x750
+ shmem_file_write_iter+0xc5/0xf0
+ vfs_write+0x5bd/0x9e0
+ ksys_write+0x130/0x220
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 12729 tgid 12729 stack trace:
+ free_unref_folios+0x891/0xe30
+ folios_put_refs+0x5f5/0x6b0
+ shmem_undo_range+0x47e/0x11d0
+ shmem_evict_inode+0x1a5/0x670
+ evict+0x376/0x620
+ __dentry_kill+0x12f/0x3e0
+ finish_dput+0x2b/0x1f0
+ __fput+0x478/0x680
+ task_work_run+0x172/0x1f0
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Memory state around the buggy address:
+ ffff88802573bf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88802573bf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff88802573c000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                   ^
+ ffff88802573c080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88802573c100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

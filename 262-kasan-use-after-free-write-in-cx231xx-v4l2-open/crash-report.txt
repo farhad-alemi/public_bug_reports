@@ -1,0 +1,173 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+cx231xx 1-1:1.1: cannot change alt number to 3 (error=-19)
+usb 1-1:1.1: can't change interface 4 alt no. to 0 (err=-19)
+==================================================================
+BUG: KASAN: use-after-free in instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+BUG: KASAN: use-after-free in atomic_long_try_cmpxchg_release include/linux/atomic/atomic-instrumented.h:4479 [inline]
+BUG: KASAN: use-after-free in __mutex_unlock_fast kernel/locking/mutex.c:172 [inline]
+BUG: KASAN: use-after-free in mutex_unlock+0x82/0xf0 kernel/locking/mutex.c:579
+Write of size 8 at addr ffff8880315398f0 by task v4l_id/13675
+
+CPU: 0 UID: 0 PID: 13675 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ kasan_check_range+0x264/0x2c0 mm/kasan/generic.c:200
+ instrument_atomic_read_write include/linux/instrumented.h:112 [inline]
+ atomic_long_try_cmpxchg_release include/linux/atomic/atomic-instrumented.h:4479 [inline]
+ __mutex_unlock_fast kernel/locking/mutex.c:172 [inline]
+ mutex_unlock+0x82/0xf0 kernel/locking/mutex.c:579
+ cx231xx_v4l2_open+0x34c/0x430
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fae40e9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffc960f41d0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007fae40c409c0 RCX: 00007fae40e9b687
+RDX: 0000000000080100 RSI: 00007ffc960f5f0b RDI: ffffffffffffff9c
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffc960f4270
+R13: 00007ffc960f4420 R14: 00007fae415b5000 R15: 0000558d0f467c58
+ </TASK>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x31539
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 0000000000000000 00000000ffffffff 0000000000000000
+raw: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0x40dc0(GFP_KERNEL|__GFP_ZERO|__GFP_COMP), pid 13437, tgid 13432 (syz.0.327), ts 90040276697, free_ts 91277385942
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_pages_mpol+0x235/0x490 mm/mempolicy.c:2490
+ ___kmalloc_large_node+0x4e/0x120 mm/slub.c:5237
+ __kmalloc_large_node_noprof+0x18/0xe0 mm/slub.c:5268
+ __do_kmalloc_node mm/slub.c:5284 [inline]
+ __kmalloc_node_track_caller_noprof+0x135/0x710 mm/slub.c:5408
+ alloc_dr drivers/base/devres.c:141 [inline]
+ devm_kmalloc+0x7f/0x370 drivers/base/devres.c:951
+ devm_kzalloc include/linux/device/devres.h:50 [inline]
+ cx231xx_usb_probe+0x166/0x2140 drivers/media/usb/cx231xx/cx231xx-cards.c:1723
+ usb_probe_interface+0x657/0xc70 drivers/usb/core/driver.c:396
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ usb_store_new_id+0x56d/0x740 drivers/usb/core/driver.c:102
+page last free pid 9 tgid 9 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ free_node drivers/base/devres.c:50 [inline]
+ release_nodes drivers/base/devres.c:547 [inline]
+ devres_release_all+0x1ce/0x260 drivers/base/devres.c:576
+ device_unbind_cleanup drivers/base/dd.c:598 [inline]
+ __device_release_driver drivers/base/dd.c:1357 [inline]
+ device_release_driver_internal+0x550/0x860 drivers/base/dd.c:1375
+ bus_remove_device+0x451/0x570 drivers/base/bus.c:657
+ device_del+0x4bf/0x860 drivers/base/core.c:3895
+ usb_disconnect+0x610/0x980 drivers/usb/core/hub.c:2376
+ hub_port_connect drivers/usb/core/hub.c:5407 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5707 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x1cbc/0x4f10 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff888031539780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888031539800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff888031539880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                                             ^
+ ffff888031539900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888031539980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+RDX: 0000000000080100 RSI: 00007ffc960f5f0b RDI: ffffffffffffff9c
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffc960f4270
+R13: 00007ffc960f4420 R14: 00007fae415b5000 R15: 0000558d0f467c58
+ </TASK>
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x31539
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 0000000000000000 00000000ffffffff 0000000000000000
+raw: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0x40dc0(GFP_KERNEL|__GFP_ZERO|__GFP_COMP), pid 13437, tgid 13432 (syz.0.327), ts 90040276697, free_ts 91277385942
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ alloc_pages_mpol+0x235/0x490
+ ___kmalloc_large_node+0x4e/0x120
+ __kmalloc_large_node_noprof+0x18/0xe0
+ __kmalloc_node_track_caller_noprof+0x135/0x710
+ devm_kmalloc+0x7f/0x370
+ cx231xx_usb_probe+0x166/0x2140
+ usb_probe_interface+0x657/0xc70
+ really_probe+0x267/0xaf0
+ __driver_probe_device+0x1ef/0x380
+ driver_probe_device+0x4f/0x240
+ __driver_attach+0x346/0x640
+ bus_for_each_dev+0x23a/0x2c0
+ usb_store_new_id+0x56d/0x740
+page last free pid 9 tgid 9 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ devres_release_all+0x1ce/0x260
+ device_release_driver_internal+0x550/0x860
+ bus_remove_device+0x451/0x570
+ device_del+0x4bf/0x860
+ usb_disconnect+0x610/0x980
+ hub_event+0x1cbc/0x4f10
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff888031539780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888031539800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff888031539880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                                             ^
+ ffff888031539900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888031539980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

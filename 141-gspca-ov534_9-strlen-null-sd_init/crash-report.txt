@@ -1,0 +1,8 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+RIP: 0010:strlen+0x29/0x70
+CPU: 1 PID: 25 Comm: kworker/1:0
+Workqueue: usb_hub_wq hub_event
+Kernel panic - not syncing: Fatal exception

@@ -1,0 +1,227 @@
+Recovered console capture for 239-kasan-slab-use-after-free-write-in-msp-remove
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
+this directory; captured after the harness marker, so boot noise is excluded.
+Matched to this entry because: same defect and same chain: the original names the inlined refcount frames (refcount_inc <- get_task_struct <- kthread_stop); this run's report names kthread_stop directly.
+Source log: console_try-239-kasan-slab-use-after-free-write-in-m-cand2.log
+
+This file exists because this entry faces a near-miss commit that is MERGED and
+present in v7.2-12252. A crash on that tree is what proves the merged commit did
+not remove this defect -- the argument should not rest on source reading alone.
+The original crash-report.txt records the first observation on v7.1-rc5.
+======================================================================
+
+[   51.771414][ T9519] msp3400 2-0040: I/O error #1 (write 0x12/0x13)
+[   51.792539][ T9519] msp3400 2-0040: I/O error #2 (write 0x12/0x13)
+[   51.810453][ T9519] msp3400 2-0040: resetting chip, sound will go off.
+[   51.815665][ T9519] msp3400 2-0040: chip reset failed
+[   54.525657][ T9501] i2c i2c-2: delete_device: Deleting device msp3400 at 0x40
+[   54.532906][ T9501] ==================================================================
+[   54.535553][ T9501] BUG: KASAN: slab-use-after-free in kthread_stop+0xb0/0x5b0
+[   54.537939][ T9501] Write of size 4 at addr ffff88810733cca8 by task repro/9501
+[   54.540159][ T9501] 
+[   54.540485][ T9501] CPU: 0 UID: 0 PID: 9501 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   54.540497][ T9501] Tainted: [W]=WARN
+[   54.540500][ T9501] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   54.540509][ T9501] Call Trace:
+[   54.540514][ T9501]  <TASK>
+[   54.540518][ T9501]  dump_stack_lvl+0xe8/0x150
+[   54.540529][ T9501]  print_address_description+0x55/0x1e0
+[   54.540538][ T9501]  ? kthread_stop+0xb0/0x5b0
+[   54.540544][ T9501]  print_report+0x58/0x70
+[   54.540552][ T9501]  kasan_report+0x117/0x150
+[   54.540562][ T9501]  ? kthread_stop+0xb0/0x5b0
+[   54.540570][ T9501]  kasan_check_range+0x264/0x2c0
+[   54.540579][ T9501]  kthread_stop+0xb0/0x5b0
+[   54.540587][ T9501]  msp_remove+0x95/0xd0
+[   54.540603][ T9501]  i2c_device_remove+0x88/0x220
+[   54.540615][ T9501]  ? __pfx_i2c_device_remove+0x10/0x10
+[   54.540625][ T9501]  device_release_driver_internal+0x46f/0x870
+[   54.540643][ T9501]  bus_remove_device+0x455/0x570
+[   54.540653][ T9501]  ? __pfx_bus_remove_device+0x10/0x10
+[   54.540663][ T9501]  ? kernfs_remove_by_name_ns+0x101/0x140
+[   54.540672][ T9501]  device_del+0x527/0x8f0
+[   54.540685][ T9501]  ? __pfx_device_del+0x10/0x10
+[   54.540695][ T9501]  ? __dev_fwnode+0x50/0x80
+[   54.540707][ T9501]  ? device_remove_software_node+0x42/0x160
+[   54.540718][ T9501]  device_unregister+0x21/0xf0
+[   54.540729][ T9501]  delete_device_store+0x43e/0x500
+[   54.540738][ T9501]  ? __pfx_delete_device_store+0x10/0x10
+[   54.540746][ T9501]  ? sysfs_file_kobj+0x1e4/0x230
+[   54.540756][ T9501]  ? sysfs_kf_write+0x166/0x260
+[   54.540766][ T9501]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   54.540775][ T9501]  kernfs_fop_write_iter+0x3af/0x540
+[   54.540785][ T9501]  vfs_write+0x61d/0xb90
+[   54.540797][ T9501]  ? __pfx_vfs_write+0x10/0x10
+[   54.540809][ T9501]  ? __fget_files+0x2a/0x420
+[   54.540820][ T9501]  ksys_write+0x150/0x270
+[   54.540830][ T9501]  ? __pfx_ksys_write+0x10/0x10
+[   54.540842][ T9501]  do_syscall_64+0x155/0x510
+[   54.540851][ T9501]  ? trace_irq_disable+0x3b/0x140
+[   54.540860][ T9501]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   54.540868][ T9501]  ? clear_bhb_loop+0x30/0x80
+[   54.540877][ T9501]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   54.540886][ T9501] RIP: 0033:0x45d4f2
+[   54.540895][ T9501] Code: 08 0f 85 d1 df ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 48 89 e5
+[   54.540904][ T9501] RSP: 002b:00007ffd04457618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[   54.540917][ T9501] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000045d4f2
+[   54.540923][ T9501] RDX: 0000000000000004 RSI: 00000000004a2269 RDI: 0000000000000004
+[   54.540928][ T9501] RBP: 00007ffd04457640 R08: 0000000000000000 R09: 0000000000000000
+[   54.540933][ T9501] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffd04457bf8
+[   54.540938][ T9501] R13: 00007ffd04457c08 R14: 0000000000000002 R15: 00000000004cca20
+[   54.540946][ T9501]  </TASK>
+[   54.540949][ T9501] 
+[   54.577582][ T9501] Allocated by task 2:
+[   54.578150][ T9501]  kasan_save_track+0x3e/0x80
+[   54.578767][ T9501]  __kasan_slab_alloc+0x6c/0x80
+[   54.579389][ T9501]  kmem_cache_alloc_node_noprof+0x361/0x620
+[   54.580118][ T9501]  dup_task_struct+0x52/0xa20
+[   54.580704][ T9501]  copy_process+0x777/0x4330
+[   54.581289][ T9501]  kernel_clone+0x2d7/0x940
+[   54.581860][ T9501]  kernel_thread+0x13f/0x1b0
+[   54.582447][ T9501]  kthreadd+0x4ec/0x6e0
+[   54.582961][ T9501]  ret_from_fork+0x514/0xb70
+[   54.583623][ T9501]  ret_from_fork_asm+0x1a/0x30
+[   54.584240][ T9501] 
+[   54.584558][ T9501] Freed by task 0:
+[   54.585053][ T9501]  kasan_save_track+0x3e/0x80
+[   54.585676][ T9501]  kasan_save_free_info+0x46/0x50
+[   54.586359][ T9501]  __kasan_slab_free+0x5c/0x80
+[   54.586982][ T9501]  kmem_cache_free+0x182/0x650
+[   54.587594][ T9501]  rcu_core+0x7d6/0x1080
+[   54.588149][ T9501]  handle_softirqs+0x22c/0x860
+[   54.588788][ T9501]  __irq_exit_rcu+0xcb/0x220
+[   54.589443][ T9501]  irq_exit_rcu+0x9/0x30
+[   54.589968][ T9501]  sysvec_apic_timer_interrupt+0xa6/0xc0
+[   54.590731][ T9501]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[   54.591512][ T9501] 
+[   54.591818][ T9501] Last potentially related work creation:
+[   54.592537][ T9501]  kasan_save_stack+0x3e/0x60
+[   54.593123][ T9501]  kasan_record_aux_stack+0xbd/0xd0
+[   54.593822][ T9501]  call_rcu+0xee/0x890
+[   54.594341][ T9501]  rcu_core+0x7d6/0x1080
+[   54.594866][ T9501]  handle_softirqs+0x22c/0x860
+[   54.595470][ T9501]  __irq_exit_rcu+0xcb/0x220
+[   54.596041][ T9501]  irq_exit_rcu+0x9/0x30
+[   54.596655][ T9501]  sysvec_apic_timer_interrupt+0xa6/0xc0
+[   54.597366][ T9501]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[   54.598099][ T9501] 
+[   54.598394][ T9501] Second to last potentially related work creation:
+[   54.599202][ T9501]  kasan_save_stack+0x3e/0x60
+[   54.599780][ T9501]  kasan_record_aux_stack+0xbd/0xd0
+[   54.600419][ T9501]  call_rcu+0xee/0x890
+[   54.600923][ T9501]  __schedule+0x17f8/0x58e0
+[   54.601474][ T9501]  schedule_idle+0x51/0x90
+[   54.602021][ T9501]  do_idle+0x4ad/0x540
+[   54.602523][ T9501]  cpu_startup_entry+0x43/0x60
+[   54.603108][ T9501]  rest_init+0x378/0x3a0
+[   54.603692][ T9501]  start_kernel+0x392/0x3e0
+[   54.604259][ T9501]  x86_64_start_reservations+0x24/0x30
+[   54.604939][ T9501]  x86_64_start_kernel+0x143/0x1c0
+[   54.605587][ T9501]  common_startup_64+0x13e/0x157
+[   54.606195][ T9501] 
+[   54.606491][ T9501] The buggy address belongs to the object at ffff88810733cc80
+[   54.606491][ T9501]  which belongs to the cache task_struct of size 9480
+[   54.608233][ T9501] The buggy address is located 40 bytes inside of
+[   54.608233][ T9501]  freed 9480-byte region [ffff88810733cc80, ffff88810733f188)
+[   54.609910][ T9501] 
+[   54.610207][ T9501] The buggy address belongs to the physical page:
+[   54.610995][ T9501] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x107338
+[   54.612083][ T9501] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   54.613160][ T9501] memcg:ffff8881092b5781
+[   54.613768][ T9501] flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+[   54.614715][ T9501] page_type: f5(slab)
+[   54.615214][ T9501] raw: 057ff00000000040 ffff888100018000 dead000000000100 dead000000000122
+[   54.616304][ T9501] raw: 0000000000000000 0000000800030003 00000000f5000000 ffff8881092b5781
+[   54.617353][ T9501] head: 057ff00000000040 ffff888100018000 dead000000000100 dead000000000122
+[   54.618420][ T9501] head: 0000000000000000 0000000800030003 00000000f5000000 ffff8881092b5781
+[   54.619484][ T9501] head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+[   54.620613][ T9501] head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+[   54.621729][ T9501] page dumped because: kasan: bad access detected
+[   54.622518][ T9501] page_owner tracks the page as allocated
+[   54.623223][ T9501] page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 88, tgid 88 (kworker/u10:5), ts 2461005454
+[   54.625715][ T9501]  post_alloc_hook+0x1f9/0x250
+[   54.626357][ T9501]  get_page_from_freelist+0x235a/0x23e0
+[   54.627098][ T9501]  __alloc_frozen_pages_noprof+0x217/0x5a0
+[   54.627815][ T9501]  allocate_slab+0x79/0x5e0
+[   54.628387][ T9501]  refill_objects+0x2d6/0x350
+[   54.628972][ T9501]  __pcs_replace_empty_main+0x2c4/0x6b0
+[   54.629667][ T9501]  kmem_cache_alloc_node_noprof+0x441/0x620
+[   54.630405][ T9501]  dup_task_struct+0x52/0xa20
+[   54.630993][ T9501]  copy_process+0x777/0x4330
+[   54.631566][ T9501]  kernel_clone+0x2d7/0x940
+[   54.632119][ T9501]  user_mode_thread+0x115/0x180
+[   54.632735][ T9501]  call_usermodehelper_exec_work+0x5c/0x230
+[   54.633526][ T9501]  process_scheduled_works+0xc99/0x1900
+[   54.634210][ T9501]  worker_thread+0xa53/0xfc0
+[   54.634795][ T9501]  kthread+0x38b/0x480
+[   54.635346][ T9501]  ret_from_fork+0x514/0xb70
+[   54.635947][ T9501] page_owner free stack trace missing
+[   54.636634][ T9501] 
+[   54.636921][ T9501] Memory state around the buggy address:
+[   54.637616][ T9501]  ffff88810733cb80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   54.638654][ T9501]  ffff88810733cc00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   54.639703][ T9501] >ffff88810733cc80: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   54.640708][ T9501]                                   ^
+[   54.641360][ T9501]  ffff88810733cd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   54.642358][ T9501]  ffff88810733cd80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   54.643416][ T9501] ==================================================================
+[   54.644811][ T9501] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   54.645785][ T9501] CPU: 0 UID: 0 PID: 9501 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   54.647269][ T9501] Tainted: [W]=WARN
+[   54.647745][ T9501] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   54.649138][ T9501] Call Trace:
+[   54.649547][ T9501]  <TASK>
+[   54.649905][ T9501]  vpanic+0x56d/0xa60
+[   54.650400][ T9501]  ? __pfx_vpanic+0x10/0x10
+[   54.650966][ T9501]  panic+0xc5/0xd0
+[   54.651429][ T9501]  ? __pfx_panic+0x10/0x10
+[   54.651974][ T9501]  ? preempt_schedule_thunk+0x16/0x40
+[   54.652641][ T9501]  ? preempt_schedule_thunk+0x16/0x40
+[   54.653355][ T9501]  ? kthread_stop+0xb0/0x5b0
+[   54.653938][ T9501]  check_panic_on_warn+0x89/0xb0
+[   54.654554][ T9501]  ? kthread_stop+0xb0/0x5b0
+[   54.655161][ T9501]  end_report+0x73/0x170
+[   54.655726][ T9501]  ? kthread_stop+0xb0/0x5b0
+[   54.656322][ T9501]  kasan_report+0x128/0x150
+[   54.656891][ T9501]  ? kthread_stop+0xb0/0x5b0
+[   54.657469][ T9501]  kasan_check_range+0x264/0x2c0
+[   54.658095][ T9501]  kthread_stop+0xb0/0x5b0
+[   54.658678][ T9501]  msp_remove+0x95/0xd0
+[   54.659215][ T9501]  i2c_device_remove+0x88/0x220
+[   54.659828][ T9501]  ? __pfx_i2c_device_remove+0x10/0x10
+[   54.660499][ T9501]  device_release_driver_internal+0x46f/0x870
+[   54.661255][ T9501]  bus_remove_device+0x455/0x570
+[   54.661864][ T9501]  ? __pfx_bus_remove_device+0x10/0x10
+[   54.662533][ T9501]  ? kernfs_remove_by_name_ns+0x101/0x140
+[   54.663236][ T9501]  device_del+0x527/0x8f0
+[   54.663848][ T9501]  ? __pfx_device_del+0x10/0x10
+[   54.664450][ T9501]  ? __dev_fwnode+0x50/0x80
+[   54.665041][ T9501]  ? device_remove_software_node+0x42/0x160
+[   54.665824][ T9501]  device_unregister+0x21/0xf0
+[   54.666446][ T9501]  delete_device_store+0x43e/0x500
+[   54.667114][ T9501]  ? __pfx_delete_device_store+0x10/0x10
+[   54.667814][ T9501]  ? sysfs_file_kobj+0x1e4/0x230
+[   54.668484][ T9501]  ? sysfs_kf_write+0x166/0x260
+[   54.669123][ T9501]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   54.669772][ T9501]  kernfs_fop_write_iter+0x3af/0x540
+[   54.670425][ T9501]  vfs_write+0x61d/0xb90
+[   54.670944][ T9501]  ? __pfx_vfs_write+0x10/0x10
+[   54.671533][ T9501]  ? __fget_files+0x2a/0x420
+[   54.672102][ T9501]  ksys_write+0x150/0x270
+[   54.672638][ T9501]  ? __pfx_ksys_write+0x10/0x10
+[   54.673235][ T9501]  do_syscall_64+0x155/0x510
+[   54.673883][ T9501]  ? trace_irq_disable+0x3b/0x140
+[   54.674567][ T9501]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   54.675375][ T9501]  ? clear_bhb_loop+0x30/0x80
+[   54.675976][ T9501]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   54.676731][ T9501] RIP: 0033:0x45d4f2
+[   54.677212][ T9501] Code: 08 0f 85 d1 df ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 48 89 e5
+[   54.679652][ T9501] RSP: 002b:00007ffd04457618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[   54.680691][ T9501] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000045d4f2
+[   54.681657][ T9501] RDX: 0000000000000004 RSI: 00000000004a2269 RDI: 0000000000000004
+[   54.682632][ T9501] RBP: 00007ffd04457640 R08: 0000000000000000 R09: 0000000000000000
+[   54.683655][ T9501] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffd04457bf8
+[   54.684671][ T9501] R13: 00007ffd04457c08 R14: 0000000000000002 R15: 00000000004cca20
+[   54.685712][ T9501]  </TASK>
+[   54.686415][ T9501] Kernel Offset: disabled
+[   54.687062][ T9501] Rebooting in 86400 seconds..

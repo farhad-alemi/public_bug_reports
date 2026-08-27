@@ -1,0 +1,52 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000006a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000350-0x0000000000000357]
+CPU: 1 UID: 0 PID: 11945 Comm: syz.5.68 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:phy_ethtool_set_wol+0x31/0x100 drivers/net/phy/phy.c:2031
+Code: 41 56 41 55 41 54 53 48 89 f3 49 89 fe 48 bd 00 00 00 00 00 fc ff df e8 bd 3c 5e fb 4d 8d be 50 03 00 00 4d 89 fd 49 c1 ed 03 <41> 80 7c 2d 00 00 74 08 4c 89 ff e8 9f a6 c5 fb 4d 8b 27 4d 85 e4
+RSP: 0018:ffffc90008fcf940 EFLAGS: 00010206
+RAX: ffffffff86608b03 RBX: ffffc90008fcfa00 RCX: 0000000000080000
+RDX: ffffc90023595000 RSI: 0000000000000463 RDI: 0000000000000464
+RBP: dffffc0000000000 R08: ffff8881154e8000 R09: 0000000000000003
+R10: 0000000000000003 R11: 0000000000000002 R12: ffff88810d098b08
+R13: 000000000000006a R14: 0000000000000000 R15: 0000000000000350
+FS:  00007f5b2ae896c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6bf0c9efe8 CR3: 000000010807d000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ lan78xx_set_wol+0x180/0x240 drivers/net/usb/lan78xx.c:1787
+ ethtool_set_wol+0x2cb/0x3f0 net/ethtool/ioctl.c:1865
+ __dev_ethtool net/ethtool/ioctl.c:3341 [inline]
+ dev_ethtool+0xe45/0x1ad0 net/ethtool/ioctl.c:3577
+ dev_ioctl+0x393/0xfc0 net/core/dev_ioctl.c:751
+ sock_do_ioctl+0x23e/0x320 net/socket.c:1327
+ sock_ioctl+0x59a/0x7c0 net/socket.c:1434
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5b29fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5b2ae89018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f5b2a235fa0 RCX: 00007f5b29fa778d
+RDX: 0000200000000b00 RSI: 0000000000008946 RDI: 0000000000000003
+RBP: 00007f5b2a04eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5b2a236038 R14: 00007f5b2a235fa0 R15: 00007ffef72be880
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

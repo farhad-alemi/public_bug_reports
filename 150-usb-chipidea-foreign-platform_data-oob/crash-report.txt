@@ -1,0 +1,17 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+BUG: KASAN: slab-out-of-bounds in ci_hdrc_add_device+0xbaf/0xd50
+Read of size 4 at addr ffff88801cbfd568 by task bash/9439
+ci_hdrc_add_device
+ci_hdrc_usb2_probe
+platform_probe
+really_probe
+__driver_probe_device
+device_driver_attach
+bind_store
+vfs_write
+Allocated by task 1: kmemdup_noprof
+platform_device_register_full
+vhci_hcd_init
+Kernel panic - not syncing: KASAN: panic_on_warn set

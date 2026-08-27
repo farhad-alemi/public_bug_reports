@@ -1,0 +1,208 @@
+Recovered console capture for 182-warning-in-lowpan-compress-addr-64
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
+this directory; captured after the harness marker, so boot noise is excluded.
+Matched to this entry because: same WARN at the same statement: net/6lowpan/iphc.c:937 in lowpan_compress_addr_64.
+Source log: console_try-182-warning-in-lowpan-compress-addr-64-cand1.log
+
+This file exists because this entry faces a near-miss commit that is MERGED and
+present in v7.2-12252. A crash on that tree is what proves the merged commit did
+not remove this defect -- the argument should not rest on source reading alone.
+The original crash-report.txt records the first observation on v7.1-rc5.
+======================================================================
+
+VMTEST_REPRO_BEGIN_try-182-warning-in-lowpan-compress-addr-64-cand1
+[   50.980944][ T9511] ------------[ cut here ]------------
+[   50.981878][ T9511] 1
+[   50.981891][ T9511] WARNING: net/6lowpan/iphc.c:937 at lowpan_compress_addr_64+0x4be/0x9c0, CPU#0: repro/9511
+[   50.983365][ T9511] Modules linked in:
+[   50.983865][ T9511] CPU: 0 UID: 0 PID: 9511 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   50.985186][ T9511] Tainted: [W]=WARN
+[   50.985628][ T9511] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   50.987188][ T9511] RIP: 0010:lowpan_compress_addr_64+0x4be/0x9c0
+[   50.987934][ T9511] Code: 81 fd fe 80 00 00 75 2e 49 39 dc 75 29 e8 1a 90 4b f6 0f 1f 44 00 00 e8 10 90 4b f6 41 b6 03 e9 96 01 00 00 e8 03 90 4b f6 90 <0f> 0b 90 eb 47 e8 f8 8f 4b f6 eb 40 e8 f1 8f 4b f6 eb 39 e8 ea 8f
+[   50.990306][ T9511] RSP: 0018:ffffc900016af020 EFLAGS: 00010293
+[   50.991049][ T9511] RAX: ffffffff8b7b65ed RBX: 0000000000000000 RCX: ffff88810bafcc80
+[   50.991976][ T9511] RDX: 0000000000000000 RSI: ffffffff90334210 RDI: 0000000000000000
+[   50.992936][ T9511] RBP: ffffc900016af0d0 R08: ffff88810bafcc80 R09: 0000000000000002
+[   50.993891][ T9511] R10: 0000000000000003 R11: 0000000000000000 R12: ffffc900016af480
+[   50.994803][ T9511] R13: ffff88802ffbc000 R14: dffffc0000000000 R15: ffff88802d537440
+[   50.995718][ T9511] FS:  0000000030aef400(0000) GS:ffff8880d73a6000(0000) knlGS:0000000000000000
+[   50.996796][ T9511] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.997580][ T9511] CR2: 00007fff079d1e20 CR3: 000000001eac4000 CR4: 0000000000752ef0
+[   50.998526][ T9511] PKRU: 55555554
+[   50.998953][ T9511] Call Trace:
+[   50.999358][ T9511]  <TASK>
+[   50.999834][ T9511]  ? __pfx_lowpan_compress_addr_64+0x10/0x10
+[   51.000594][ T9511]  ? __local_bh_enable_ip+0xd6/0x140
+[   51.001267][ T9511]  lowpan_header_compress+0xeea/0x1ee0
+[   51.001948][ T9511]  ? __pfx_lowpan_header_compress+0x10/0x10
+[   51.002704][ T9511]  ? lock_release+0x4b/0x3c0
+[   51.003289][ T9511]  ? lock_release+0x4b/0x3c0
+[   51.003854][ T9511]  ? is_bpf_text_address+0x292/0x2b0
+[   51.004486][ T9511]  ? is_bpf_text_address+0x26/0x2b0
+[   51.005105][ T9511]  ? __pfx_stack_trace_consume_entry+0x10/0x10
+[   51.005837][ T9511]  ? arch_stack_walk+0xfb/0x150
+[   51.006451][ T9511]  ? stack_trace_save+0xa9/0x100
+[   51.007036][ T9511]  ? lowpan_xmit+0x4d6/0x14d0
+[   51.007608][ T9511]  lowpan_xmit+0x51d/0x14d0
+[   51.008151][ T9511]  ? mark_lock_irq+0x38f/0x420
+[   51.008727][ T9511]  ? mark_lock+0x180/0x190
+[   51.009265][ T9511]  ? __pfx_lowpan_xmit+0x10/0x10
+[   51.009982][ T9511]  ? lockdep_unlock+0x5c/0xd0
+[   51.010583][ T9511]  ? __lock_acquire+0x146e/0x2d10
+[   51.011232][ T9511]  ? __lock_acquire+0x6b5/0x2d10
+[   51.011826][ T9511]  dev_hard_start_xmit+0x2cd/0x830
+[   51.012482][ T9511]  __dev_queue_xmit+0x1560/0x3980
+[   51.013119][ T9511]  ? __dev_queue_xmit+0x2b6/0x3980
+[   51.013759][ T9511]  ? _copy_from_iter+0x21b/0x1670
+[   51.014376][ T9511]  ? __pfx___dev_queue_xmit+0x10/0x10
+[   51.015012][ T9511]  ? sock_alloc_send_pskb+0x896/0x990
+[   51.015656][ T9511]  ? __pfx__copy_from_iter+0x10/0x10
+[   51.016307][ T9511]  ? packet_parse_headers+0x2e6/0x790
+[   51.016952][ T9511]  ? packet_parse_headers+0x5dd/0x790
+[   51.017645][ T9511]  ? __pfx_packet_parse_headers+0x10/0x10
+[   51.018371][ T9511]  ? packet_xmit+0x68/0x320
+[   51.018927][ T9511]  packet_sendmsg+0x3b14/0x4d00
+[   51.019514][ T9511]  ? __pfx_aa_label_sk_perm+0x10/0x10
+[   51.020302][ T9511]  ? kasan_save_track+0x3e/0x80
+[   51.020914][ T9511]  ? __kasan_slab_alloc+0x6c/0x80
+[   51.021526][ T9511]  ? kmem_cache_alloc_noprof+0x2a8/0x600
+[   51.022242][ T9511]  ? security_file_alloc+0x34/0x310
+[   51.022898][ T9511]  ? init_file+0x90/0x2b0
+[   51.023453][ T9511]  ? alloc_empty_file+0x74/0x1d0
+[   51.024056][ T9511]  ? alloc_file_pseudo+0x115/0x1e0
+[   51.024668][ T9511]  ? sock_alloc_file+0xb8/0x2e0
+[   51.025242][ T9511]  ? __sys_socket+0x13c/0x1b0
+[   51.025814][ T9511]  ? __lock_acquire+0x6b5/0x2d10
+[   51.026442][ T9511]  ? __pfx_packet_sendmsg+0x10/0x10
+[   51.027062][ T9511]  ? __might_fault+0xaf/0x130
+[   51.027631][ T9511]  ? __pfx_aa_sk_perm+0x10/0x10
+[   51.028212][ T9511]  ? aa_sock_msg_perm+0xf6/0x1c0
+[   51.028810][ T9511]  ? __pfx_packet_sendmsg+0x10/0x10
+[   51.029433][ T9511]  sock_sendmsg_nosec+0x13a/0x180
+[   51.030163][ T9511]  __sys_sendto+0x408/0x5a0
+[   51.030754][ T9511]  ? __pfx___sys_sendto+0x10/0x10
+[   51.031388][ T9511]  ? fd_install+0x94/0x3d0
+[   51.031916][ T9511]  ? fd_install+0x309/0x3d0
+[   51.032518][ T9511]  __x64_sys_sendto+0xde/0x100
+[   51.033121][ T9511]  do_syscall_64+0x155/0x510
+[   51.033699][ T9511]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.034485][ T9511]  ? clear_bhb_loop+0x30/0x80
+[   51.035079][ T9511]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.035797][ T9511] RIP: 0033:0x4532a6
+[   51.036293][ T9511] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   51.038555][ T9511] RSP: 002b:00007fff079d36a0 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
+[   51.039578][ T9511] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00000000004532a6
+[   51.040618][ T9511] RDX: 0000000000000028 RSI: 00007fff079d3730 RDI: 0000000000000003
+[   51.041572][ T9511] RBP: 00007fff079d36b0 R08: 00007fff079d3710 R09: 0000000000000014
+[   51.042544][ T9511] R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff079d3888
+[   51.043531][ T9511] R13: 00007fff079d3898 R14: 0000000000000002 R15: 00000000004b2160
+[   51.044517][ T9511]  </TASK>
+[   51.044892][ T9511] Kernel panic - not syncing: kernel: panic_on_warn set ...
+[   51.045752][ T9511] CPU: 0 UID: 0 PID: 9511 Comm: repro Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.047159][ T9511] Tainted: [W]=WARN
+[   51.047636][ T9511] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.048903][ T9511] Call Trace:
+[   51.049302][ T9511]  <TASK>
+[   51.049739][ T9511]  vpanic+0x56d/0xa60
+[   51.050256][ T9511]  ? __pfx__printk+0x10/0x10
+[   51.050834][ T9511]  ? __pfx_vpanic+0x10/0x10
+[   51.051402][ T9511]  ? is_bpf_text_address+0x292/0x2b0
+[   51.052055][ T9511]  ? is_bpf_text_address+0x26/0x2b0
+[   51.052725][ T9511]  panic+0xc5/0xd0
+[   51.053195][ T9511]  ? __pfx_panic+0x10/0x10
+[   51.053754][ T9511]  __warn+0x315/0x4c0
+[   51.054228][ T9511]  ? lowpan_compress_addr_64+0x4be/0x9c0
+[   51.054892][ T9511]  ? lowpan_compress_addr_64+0x4be/0x9c0
+[   51.055567][ T9511]  __report_bug+0x273/0x580
+[   51.056107][ T9511]  ? lowpan_compress_addr_64+0x4be/0x9c0
+[   51.056767][ T9511]  ? __pfx___report_bug+0x10/0x10
+[   51.057365][ T9511]  ? check_path+0x21/0x40
+[   51.057874][ T9511]  ? check_noncircular+0xda/0x150
+[   51.058472][ T9511]  ? add_lock_to_list+0xc7/0x100
+[   51.059053][ T9511]  ? lockdep_unlock+0x5c/0xd0
+[   51.059693][ T9511]  ? __lock_acquire+0x146e/0x2d10
+[   51.060336][ T9511]  ? lowpan_compress_addr_64+0x4be/0x9c0
+[   51.061028][ T9511]  report_bug+0x16b/0x220
+[   51.061577][ T9511]  ? lowpan_compress_addr_64+0x4be/0x9c0
+[   51.062271][ T9511]  ? lowpan_compress_addr_64+0x4c0/0x9c0
+[   51.062963][ T9511]  handle_bug+0x9c/0x200
+[   51.063502][ T9511]  exc_invalid_op+0x1a/0x50
+[   51.064035][ T9511]  asm_exc_invalid_op+0x1a/0x20
+[   51.064614][ T9511] RIP: 0010:lowpan_compress_addr_64+0x4be/0x9c0
+[   51.065344][ T9511] Code: 81 fd fe 80 00 00 75 2e 49 39 dc 75 29 e8 1a 90 4b f6 0f 1f 44 00 00 e8 10 90 4b f6 41 b6 03 e9 96 01 00 00 e8 03 90 4b f6 90 <0f> 0b 90 eb 47 e8 f8 8f 4b f6 eb 40 e8 f1 8f 4b f6 eb 39 e8 ea 8f
+[   51.067671][ T9511] RSP: 0018:ffffc900016af020 EFLAGS: 00010293
+[   51.068438][ T9511] RAX: ffffffff8b7b65ed RBX: 0000000000000000 RCX: ffff88810bafcc80
+[   51.069364][ T9511] RDX: 0000000000000000 RSI: ffffffff90334210 RDI: 0000000000000000
+[   51.070445][ T9511] RBP: ffffc900016af0d0 R08: ffff88810bafcc80 R09: 0000000000000002
+[   51.071414][ T9511] R10: 0000000000000003 R11: 0000000000000000 R12: ffffc900016af480
+[   51.072369][ T9511] R13: ffff88802ffbc000 R14: dffffc0000000000 R15: ffff88802d537440
+[   51.073346][ T9511]  ? lowpan_compress_addr_64+0x4bd/0x9c0
+[   51.074022][ T9511]  ? __pfx_lowpan_compress_addr_64+0x10/0x10
+[   51.074730][ T9511]  ? __local_bh_enable_ip+0xd6/0x140
+[   51.075372][ T9511]  lowpan_header_compress+0xeea/0x1ee0
+[   51.076022][ T9511]  ? __pfx_lowpan_header_compress+0x10/0x10
+[   51.076718][ T9511]  ? lock_release+0x4b/0x3c0
+[   51.077268][ T9511]  ? lock_release+0x4b/0x3c0
+[   51.077868][ T9511]  ? is_bpf_text_address+0x292/0x2b0
+[   51.078541][ T9511]  ? is_bpf_text_address+0x26/0x2b0
+[   51.079158][ T9511]  ? __pfx_stack_trace_consume_entry+0x10/0x10
+[   51.080021][ T9511]  ? arch_stack_walk+0xfb/0x150
+[   51.080641][ T9511]  ? stack_trace_save+0xa9/0x100
+[   51.081266][ T9511]  ? lowpan_xmit+0x4d6/0x14d0
+[   51.081819][ T9511]  lowpan_xmit+0x51d/0x14d0
+[   51.082391][ T9511]  ? mark_lock_irq+0x38f/0x420
+[   51.082991][ T9511]  ? mark_lock+0x180/0x190
+[   51.083560][ T9511]  ? __pfx_lowpan_xmit+0x10/0x10
+[   51.084176][ T9511]  ? lockdep_unlock+0x5c/0xd0
+[   51.084769][ T9511]  ? __lock_acquire+0x146e/0x2d10
+[   51.085405][ T9511]  ? __lock_acquire+0x6b5/0x2d10
+[   51.085992][ T9511]  dev_hard_start_xmit+0x2cd/0x830
+[   51.086618][ T9511]  __dev_queue_xmit+0x1560/0x3980
+[   51.087222][ T9511]  ? __dev_queue_xmit+0x2b6/0x3980
+[   51.087833][ T9511]  ? _copy_from_iter+0x21b/0x1670
+[   51.088434][ T9511]  ? __pfx___dev_queue_xmit+0x10/0x10
+[   51.089065][ T9511]  ? sock_alloc_send_pskb+0x896/0x990
+[   51.089800][ T9511]  ? __pfx__copy_from_iter+0x10/0x10
+[   51.090509][ T9511]  ? packet_parse_headers+0x2e6/0x790
+[   51.091219][ T9511]  ? packet_parse_headers+0x5dd/0x790
+[   51.091921][ T9511]  ? __pfx_packet_parse_headers+0x10/0x10
+[   51.092685][ T9511]  ? packet_xmit+0x68/0x320
+[   51.093286][ T9511]  packet_sendmsg+0x3b14/0x4d00
+[   51.093922][ T9511]  ? __pfx_aa_label_sk_perm+0x10/0x10
+[   51.094639][ T9511]  ? kasan_save_track+0x3e/0x80
+[   51.095237][ T9511]  ? __kasan_slab_alloc+0x6c/0x80
+[   51.095877][ T9511]  ? kmem_cache_alloc_noprof+0x2a8/0x600
+[   51.096569][ T9511]  ? security_file_alloc+0x34/0x310
+[   51.097218][ T9511]  ? init_file+0x90/0x2b0
+[   51.097765][ T9511]  ? alloc_empty_file+0x74/0x1d0
+[   51.098381][ T9511]  ? alloc_file_pseudo+0x115/0x1e0
+[   51.099016][ T9511]  ? sock_alloc_file+0xb8/0x2e0
+[   51.099717][ T9511]  ? __sys_socket+0x13c/0x1b0
+[   51.100347][ T9511]  ? __lock_acquire+0x6b5/0x2d10
+[   51.101017][ T9511]  ? __pfx_packet_sendmsg+0x10/0x10
+[   51.101709][ T9511]  ? __might_fault+0xaf/0x130
+[   51.102331][ T9511]  ? __pfx_aa_sk_perm+0x10/0x10
+[   51.102991][ T9511]  ? aa_sock_msg_perm+0xf6/0x1c0
+[   51.103612][ T9511]  ? __pfx_packet_sendmsg+0x10/0x10
+[   51.104259][ T9511]  sock_sendmsg_nosec+0x13a/0x180
+[   51.104895][ T9511]  __sys_sendto+0x408/0x5a0
+[   51.105457][ T9511]  ? __pfx___sys_sendto+0x10/0x10
+[   51.106099][ T9511]  ? fd_install+0x94/0x3d0
+[   51.106705][ T9511]  ? fd_install+0x309/0x3d0
+[   51.107277][ T9511]  __x64_sys_sendto+0xde/0x100
+[   51.107884][ T9511]  do_syscall_64+0x155/0x510
+[   51.108457][ T9511]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.109213][ T9511]  ? clear_bhb_loop+0x30/0x80
+[   51.109929][ T9511]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   51.110684][ T9511] RIP: 0033:0x4532a6
+[   51.111171][ T9511] Code: 47 ba 04 00 00 00 48 c7 c0 f0 ff ff ff 64 89 10 48 c7 c2 ff ff ff ff c9 48 89 d0 c3 0f 1f 84 00 00 00 00 00 48 8b 45 10 0f 05 <48> 89 c2 48 3d 00 f0 ff ff 77 0f c9 48 89 d0 c3 66 2e 0f 1f 84 00
+[   51.113620][ T9511] RSP: 002b:00007fff079d36a0 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
+[   51.114656][ T9511] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00000000004532a6
+[   51.115640][ T9511] RDX: 0000000000000028 RSI: 00007fff079d3730 RDI: 0000000000000003
+[   51.116624][ T9511] RBP: 00007fff079d36b0 R08: 00007fff079d3710 R09: 0000000000000014
+[   51.117606][ T9511] R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff079d3888
+[   51.118585][ T9511] R13: 00007fff079d3898 R14: 0000000000000002 R15: 00000000004b2160
+[   51.119575][ T9511]  </TASK>
+[   51.120183][ T9511] Kernel Offset: disabled
+[   51.120733][ T9511] Rebooting in 86400 seconds..

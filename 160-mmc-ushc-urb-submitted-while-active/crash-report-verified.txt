@@ -1,0 +1,140 @@
+Recovered console capture for 160-mmc-ushc-urb-submitted-while-active
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: frame ushc_request is defined in the entry's own file drivers/mmc/host/ushc.c.
+Source log: console_try-160-mmc-ushc-urb-submitted-while-active-cand1.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   50.893090][  T992] usb 3-1: new high-speed USB device number 2 using dummy_hcd
+[   51.052498][  T992] usb 3-1: New USB device found, idVendor=0a12, idProduct=5d10, bcdDevice= 1.00
+[   51.055972][  T992] usb 3-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[   51.117594][  T992] ------------[ cut here ]------------
+[   51.118597][  T992] URB ffff888109bbaa00 submitted while active
+[   51.119568][  T992] WARNING: drivers/usb/core/urb.c:379 at usb_submit_urb+0x7b/0x18c0, CPU#1: kworker/1:2/992
+[   51.121108][  T992] Modules linked in:
+[   51.121594][  T992] CPU: 1 UID: 0 PID: 992 Comm: kworker/1:2 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.123042][  T992] Tainted: [W]=WARN
+[   51.123489][  T992] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.124746][  T992] Workqueue: events_freezable mmc_rescan
+[   51.125457][  T992] RIP: 0010:usb_submit_urb+0x7e/0x18c0
+[   51.126096][  T992] Code: 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 a7 27 e3 fa 49 83 3e 00 74 40 e8 bc 70 73 fa 48 8d 3d e5 c2 0f 09 48 89 de <67> 48 0f b9 3a b8 f0 ff ff ff eb 11 e8 a1 70 73 fa eb 05 e8 9a 70
+[   51.128227][  T992] RSP: 0018:ffffc90006387508 EFLAGS: 00010093
+[   51.128932][  T992] RAX: ffffffff87538534 RBX: ffff888109bbaa00 RCX: ffff8881072acc80
+[   51.129833][  T992] RDX: 0000000000000000 RSI: ffff888109bbaa00 RDI: ffffffff90634820
+[   51.130735][  T992] RBP: 0000000080000c08 R08: ffff88810862899f R09: 1ffff110210c5133
+[   51.131667][  T992] R10: dffffc0000000000 R11: ffffed10210c5134 R12: 0000000000000820
+[   51.132618][  T992] R13: ffffc900063876c0 R14: ffff888109bbaa08 R15: dffffc0000000000
+[   51.133642][  T992] FS:  0000000000000000(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   51.134709][  T992] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   51.135548][  T992] CR2: 00007ffd9775a7c0 CR3: 0000000108f56000 CR4: 0000000000752ef0
+[   51.136518][  T992] PKRU: 55555554
+[   51.136951][  T992] Call Trace:
+[   51.137358][  T992]  <TASK>
+[   51.137721][  T992]  ? led_trigger_event+0x4b/0x210
+[   51.138334][  T992]  ? rcu_is_watching+0x16/0xb0
+[   51.138925][  T992]  ushc_request+0x3ce/0x8f0
+[   51.139488][  T992]  ? __mmc_start_request+0x3d2/0x500
+[   51.140130][  T992]  mmc_start_request+0x202/0x2d0
+[   51.140738][  T992]  mmc_wait_for_req+0xd9/0x240
+[   51.141319][  T992]  mmc_wait_for_cmd+0x183/0x2a0
+[   51.141929][  T992]  ? trace_rpm_return_int+0x83/0x200
+[   51.142602][  T992]  ? __pfx_mmc_wait_for_cmd+0x10/0x10
+[   51.143342][  T992]  ? rpm_resume+0xc3c/0x15f0
+[   51.143943][  T992]  ? __pfx_mmc_wait_done+0x10/0x10
+[   51.144596][  T992]  ? _raw_spin_unlock_irqrestore+0x30/0x80
+[   51.145344][  T992]  sdio_reset+0x1fa/0x3a0
+[   51.145896][  T992]  ? __pfx_sdio_reset+0x10/0x10
+[   51.146525][  T992]  ? __mmc_claim_host+0x160/0x650
+[   51.147162][  T992]  ? mmc_power_up+0x5e/0x650
+[   51.147750][  T992]  mmc_rescan+0x6d3/0x1020
+[   51.148314][  T992]  ? process_scheduled_works+0x94e/0x1900
+[   51.149028][  T992]  process_scheduled_works+0xc99/0x1900
+[   51.149738][  T992]  ? __pfx_process_scheduled_works+0x10/0x10
+[   51.150490][  T992]  ? assign_work+0x3d5/0x5e0
+[   51.151070][  T992]  worker_thread+0xa53/0xfc0
+[   51.151664][  T992]  kthread+0x38b/0x480
+[   51.152173][  T992]  ? __pfx_worker_thread+0x10/0x10
+[   51.152860][  T992]  ? __pfx_kthread+0x10/0x10
+[   51.153437][  T992]  ret_from_fork+0x514/0xb70
+[   51.154052][  T992]  ? __pfx_ret_from_fork+0x10/0x10
+[   51.154714][  T992]  ? __switch_to+0xc79/0x1410
+[   51.155317][  T992]  ? __pfx_kthread+0x10/0x10
+[   51.155902][  T992]  ret_from_fork_asm+0x1a/0x30
+[   51.156513][  T992]  </TASK>
+[   51.156902][  T992] Kernel panic - not syncing: kernel: panic_on_warn set ...
+[   51.157811][  T992] CPU: 1 UID: 0 PID: 992 Comm: kworker/1:2 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   51.159283][  T992] Tainted: [W]=WARN
+[   51.159763][  T992] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   51.161124][  T992] Workqueue: events_freezable mmc_rescan
+[   51.161829][  T992] Call Trace:
+[   51.162246][  T992]  <TASK>
+[   51.162613][  T992]  vpanic+0x56d/0xa60
+[   51.163168][  T992]  ? __pfx__printk+0x10/0x10
+[   51.163747][  T992]  ? __pfx_vpanic+0x10/0x10
+[   51.164318][  T992]  ? is_bpf_text_address+0x292/0x2b0
+[   51.164988][  T992]  ? is_bpf_text_address+0x26/0x2b0
+[   51.165647][  T992]  panic+0xc5/0xd0
+[   51.166120][  T992]  ? __pfx_panic+0x10/0x10
+[   51.166681][  T992]  ? ret_from_fork_asm+0x1a/0x30
+[   51.167301][  T992]  __warn+0x315/0x4c0
+[   51.167805][  T992]  ? usb_submit_urb+0x7b/0x18c0
+[   51.168421][  T992]  ? usb_submit_urb+0x7b/0x18c0
+[   51.169034][  T992]  __report_bug+0x273/0x580
+[   51.169608][  T992]  ? __lock_acquire+0x6b5/0x2d10
+[   51.170228][  T992]  ? usb_submit_urb+0x7b/0x18c0
+[   51.170835][  T992]  ? __pfx___report_bug+0x10/0x10
+[   51.171464][  T992]  ? kthread_data+0x4f/0xc0
+[   51.172040][  T992]  ? schedule_timeout+0xc3/0x2c0
+[   51.172695][  T992]  ? irqentry_exit+0x218/0x760
+[   51.173372][  T992]  ? __lock_acquire+0x6b5/0x2d10
+[   51.173988][  T992]  report_bug_entry+0x19b/0x290
+[   51.174598][  T992]  ? usb_submit_urb+0x7e/0x18c0
+[   51.175248][  T992]  ? usb_submit_urb+0x83/0x18c0
+[   51.175892][  T992]  handle_bug+0xce/0x200
+[   51.176433][  T992]  exc_invalid_op+0x1a/0x50
+[   51.177002][  T992]  asm_exc_invalid_op+0x1a/0x20
+[   51.177608][  T992] RIP: 0010:usb_submit_urb+0x7e/0x18c0
+[   51.178282][  T992] Code: 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 a7 27 e3 fa 49 83 3e 00 74 40 e8 bc 70 73 fa 48 8d 3d e5 c2 0f 09 48 89 de <67> 48 0f b9 3a b8 f0 ff ff ff eb 11 e8 a1 70 73 fa eb 05 e8 9a 70
+[   51.180683][  T992] RSP: 0018:ffffc90006387508 EFLAGS: 00010093
+[   51.181427][  T992] RAX: ffffffff87538534 RBX: ffff888109bbaa00 RCX: ffff8881072acc80
+[   51.182408][  T992] RDX: 0000000000000000 RSI: ffff888109bbaa00 RDI: ffffffff90634820
+[   51.183454][  T992] RBP: 0000000080000c08 R08: ffff88810862899f R09: 1ffff110210c5133
+[   51.184428][  T992] R10: dffffc0000000000 R11: ffffed10210c5134 R12: 0000000000000820
+[   51.185398][  T992] R13: ffffc900063876c0 R14: ffff888109bbaa08 R15: dffffc0000000000
+[   51.186378][  T992]  ? usb_submit_urb+0x74/0x18c0
+[   51.186989][  T992]  ? usb_submit_urb+0x74/0x18c0
+[   51.187598][  T992]  ? led_trigger_event+0x4b/0x210
+[   51.188234][  T992]  ? rcu_is_watching+0x16/0xb0
+[   51.188839][  T992]  ushc_request+0x3ce/0x8f0
+[   51.189408][  T992]  ? __mmc_start_request+0x3d2/0x500
+[   51.190066][  T992]  mmc_start_request+0x202/0x2d0
+[   51.190684][  T992]  mmc_wait_for_req+0xd9/0x240
+[   51.191285][  T992]  mmc_wait_for_cmd+0x183/0x2a0
+[   51.191899][  T992]  ? trace_rpm_return_int+0x83/0x200
+[   51.192556][  T992]  ? __pfx_mmc_wait_for_cmd+0x10/0x10
+[   51.193322][  T992]  ? rpm_resume+0xc3c/0x15f0
+[   51.193910][  T992]  ? __pfx_mmc_wait_done+0x10/0x10
+[   51.194549][  T992]  ? _raw_spin_unlock_irqrestore+0x30/0x80
+[   51.195306][  T992]  sdio_reset+0x1fa/0x3a0
+[   51.195895][  T992]  ? __pfx_sdio_reset+0x10/0x10
+[   51.196537][  T992]  ? __mmc_claim_host+0x160/0x650
+[   51.197187][  T992]  ? mmc_power_up+0x5e/0x650
+[   51.197764][  T992]  mmc_rescan+0x6d3/0x1020
+[   51.198323][  T992]  ? process_scheduled_works+0x94e/0x1900
+[   51.199035][  T992]  process_scheduled_works+0xc99/0x1900
+[   51.199766][  T992]  ? __pfx_process_scheduled_works+0x10/0x10
+[   51.200544][  T992]  ? assign_work+0x3d5/0x5e0
+[   51.201126][  T992]  worker_thread+0xa53/0xfc0
+[   51.201728][  T992]  kthread+0x38b/0x480
+[   51.202238][  T992]  ? __pfx_worker_thread+0x10/0x10
+[   51.202964][  T992]  ? __pfx_kthread+0x10/0x10
+[   51.203544][  T992]  ret_from_fork+0x514/0xb70
+[   51.204108][  T992]  ? __pfx_ret_from_fork+0x10/0x10
+[   51.204738][  T992]  ? __switch_to+0xc79/0x1410
+[   51.205326][  T992]  ? __pfx_kthread+0x10/0x10
+[   51.205909][  T992]  ret_from_fork_asm+0x1a/0x30
+[   51.206508][  T992]  </TASK>
+[   51.207235][  T992] Kernel Offset: disabled
+[   51.207773][  T992] Rebooting in 86400 seconds..

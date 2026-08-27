@@ -1,0 +1,117 @@
+Recovered console capture for 144-media-cx231xx-vbi-node-published-before-alloc
+Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
+directory; captured after the harness marker, so boot noise and any earlier
+run are excluded. Matched to this entry because: same crash class (gpf/kasan null-ptr-deref) and same crash site: cx231xx_audio_init.
+Source log: console_try-settle-144-media-cx231xx-vbi-node-publis-reproducer.log
+The original crash-report.txt records the FIRST observation, on the reporting
+kernel; this records a reproduction. Both are kept.
+======================================================================
+
+[   47.494054][   T32] cx231xx 3-1:1.1: Registered video device video7 [v4l2]
+[   47.498362][   T32] cx231xx 3-1:1.1: Registered VBI device vbi0
+[   47.566141][ T9836] cx231xx 3-1:1.1: cannot change alt number to 3 (error=-22)
+[   47.569044][ T9836] cx231xx 3-1:1.1: can't change interface 3 alt no. to 0 (err=-22)
+[   47.613114][ T9839] cx231xx 3-1:1.1: cannot change alt number to 3 (error=-22)
+[   47.614782][   T32] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+[   47.616194][   T32] KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+[   47.617224][   T32] CPU: 1 UID: 0 PID: 32 Comm: kworker/1:1 Tainted: G        W           7.2.0-12252-g388b607d107c #1 PREEMPT(full) 
+[   47.618599][   T32] Tainted: [W]=WARN
+[   47.619022][   T32] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   47.620191][   T32] Workqueue: usb_hub_wq hub_event
+[   47.620781][   T32] RIP: 0010:cx231xx_audio_init+0x4b2/0xcd0
+[   47.621440][   T32] Code: 8d 3c fd 00 00 00 00 4d 01 ef 4c 89 f8 48 c1 e8 03 42 80 3c 20 00 74 08 4c 89 ff e8 88 fa f4 f9 4d 8b 2f 4d 89 ef 49 c1 ef 03 <43> 80 3c 27 00 74 08 4c 89 ef e8 6f fa f4 f9 4c 89 6c 24 28 4d 8b
+[   47.623533][   T32] RSP: 0000:ffffc9000065ebe0 EFLAGS: 00010246
+[   47.624221][   T32] RAX: 1ffff1102277a915 RBX: 1ffff920000cbd88 RCX: ffff8881000fa640
+[   47.625102][   T32] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 000000000000001f
+[   47.626020][   T32] RBP: ffffc9000065ece8 R08: ffffc9000065ea27 R09: 1ffff920000cbd44
+[   47.626976][   T32] R10: dffffc0000000000 R11: fffff520000cbd45 R12: dffffc0000000000
+[   47.627940][   T32] R13: 0000000000000000 R14: 1ffff1102261000c R15: 0000000000000000
+[   47.628842][   T32] FS:  0000000000000000(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   47.629849][   T32] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   47.630619][   T32] CR2: 0000562135df2004 CR3: 0000000027f94000 CR4: 0000000000752ef0
+[   47.631550][   T32] PKRU: 55555554
+[   47.631969][   T32] Call Trace:
+[   47.632367][   T32]  <TASK>
+[   47.632715][   T32]  ? cx231xx_init_extension+0x21/0xc0
+[   47.633402][   T32]  ? __pfx___mutex_lock+0x10/0x10
+[   47.634009][   T32]  ? __pfx_cx231xx_ir_init+0x10/0x10
+[   47.634651][   T32]  ? __pfx_cx231xx_audio_init+0x10/0x10
+[   47.635311][   T32]  ? cx231xx_register_analog_devices+0x101d/0x1730
+[   47.636073][   T32]  ? __pfx_cx231xx_audio_init+0x10/0x10
+[   47.636743][   T32]  cx231xx_init_extension+0x6e/0xc0
+[   47.637359][   T32]  cx231xx_usb_probe+0x10f9/0x2100
+[   47.637964][   T32]  usb_probe_interface+0x659/0xc70
+[   47.638573][   T32]  ? __pfx_usb_probe_interface+0x10/0x10
+[   47.639232][   T32]  really_probe+0x267/0xaf0
+[   47.639793][   T32]  __driver_probe_device+0x1e2/0x350
+[   47.640428][   T32]  driver_probe_device+0x4f/0x240
+[   47.641025][   T32]  __device_attach_driver+0x270/0x410
+[   47.641678][   T32]  bus_for_each_drv+0x258/0x2f0
+[   47.642268][   T32]  ? __pfx___device_attach_driver+0x10/0x10
+[   47.642967][   T32]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   47.643612][   T32]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   47.644300][   T32]  __device_attach+0x2c5/0x450
+[   47.644887][   T32]  ? __pfx___device_attach+0x10/0x10
+[   47.645528][   T32]  ? _raw_spin_unlock+0x28/0x50
+[   47.646110][   T32]  device_initial_probe+0xa1/0xd0
+[   47.646713][   T32]  bus_probe_device+0x12a/0x220
+[   47.647301][   T32]  device_add+0x7ec/0xb90
+[   47.647878][   T32]  usb_set_configuration+0x1a87/0x2110
+[   47.648602][   T32]  usb_generic_driver_probe+0x8d/0x150
+[   47.649274][   T32]  usb_probe_device+0x1c4/0x3b0
+[   47.649879][   T32]  ? __pfx_usb_probe_device+0x10/0x10
+[   47.650541][   T32]  really_probe+0x267/0xaf0
+[   47.651082][   T32]  __driver_probe_device+0x1e2/0x350
+[   47.651713][   T32]  driver_probe_device+0x4f/0x240
+[   47.652318][   T32]  __device_attach_driver+0x270/0x410
+[   47.652957][   T32]  bus_for_each_drv+0x258/0x2f0
+[   47.653560][   T32]  ? __pfx___device_attach_driver+0x10/0x10
+[   47.654271][   T32]  ? __pfx_bus_for_each_drv+0x10/0x10
+[   47.654910][   T32]  ? _raw_spin_unlock_irqrestore+0x4c/0x80
+[   47.655597][   T32]  __device_attach+0x2c5/0x450
+[   47.656177][   T32]  ? __pfx___device_attach+0x10/0x10
+[   47.656814][   T32]  ? _raw_spin_unlock+0x28/0x50
+[   47.657392][   T32]  device_initial_probe+0xa1/0xd0
+[   47.657999][   T32]  bus_probe_device+0x12a/0x220
+[   47.658609][   T32]  device_add+0x7ec/0xb90
+[   47.659148][   T32]  usb_new_device+0xa14/0x1720
+[   47.659743][   T32]  ? __pfx_usb_new_device+0x10/0x10
+[   47.660389][   T32]  ? _raw_spin_unlock_irq+0x23/0x50
+[   47.661038][   T32]  hub_event+0x2a1c/0x4f30
+[   47.661628][   T32]  ? do_raw_spin_unlock+0xf5/0x200
+[   47.662304][   T32]  ? __pfx_hub_event+0x10/0x10
+[   47.662884][   T32]  ? process_scheduled_works+0x94e/0x1900
+[   47.663575][   T32]  ? process_scheduled_works+0x94e/0x1900
+[   47.664321][   T32]  ? process_scheduled_works+0x94e/0x1900
+[   47.665056][   T32]  ? process_scheduled_works+0x94e/0x1900
+[   47.665764][   T32]  process_scheduled_works+0xc99/0x1900
+[   47.666450][   T32]  ? __pfx_process_scheduled_works+0x10/0x10
+[   47.667196][   T32]  ? assign_work+0x3d5/0x5e0
+[   47.667766][   T32]  worker_thread+0xa53/0xfc0
+[   47.668326][   T32]  kthread+0x38b/0x480
+[   47.668820][   T32]  ? __pfx_worker_thread+0x10/0x10
+[   47.669440][   T32]  ? __pfx_kthread+0x10/0x10
+[   47.669988][   T32]  ret_from_fork+0x514/0xb70
+[   47.670536][   T32]  ? __pfx_ret_from_fork+0x10/0x10
+[   47.671145][   T32]  ? __switch_to+0xc79/0x1410
+[   47.671715][   T32]  ? __pfx_kthread+0x10/0x10
+[   47.672267][   T32]  ret_from_fork_asm+0x1a/0x30
+[   47.672851][   T32]  </TASK>
+[   47.673223][   T32] Modules linked in:
+[   47.673759][   T32] ---[ end trace 0000000000000000 ]---
+[   47.674551][   T32] RIP: 0010:cx231xx_audio_init+0x4b2/0xcd0
+[   47.675323][   T32] Code: 8d 3c fd 00 00 00 00 4d 01 ef 4c 89 f8 48 c1 e8 03 42 80 3c 20 00 74 08 4c 89 ff e8 88 fa f4 f9 4d 8b 2f 4d 89 ef 49 c1 ef 03 <43> 80 3c 27 00 74 08 4c 89 ef e8 6f fa f4 f9 4c 89 6c 24 28 4d 8b
+[   47.675457][ T9839] cx231xx 3-1:1.1: can't change interface 3 alt no. to 0 (err=-22)
+[   47.677752][   T32] RSP: 0000:ffffc9000065ebe0 EFLAGS: 00010246
+[   47.679906][   T32] RAX: 1ffff1102277a915 RBX: 1ffff920000cbd88 RCX: ffff8881000fa640
+[   47.680873][   T32] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 000000000000001f
+[   47.681866][   T32] RBP: ffffc9000065ece8 R08: ffffc9000065ea27 R09: 1ffff920000cbd44
+[   47.682921][   T32] R10: dffffc0000000000 R11: fffff520000cbd45 R12: dffffc0000000000
+[   47.685545][   T32] R13: 0000000000000000 R14: 1ffff1102261000c R15: 0000000000000000
+[   47.689442][   T32] FS:  0000000000000000(0000) GS:ffff8881da5a6000(0000) knlGS:0000000000000000
+[   47.692039][   T32] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   47.692859][   T32] CR2: 00007f2b4cf93790 CR3: 0000000109853000 CR4: 0000000000752ef0
+[   47.695323][   T32] PKRU: 55555554
+[   47.695770][   T32] Kernel panic - not syncing: Fatal exception
+[   47.696790][   T32] Kernel Offset: disabled
+[   47.697461][   T32] Rebooting in 86400 seconds..

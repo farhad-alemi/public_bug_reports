@@ -1,0 +1,57 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+STV06xx 6-1:1.0: Written 0x1 to address 0x15c3, status: -19
+STV06xx 6-1:1.0: Written 0xa to address 0x1680, status: -19
+STV06xx 6-1:1.0: Written 0x20 to address 0x1443, status: -19
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 1 UID: 0 PID: 14422 Comm: syz.0.367 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:stv06xx_write_sensor+0xa0/0x190 drivers/media/usb/gspca/stv06xx/stv06xx.c:74
+Code: a3 b8 08 00 00 4c 89 e0 48 c1 e8 03 42 80 3c 28 00 74 08 4c 89 e7 e8 6f f8 29 fa 4d 8b 24 24 49 83 c4 22 4c 89 e0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 b9 00 00 00 45 0f b6 24 24 bf 02 00 00
+RSP: 0018:ffffc9000991f420 EFLAGS: 00010202
+RAX: 0000000000000004 RBX: ffff88810e9c0000 RCX: 0000000000080000
+RDX: ffffc90023813000 RSI: 000000000000774f RDI: 0000000000007750
+RBP: ffffc9000991f4d0 R08: ffff88816dc24593 R09: 1ffff1102db848b2
+R10: dffffc0000000000 R11: ffffed102db848b3 R12: 0000000000000022
+R13: dffffc0000000000 R14: 1ffff92001323e88 R15: 0000000000000007
+FS:  00007f7f5ec336c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f50ef1fb2b8 CR3: 0000000106bc8000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pb0100_start+0x31a/0x4c0 drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c:226
+ stv06xx_start+0x2a3/0x6b0 drivers/media/usb/gspca/stv06xx/stv06xx.c:294
+ gspca_init_transfer+0x2470/0x3060 drivers/media/usb/gspca/gspca.c:842
+ gspca_start_streaming+0x6f/0x250 drivers/media/usb/gspca/gspca.c:1360
+ vb2_start_streaming+0x128/0x460 drivers/media/common/videobuf2/videobuf2-core.c:1783
+ vb2_core_streamon+0x2e0/0x4f0 drivers/media/common/videobuf2/videobuf2-core.c:2336
+ __vb2_init_fileio+0xca2/0xff0 drivers/media/common/videobuf2/videobuf2-core.c:2949
+ __vb2_perform_fileio+0x282/0x1620 drivers/media/common/videobuf2/videobuf2-core.c:3025
+ vb2_fop_read+0x271/0x350 drivers/media/common/videobuf2/videobuf2-v4l2.c:1215
+ v4l2_read+0x19c/0x2c0 drivers/media/v4l2-core/v4l2-dev.c:316
+ vfs_read+0x20c/0xa60 fs/read_write.c:572
+ ksys_read+0x14d/0x260 fs/read_write.c:717
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7f5dda778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f7f5ec33018 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00007f7f5e036090 RCX: 00007f7f5dda778d
+RDX: 0000000000001000 RSI: 0000200000001480 RDI: 0000000000000007
+RBP: 00007f7f5de4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f7f5e036128 R14: 00007f7f5e036090 R15: 00007ffddd0f6590
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+

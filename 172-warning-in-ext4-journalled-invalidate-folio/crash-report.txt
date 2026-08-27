@@ -1,0 +1,275 @@
+Linux 7.1.0-rc5, 7.1.0-rc3-00200-g70eda68668d1-dirty, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.  The kernel version string each
+trace was captured under is given with that trace.
+
+3 distinct call traces.
+
+======================================================================
+[1/3]   Linux 7.1.0-rc5
+======================================================================
+
+------------[ cut here ]------------
+__ext4_journalled_invalidate_folio(folio, offset, length) < 0
+WARNING: fs/ext4/inode.c:3432 at ext4_journalled_invalidate_folio+0x4a/0x50 fs/ext4/inode.c:3432, CPU#0: syz.3.369/14887
+Modules linked in:
+CPU: 0 UID: 0 PID: 14887 Comm: syz.3.369 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ext4_journalled_invalidate_folio+0x4a/0x50 fs/ext4/inode.c:3432
+Code: e8 4b 03 00 00 89 c3 31 ff 89 c6 e8 f0 d7 43 ff 85 db 78 10 e8 a7 d3 43 ff 5b 41 5e 41 5f e9 7d f5 f4 08 cc e8 97 d3 43 ff 90 <0f> 0b 90 eb ea 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0000:ffffc90007d5f490 EFLAGS: 00010283
+RAX: ffffffff827af429 RBX: 00000000fffffff0 RCX: 0000000000080000
+RDX: ffffc90021802000 RSI: 0000000000051d37 RDI: 0000000000051d38
+RBP: 0000000000000600 R08: ffff88803bbba73f R09: 1ffff110077774e7
+R10: dffffc0000000000 R11: ffffed10077774e8 R12: 0000000000001000
+R13: 0000000000000a00 R14: 0000000000000600 R15: ffffea0001065140
+FS:  00007fbdf13936c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000001d000 CR3: 0000000109a84000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ folio_invalidate mm/truncate.c:140 [inline]
+ truncate_inode_partial_folio+0x33e/0x8d0 mm/truncate.c:249
+ truncate_inode_pages_range+0x5de/0xdf0 mm/truncate.c:416
+ ext4_truncate_failed_write fs/ext4/truncate.h:21 [inline]
+ ext4_journalled_write_end+0x8f2/0xc70 fs/ext4/inode.c:1608
+ generic_perform_write+0x611/0x8d0 mm/filemap.c:4346
+ ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:316
+ ext4_file_write_iter+0x298/0x1bf0
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbdf05a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbdf1393018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fbdf0835fa0 RCX: 00007fbdf05a778d
+RDX: 00000000fffffe13 RSI: 0000200000000a00 RDI: 0000000000000004
+RBP: 00007fbdf064eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fbdf0836038 R14: 00007fbdf0835fa0 R15: 00007fffa3ecbf60
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 0 UID: 0 PID: 14887 Comm: syz.3.369 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ext4_journalled_invalidate_folio+0x4a/0x50
+Code: e8 4b 03 00 00 89 c3 31 ff 89 c6 e8 f0 d7 43 ff 85 db 78 10 e8 a7 d3 43 ff 5b 41 5e 41 5f e9 7d f5 f4 08 cc e8 97 d3 43 ff 90 <0f> 0b 90 eb ea 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0000:ffffc90007d5f490 EFLAGS: 00010283
+RAX: ffffffff827af429 RBX: 00000000fffffff0 RCX: 0000000000080000
+RDX: ffffc90021802000 RSI: 0000000000051d37 RDI: 0000000000051d38
+RBP: 0000000000000600 R08: ffff88803bbba73f R09: 1ffff110077774e7
+R10: dffffc0000000000 R11: ffffed10077774e8 R12: 0000000000001000
+R13: 0000000000000a00 R14: 0000000000000600 R15: ffffea0001065140
+FS:  00007fbdf13936c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000001d000 CR3: 0000000109a84000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ truncate_inode_partial_folio+0x33e/0x8d0
+ truncate_inode_pages_range+0x5de/0xdf0
+ ext4_journalled_write_end+0x8f2/0xc70
+ generic_perform_write+0x611/0x8d0
+ ext4_buffered_write_iter+0xce/0x3a0
+ ext4_file_write_iter+0x298/0x1bf0
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbdf05a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbdf1393018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fbdf0835fa0 RCX: 00007fbdf05a778d
+RDX: 00000000fffffe13 RSI: 0000200000000a00 RDI: 0000000000000004
+RBP: 00007fbdf064eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fbdf0836038 R14: 00007fbdf0835fa0 R15: 00007fffa3ecbf60
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[2/3]   Linux 7.1.0-rc5
+======================================================================
+
+------------[ cut here ]------------
+__ext4_journalled_invalidate_folio(folio, offset, length) < 0
+WARNING: fs/ext4/inode.c:3432 at ext4_journalled_invalidate_folio+0x4a/0x50 fs/ext4/inode.c:3432, CPU#1: syz.8.655/18570
+Modules linked in:
+CPU: 1 UID: 0 PID: 18570 Comm: syz.8.655 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ext4_journalled_invalidate_folio+0x4a/0x50 fs/ext4/inode.c:3432
+Code: e8 4b 03 00 00 89 c3 31 ff 89 c6 e8 f0 d7 43 ff 85 db 78 10 e8 a7 d3 43 ff 5b 41 5e 41 5f e9 7d f5 f4 08 cc e8 97 d3 43 ff 90 <0f> 0b 90 eb ea 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000594f490 EFLAGS: 00010246
+RAX: ffffffff827af429 RBX: 00000000fffffff0 RCX: 0000000000080000
+RDX: ffffc90034407000 RSI: 000000000007ffff RDI: 0000000000080000
+RBP: 0000000000000c00 R08: ffff888108e649df R09: 1ffff110211cc93b
+R10: dffffc0000000000 R11: ffffed10211cc93c R12: 0000000000001000
+R13: 0000000000000400 R14: 0000000000000c00 R15: ffffea00048e0180
+FS:  00007f3c26eb06c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00002000000b5000 CR3: 0000000020c2b000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ folio_invalidate mm/truncate.c:140 [inline]
+ truncate_inode_partial_folio+0x33e/0x8d0 mm/truncate.c:249
+ truncate_inode_pages_range+0x5de/0xdf0 mm/truncate.c:416
+ ext4_truncate_failed_write fs/ext4/truncate.h:21 [inline]
+ ext4_journalled_write_end+0x8f2/0xc70 fs/ext4/inode.c:1608
+ generic_perform_write+0x611/0x8d0 mm/filemap.c:4346
+ ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:316
+ ext4_file_write_iter+0x298/0x1bf0
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_pwrite64 fs/read_write.c:795 [inline]
+ __do_sys_pwrite64 fs/read_write.c:803 [inline]
+ __se_sys_pwrite64 fs/read_write.c:800 [inline]
+ __x64_sys_pwrite64+0x199/0x230 fs/read_write.c:800
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3c25fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3c26eb0018 EFLAGS: 00000246 ORIG_RAX: 0000000000000012
+RAX: ffffffffffffffda RBX: 00007f3c26235fa0 RCX: 00007f3c25fa778d
+RDX: 00000000fffffebd RSI: 000020000000c400 RDI: 0000000000000004
+RBP: 00007f3c2604eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3c26236038 R14: 00007f3c26235fa0 R15: 00007ffe17998ca0
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 18570 Comm: syz.8.655 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ext4_journalled_invalidate_folio+0x4a/0x50
+Code: e8 4b 03 00 00 89 c3 31 ff 89 c6 e8 f0 d7 43 ff 85 db 78 10 e8 a7 d3 43 ff 5b 41 5e 41 5f e9 7d f5 f4 08 cc e8 97 d3 43 ff 90 <0f> 0b 90 eb ea 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000594f490 EFLAGS: 00010246
+RAX: ffffffff827af429 RBX: 00000000fffffff0 RCX: 0000000000080000
+RDX: ffffc90034407000 RSI: 000000000007ffff RDI: 0000000000080000
+RBP: 0000000000000c00 R08: ffff888108e649df R09: 1ffff110211cc93b
+R10: dffffc0000000000 R11: ffffed10211cc93c R12: 0000000000001000
+R13: 0000000000000400 R14: 0000000000000c00 R15: ffffea00048e0180
+FS:  00007f3c26eb06c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00002000000b5000 CR3: 0000000020c2b000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ truncate_inode_partial_folio+0x33e/0x8d0
+ truncate_inode_pages_range+0x5de/0xdf0
+ ext4_journalled_write_end+0x8f2/0xc70
+ generic_perform_write+0x611/0x8d0
+ ext4_buffered_write_iter+0xce/0x3a0
+ ext4_file_write_iter+0x298/0x1bf0
+ vfs_write+0x6f3/0xda0
+ __x64_sys_pwrite64+0x199/0x230
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f3c25fa778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3c26eb0018 EFLAGS: 00000246 ORIG_RAX: 0000000000000012
+RAX: ffffffffffffffda RBX: 00007f3c26235fa0 RCX: 00007f3c25fa778d
+RDX: 00000000fffffebd RSI: 000020000000c400 RDI: 0000000000000004
+RBP: 00007f3c2604eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f3c26236038 R14: 00007f3c26235fa0 R15: 00007ffe17998ca0
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+
+======================================================================
+[3/3]   Linux 7.1.0-rc5
+======================================================================
+
+------------[ cut here ]------------
+__ext4_journalled_invalidate_folio(folio, offset, length) < 0
+WARNING: fs/ext4/inode.c:3432 at ext4_journalled_invalidate_folio+0x4a/0x50 fs/ext4/inode.c:3432, CPU#1: syz.4.1281/26864
+Modules linked in:
+CPU: 1 UID: 0 PID: 26864 Comm: syz.4.1281 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ext4_journalled_invalidate_folio+0x4a/0x50 fs/ext4/inode.c:3432
+Code: e8 4b 03 00 00 89 c3 31 ff 89 c6 e8 f0 d7 43 ff 85 db 78 10 e8 a7 d3 43 ff 5b 41 5e 41 5f e9 7d f5 f4 08 cc e8 97 d3 43 ff 90 <0f> 0b 90 eb ea 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000791f490 EFLAGS: 00010246
+RAX: ffffffff827af429 RBX: 00000000fffffff0 RCX: 0000000000080000
+RDX: ffffc90006b19000 RSI: 000000000007ffff RDI: 0000000000080000
+RBP: 00000000000008c0 R08: ffff888132ccd9df R09: 1ffff11026599b3b
+R10: dffffc0000000000 R11: ffffed1026599b3c R12: 0000000000001000
+R13: 0000000000000740 R14: 00000000000008c0 R15: ffffea0005641b80
+FS:  00007f08728b26c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555584b59a28 CR3: 000000010d6fe000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ folio_invalidate mm/truncate.c:140 [inline]
+ truncate_inode_partial_folio+0x33e/0x8d0 mm/truncate.c:249
+ truncate_inode_pages_range+0x5de/0xdf0 mm/truncate.c:416
+ ext4_truncate_failed_write fs/ext4/truncate.h:21 [inline]
+ ext4_journalled_write_end+0x8f2/0xc70 fs/ext4/inode.c:1608
+ generic_perform_write+0x611/0x8d0 mm/filemap.c:4346
+ ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:316
+ ext4_file_write_iter+0x298/0x1bf0
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f08719a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f08728b2018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f0871c35fa0 RCX: 00007f08719a778d
+RDX: 00000000ffffffd1 RSI: 0000200000017740 RDI: 0000000000000004
+RBP: 00007f0871a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f0871c36038 R14: 00007f0871c35fa0 R15: 00007ffe52f05ed0
+ </TASK>
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Modules linked in:
+CPU: 1 UID: 0 PID: 26864 Comm: syz.4.1281 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:ext4_journalled_invalidate_folio+0x4a/0x50
+Code: e8 4b 03 00 00 89 c3 31 ff 89 c6 e8 f0 d7 43 ff 85 db 78 10 e8 a7 d3 43 ff 5b 41 5e 41 5f e9 7d f5 f4 08 cc e8 97 d3 43 ff 90 <0f> 0b 90 eb ea 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000791f490 EFLAGS: 00010246
+RAX: ffffffff827af429 RBX: 00000000fffffff0 RCX: 0000000000080000
+RDX: ffffc90006b19000 RSI: 000000000007ffff RDI: 0000000000080000
+RBP: 00000000000008c0 R08: ffff888132ccd9df R09: 1ffff11026599b3b
+R10: dffffc0000000000 R11: ffffed1026599b3c R12: 0000000000001000
+R13: 0000000000000740 R14: 00000000000008c0 R15: ffffea0005641b80
+FS:  00007f08728b26c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555584b59a28 CR3: 000000010d6fe000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ truncate_inode_partial_folio+0x33e/0x8d0
+ truncate_inode_pages_range+0x5de/0xdf0
+ ext4_journalled_write_end+0x8f2/0xc70
+ generic_perform_write+0x611/0x8d0
+ ext4_buffered_write_iter+0xce/0x3a0
+ ext4_file_write_iter+0x298/0x1bf0
+ vfs_write+0x6f3/0xda0
+ ksys_write+0x14d/0x260
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f08719a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f08728b2018 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f0871c35fa0 RCX: 00007f08719a778d
+RDX: 00000000ffffffd1 RSI: 0000200000017740 RDI: 0000000000000004
+RBP: 00007f0871a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f0871c36038 R14: 00007f0871c35fa0 R15: 00007ffe52f05ed0
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+

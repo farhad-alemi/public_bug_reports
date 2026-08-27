@@ -1,0 +1,1776 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+8 distinct call traces, each reproduced once.
+
+======================================================================
+[1/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff88803e2ae8a8 by task syz.4.148/13541
+
+CPU: 0 UID: 0 PID: 13541 Comm: syz.4.148 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff5e57a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe69b99098 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007ff5e5a37da0 RCX: 00007ff5e57a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007ff5e5a37da0 R08: 0000000000000000 R09: 0000001e00000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000015b7c
+R13: 00007ff5e5a36090 R14: 0000000000014ff6 R15: 0000000000014c58
+ </TASK>
+
+Allocated by task 13599 on cpu 0 at 85.973338s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 13541 on cpu 0 at 86.032640s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88803e2ae800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff88803e2ae800, ffff88803e2aec00)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88803e2ad800 pfn:0x3e2a8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000240(workingset|head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000240 ffff888013041dc0 ffff888013040590 ffffea00009ba610
+raw: ffff88803e2ad800 000000080010000f 00000000f5000000 0000000000000000
+head: 00fff00000000240 ffff888013041dc0 ffff888013040590 ffffea00009ba610
+head: ffff88803e2ad800 000000080010000f 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9408, tgid 9408 (sshd-session), ts 55549554157, free_ts 55540766230
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_node_track_caller_noprof+0x4d7/0x710 mm/slub.c:5408
+ kmalloc_reserve net/core/skbuff.c:635 [inline]
+ pskb_expand_head+0x230/0x1390 net/core/skbuff.c:2303
+ __pskb_pull_tail+0x10a/0x1720 net/core/skbuff.c:2855
+ __skb_linearize include/linux/skbuff.h:4000 [inline]
+ validate_xmit_skb+0xb07/0x14a0 net/core/dev.c:4048
+ validate_xmit_skb_list+0x84/0x120 net/core/dev.c:4089
+ sch_direct_xmit+0xdf/0x4c0 net/sched/sch_generic.c:357
+ __dev_xmit_skb net/core/dev.c:4276 [inline]
+ __dev_queue_xmit+0x160b/0x3250 net/core/dev.c:4831
+ dev_queue_xmit include/linux/netdevice.h:3418 [inline]
+ neigh_hh_output include/net/neighbour.h:544 [inline]
+ neigh_output include/net/neighbour.h:558 [inline]
+ ip_finish_output2+0xcdc/0x1090 net/ipv4/ip_output.c:237
+ NF_HOOK_COND include/linux/netfilter.h:307 [inline]
+ ip_output+0x1a0/0x330 net/ipv4/ip_output.c:438
+ dst_output include/net/dst.h:470 [inline]
+ ip_local_out net/ipv4/ip_output.c:131 [inline]
+ __ip_queue_xmit+0x109f/0x1aa0 net/ipv4/ip_output.c:534
+page last free pid 9448 tgid 9448 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ kmem_cache_alloc_noprof+0x1fc/0x540 mm/slub.c:4906
+ alloc_empty_file+0x5b/0x1d0 fs/file_table.c:262
+ alloc_file fs/file_table.c:396 [inline]
+ alloc_file_pseudo+0x152/0x250 fs/file_table.c:425
+ sock_alloc_file+0xb8/0x2e0 net/socket.c:543
+ sock_map_fd net/socket.c:573 [inline]
+ __sys_socket+0x13c/0x1b0 net/socket.c:1815
+ __do_sys_socket net/socket.c:1820 [inline]
+ __se_sys_socket net/socket.c:1818 [inline]
+ __x64_sys_socket+0x7a/0x90 net/socket.c:1818
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88803e2ae780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88803e2ae800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88803e2ae880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88803e2ae900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803e2ae980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000240(workingset|head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000240 ffff888013041dc0 ffff888013040590 ffffea00009ba610
+raw: ffff88803e2ad800 000000080010000f 00000000f5000000 0000000000000000
+head: 00fff00000000240 ffff888013041dc0 ffff888013040590 ffffea00009ba610
+head: ffff88803e2ad800 000000080010000f 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9408, tgid 9408 (sshd-session), ts 55549554157, free_ts 55540766230
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_node_track_caller_noprof+0x4d7/0x710
+ pskb_expand_head+0x230/0x1390
+ __pskb_pull_tail+0x10a/0x1720
+ validate_xmit_skb+0xb07/0x14a0
+ validate_xmit_skb_list+0x84/0x120
+ sch_direct_xmit+0xdf/0x4c0
+ __dev_queue_xmit+0x160b/0x3250
+ ip_finish_output2+0xcdc/0x1090
+ ip_output+0x1a0/0x330
+ __ip_queue_xmit+0x109f/0x1aa0
+page last free pid 9448 tgid 9448 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ kmem_cache_alloc_noprof+0x1fc/0x540
+ alloc_empty_file+0x5b/0x1d0
+ alloc_file_pseudo+0x152/0x250
+ sock_alloc_file+0xb8/0x2e0
+ __sys_socket+0x13c/0x1b0
+ __x64_sys_socket+0x7a/0x90
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Memory state around the buggy address:
+ ffff88803e2ae780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88803e2ae800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88803e2ae880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88803e2ae900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803e2ae980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[2/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff8881114e60a8 by task syz.4.327/14192
+
+CPU: 1 UID: 0 PID: 14192 Comm: syz.4.327 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff3adba778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd308ce878 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007ffd308ce948 RCX: 00007ff3adba778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007ff3ade37da0 R08: 0000000000000001 R09: 0000002000000000
+R10: 0000001b31120000 R11: 0000000000000246 R12: 00007ff3ade35fac
+R13: 00007ff3ade35fa0 R14: 0000000000015f7f R15: 0000000000015f0d
+ </TASK>
+
+Allocated by task 14194 on cpu 1 at 89.950960s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 14194 on cpu 1 at 89.965568s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff8881114e6000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff8881114e6000, ffff8881114e6400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1114e0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9319, tgid 9319 ((agetty)), ts 40616863897, free_ts 40582408105
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ tomoyo_init_log+0x1840/0x1d40 security/tomoyo/audit.c:273
+ tomoyo_supervisor+0x353/0x1560 security/tomoyo/common.c:2232
+ tomoyo_audit_env_log security/tomoyo/environ.c:37 [inline]
+ tomoyo_env_perm+0x151/0x1f0 security/tomoyo/environ.c:64
+ tomoyo_environ security/tomoyo/domain.c:673 [inline]
+ tomoyo_find_next_domain+0x15cb/0x1aa0 security/tomoyo/domain.c:889
+ tomoyo_bprm_check_security+0xdf/0x130 security/tomoyo/tomoyo.c:102
+ security_bprm_check+0x85/0x240 security/security.c:820
+ search_binary_handler fs/exec.c:1654 [inline]
+ exec_binprm fs/exec.c:1696 [inline]
+ bprm_execve+0x681/0x1260 fs/exec.c:1748
+ do_execveat_common+0x86f/0xa10 fs/exec.c:1846
+ __do_sys_execve fs/exec.c:1930 [inline]
+ __se_sys_execve fs/exec.c:1924 [inline]
+ __x64_sys_execve+0x97/0xc0 fs/exec.c:1924
+page last free pid 9321 tgid 9321 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x25a/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ tomoyo_realpath_from_path+0xda/0x5d0 security/tomoyo/realpath.c:251
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_number_perm+0x20c/0x5d0 security/tomoyo/file.c:728
+ security_file_ioctl+0xc3/0x2a0 security/security.c:2512
+ __do_sys_ioctl fs/ioctl.c:591 [inline]
+ __se_sys_ioctl+0x47/0x170 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8881114e5f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881114e6000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881114e6080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff8881114e6100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881114e6180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1114e0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9319, tgid 9319 ((agetty)), ts 40616863897, free_ts 40582408105
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ tomoyo_init_log+0x1840/0x1d40
+ tomoyo_supervisor+0x353/0x1560
+ tomoyo_env_perm+0x151/0x1f0
+ tomoyo_find_next_domain+0x15cb/0x1aa0
+ tomoyo_bprm_check_security+0xdf/0x130
+ security_bprm_check+0x85/0x240
+ bprm_execve+0x681/0x1260
+ do_execveat_common+0x86f/0xa10
+ __x64_sys_execve+0x97/0xc0
+page last free pid 9321 tgid 9321 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ __kmalloc_noprof+0x25a/0x670
+ tomoyo_realpath_from_path+0xda/0x5d0
+ tomoyo_path_number_perm+0x20c/0x5d0
+ security_file_ioctl+0xc3/0x2a0
+ __se_sys_ioctl+0x47/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Memory state around the buggy address:
+ ffff8881114e5f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881114e6000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881114e6080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff8881114e6100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881114e6180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[3/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff8881161370a8 by task syz.3.244/13474
+
+CPU: 1 UID: 0 PID: 13474 Comm: syz.3.244 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4dfc5a778d
+Code: Unable to access opcode bytes at 0x7f4dfc5a7763.
+RSP: 002b:00007f4dfd3c60d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007f4dfc835fa8 RCX: 00007f4dfc5a778d
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f4dfc835fa8
+RBP: 00007f4dfc835fa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f4dfc836038 R14: 000000000000000b R15: 00007ffe773662e0
+ </TASK>
+
+Allocated by task 13474 on cpu 1 at 77.201233s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 13474 on cpu 1 at 77.311507s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888116137000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff888116137000, ffff888116137400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x116130
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 35, tgid 35 (kworker/u10:1), ts 55791684193, free_ts 55749458268
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ ieee802_11_parse_elems_full+0x14a/0x29f0 net/mac80211/parse.c:1058
+ ieee802_11_parse_elems net/mac80211/ieee80211_i.h:2518 [inline]
+ ieee80211_inform_bss+0x161/0x1160 net/mac80211/scan.c:79
+ rdev_inform_bss net/wireless/rdev-ops.h:418 [inline]
+ cfg80211_inform_single_bss_data+0xc94/0x1820 net/wireless/scan.c:2372
+ cfg80211_inform_bss_data+0x266/0x39f0 net/wireless/scan.c:3229
+ cfg80211_inform_bss_frame_data+0x34f/0x650 net/wireless/scan.c:3320
+ ieee80211_bss_info_update+0x56a/0x7b0 net/mac80211/scan.c:230
+ ieee80211_rx_bss_info net/mac80211/ibss.c:1088 [inline]
+ ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1569 [inline]
+ ieee80211_ibss_rx_queued_mgmt+0x12dc/0x2610 net/mac80211/ibss.c:1596
+ ieee80211_iface_process_skb net/mac80211/iface.c:1795 [inline]
+ ieee80211_iface_work+0x7b3/0x11b0 net/mac80211/iface.c:1849
+ cfg80211_wiphy_work+0x252/0x4b0 net/wireless/core.c:513
+page last free pid 35 tgid 35 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ kmem_cache_alloc_node_noprof+0x2d7/0x5c0 mm/slub.c:4951
+ alloc_task_struct_node kernel/fork.c:187 [inline]
+ dup_task_struct+0x52/0x840 kernel/fork.c:918
+ copy_process+0x797/0x3ba0 kernel/fork.c:2090
+ kernel_clone+0x269/0x880 kernel/fork.c:2721
+ user_mode_thread+0x110/0x180 kernel/fork.c:2797
+ call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff888116136f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888116137000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888116137080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888116137100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888116137180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 35, tgid 35 (kworker/u10:1), ts 55791684193, free_ts 55749458268
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ ieee802_11_parse_elems_full+0x14a/0x29f0
+ ieee80211_inform_bss+0x161/0x1160
+ cfg80211_inform_single_bss_data+0xc94/0x1820
+ cfg80211_inform_bss_data+0x266/0x39f0
+ cfg80211_inform_bss_frame_data+0x34f/0x650
+ ieee80211_bss_info_update+0x56a/0x7b0
+ ieee80211_ibss_rx_queued_mgmt+0x12dc/0x2610
+ ieee80211_iface_work+0x7b3/0x11b0
+ cfg80211_wiphy_work+0x252/0x4b0
+page last free pid 35 tgid 35 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ kmem_cache_alloc_node_noprof+0x2d7/0x5c0
+ dup_task_struct+0x52/0x840
+ copy_process+0x797/0x3ba0
+ kernel_clone+0x269/0x880
+ user_mode_thread+0x110/0x180
+ call_usermodehelper_exec_work+0x5c/0x230
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff888116136f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888116137000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888116137080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888116137100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888116137180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[4/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff888136da50a8 by task syz.3.94/12445
+
+CPU: 1 UID: 0 PID: 12445 Comm: syz.3.94 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4702da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffeb9ad4db8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007ffeb9ad4e88 RCX: 00007f4702da778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007f4703037da0 R08: 0000000000000001 R09: 0000001e00000000
+R10: 0000001b30520000 R11: 0000000000000246 R12: 00007f4703035fac
+R13: 00007f4703035fa0 R14: 000000000000ee12 R15: 000000000000eda6
+ </TASK>
+
+Allocated by task 12446 on cpu 1 at 60.921079s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 12445 on cpu 1 at 60.929920s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888136da5000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff888136da5000, ffff888136da5400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x136da0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 11354, tgid 11353 (syz.5.16), ts 52510965700, free_ts 0
+ create_dummy_stack mm/page_owner.c:103 [inline]
+ register_dummy_stack+0x98/0x100 mm/page_owner.c:109
+ init_page_owner+0x2e/0x5f0 mm/page_owner.c:127
+ invoke_init_callbacks mm/page_ext.c:152 [inline]
+ page_ext_init+0x3c7/0x400 mm/page_ext.c:490
+ mm_core_init+0x92/0xb0 mm/mm_init.c:2738
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888136da4f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888136da5000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888136da5080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888136da5100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888136da5180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ vfs_open+0x38/0x340
+ path_openat+0x2e26/0x37c0
+ do_file_open+0x23e/0x4a0
+ do_sys_openat2+0x113/0x200
+ __x64_sys_openat+0x138/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Freed by task 12445 on cpu 1 at 60.929920s:
+ kasan_save_track+0x3f/0xa0
+ kasan_save_free_info+0x46/0x50
+ __kasan_slab_free+0x5c/0x80
+ kfree+0x18a/0x4d0
+ vim2m_release+0xe6/0x140
+ v4l2_release+0x1ad/0x370
+ __fput+0x435/0xa40
+ task_work_run+0x1d5/0x250
+ exit_to_user_mode_loop+0xe0/0x4c0
+ do_syscall_64+0x259/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The buggy address belongs to the object at ffff888136da5000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff888136da5000, ffff888136da5400)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x136da0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 11354, tgid 11353 (syz.5.16), ts 52510965700, free_ts 0
+ register_dummy_stack+0x98/0x100
+ init_page_owner+0x2e/0x5f0
+ page_ext_init+0x3c7/0x400
+ mm_core_init+0x92/0xb0
+page_owner free stack trace missing
+Memory state around the buggy address:
+ ffff888136da4f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888136da5000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888136da5080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888136da5100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888136da5180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[5/8]
+======================================================================
+
+use of bytesused == 0 is deprecated and will be removed in the future,
+use the actual size instead.
+No buffer was provided with the request
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff888137dcd8a8 by task syz.1.384/16390
+
+CPU: 1 UID: 0 PID: 16390 Comm: syz.1.384 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ __do_sys_exit_group kernel/exit.c:1130 [inline]
+ __se_sys_exit_group kernel/exit.c:1128 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1128
+ x64_sys_call+0x221a/0x2240 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8f4c1a778d
+Code: Unable to access opcode bytes at 0x7f8f4c1a7763.
+RSP: 002b:00007f8f4cfc22f8 EFLAGS: 00000206 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 000000000000000b RCX: 00007f8f4c1a778d
+RDX: 00007f8f4bfff000 RSI: 0000000000000000 RDI: 000000000000000b
+RBP: 00007f8f4c24eb3d R08: 00007f8f4c24eb3d R09: 000000000000000b
+R10: 00007f8f4cfc3040 R11: 0000000000000206 R12: 0000000000000000
+R13: 00007f8f4c436038 R14: 00007f8f4c435fa0 R15: 00007ffd50939b40
+ </TASK>
+
+Allocated by task 16390 on cpu 1 at 97.851709s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 16390 on cpu 1 at 97.867998s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ __do_sys_exit_group kernel/exit.c:1130 [inline]
+ __se_sys_exit_group kernel/exit.c:1128 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1128
+ x64_sys_call+0x221a/0x2240 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888137dcd800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff888137dcd800, ffff888137dcdc00)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888137dcd000 pfn:0x137dc8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000240 ffff888013041dc0 ffffea0004531210 ffffea00041a5e10
+raw: ffff888137dcd000 000000080010000e 00000000f5000000 0000000000000000
+head: 057ff00000000240 ffff888013041dc0 ffffea0004531210 ffffea00041a5e10
+head: ffff888137dcd000 000000080010000e 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1113, tgid 1113 (kworker/u10:3), ts 73759375149, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ ieee802_11_parse_elems_full+0x14a/0x29f0 net/mac80211/parse.c:1058
+ ieee802_11_parse_elems net/mac80211/ieee80211_i.h:2518 [inline]
+ ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1565 [inline]
+ ieee80211_ibss_rx_queued_mgmt+0x44c/0x2610 net/mac80211/ibss.c:1596
+ ieee80211_iface_process_skb net/mac80211/iface.c:1795 [inline]
+ ieee80211_iface_work+0x7b3/0x11b0 net/mac80211/iface.c:1849
+ cfg80211_wiphy_work+0x252/0x4b0 net/wireless/core.c:513
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888137dcd780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888137dcd800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888137dcd880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888137dcd900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888137dcd980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ task_work_run+0x1d5/0x250
+ do_exit+0x6ee/0x2360
+ do_group_exit+0x20c/0x2c0
+ __x64_sys_exit_group+0x3f/0x40
+ x64_sys_call+0x221a/0x2240
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The buggy address belongs to the object at ffff888137dcd800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff888137dcd800, ffff888137dcdc00)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888137dcd000 pfn:0x137dc8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000240 ffff888013041dc0 ffffea0004531210 ffffea00041a5e10
+raw: ffff888137dcd000 000000080010000e 00000000f5000000 0000000000000000
+head: 057ff00000000240 ffff888013041dc0 ffffea0004531210 ffffea00041a5e10
+head: ffff888137dcd000 000000080010000e 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1113, tgid 1113 (kworker/u10:3), ts 73759375149, free_ts 0
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ ieee802_11_parse_elems_full+0x14a/0x29f0
+ ieee80211_ibss_rx_queued_mgmt+0x44c/0x2610
+ ieee80211_iface_work+0x7b3/0x11b0
+ cfg80211_wiphy_work+0x252/0x4b0
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+page_owner free stack trace missing
+Memory state around the buggy address:
+ ffff888137dcd780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888137dcd800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888137dcd880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888137dcd900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888137dcd980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[6/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff888026c1f8a8 by task syz.6.1790/27903
+
+CPU: 0 UID: 0 PID: 27903 Comm: syz.6.1790 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff0151a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcafb339b8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007ffcafb33a88 RCX: 00007ff0151a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007ff015437da0 R08: 0000000000000001 R09: 0000001e00000000
+R10: 0000001b2fc20000 R11: 0000000000000246 R12: 00007ff015435fac
+R13: 00007ff015435fa0 R14: 0000000000038b4c R15: 0000000000038b0f
+ </TASK>
+
+Allocated by task 27904 on cpu 0 at 232.243741s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 27903 on cpu 0 at 232.252153s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888026c1f800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff888026c1f800, ffff888026c1fc00)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x26c18
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9453, tgid 9453 (syz-executor), ts 64639749492, free_ts 26790987189
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kvmalloc_node_noprof+0x58f/0x7c0 mm/slub.c:6833
+ bucket_table_alloc lib/rhashtable.c:194 [inline]
+ rhashtable_init_noprof+0x524/0xa80 lib/rhashtable.c:1108
+ br_dev_init+0x20/0xf0 net/bridge/br_device.c:124
+ register_netdevice+0x34e/0x1a90 net/core/dev.c:11342
+ br_dev_newlink+0x6a/0x140 net/bridge/br_netlink.c:1585
+ rtnl_newlink_create+0x31a/0xb30 net/core/rtnetlink.c:3864
+ __rtnl_newlink net/core/rtnetlink.c:3995 [inline]
+ rtnl_newlink+0x1761/0x1ce0 net/core/rtnetlink.c:4110
+ rtnetlink_rcv_msg+0x830/0xa10 net/core/rtnetlink.c:6997
+ netlink_rcv_skb+0x232/0x4b0 net/netlink/af_netlink.c:2550
+ netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
+ netlink_unicast+0x8d2/0xa70 net/netlink/af_netlink.c:1344
+page last free pid 5340 tgid 5340 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ kmem_cache_alloc_noprof+0x1fc/0x540 mm/slub.c:4906
+ alloc_filename fs/namei.c:142 [inline]
+ do_getname+0x2e/0x250 fs/namei.c:182
+ getname include/linux/fs.h:2526 [inline]
+ class_filename_constructor include/linux/fs.h:2553 [inline]
+ do_sys_openat2+0xca/0x200 fs/open.c:1363
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff888026c1f780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888026c1f800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888026c1f880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888026c1f900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888026c1f980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x26c18
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9453, tgid 9453 (syz-executor), ts 64639749492, free_ts 26790987189
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kvmalloc_node_noprof+0x58f/0x7c0
+ rhashtable_init_noprof+0x524/0xa80
+ br_dev_init+0x20/0xf0
+ register_netdevice+0x34e/0x1a90
+ br_dev_newlink+0x6a/0x140
+ rtnl_newlink_create+0x31a/0xb30
+ rtnl_newlink+0x1761/0x1ce0
+ rtnetlink_rcv_msg+0x830/0xa10
+ netlink_rcv_skb+0x232/0x4b0
+ netlink_unicast+0x8d2/0xa70
+page last free pid 5340 tgid 5340 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ kmem_cache_alloc_noprof+0x1fc/0x540
+ do_getname+0x2e/0x250
+ do_sys_openat2+0xca/0x200
+ __x64_sys_openat+0x138/0x170
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Memory state around the buggy address:
+ ffff888026c1f780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888026c1f800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888026c1f880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888026c1f900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888026c1f980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[7/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff88803e8960a8 by task syz.1.1003/19608
+
+CPU: 0 UID: 0 PID: 19608 Comm: syz.1.1003 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa74c1a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff0f347148 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fff0f347218 RCX: 00007fa74c1a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007fa74c437da0 R08: 0000000000000001 R09: 0000001e00000000
+R10: 0000001b31920000 R11: 0000000000000246 R12: 00007fa74c435fac
+R13: 00007fa74c435fa0 R14: 000000000002dc10 R15: 000000000002db97
+ </TASK>
+
+Allocated by task 19609 on cpu 0 at 187.353183s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 19608 on cpu 0 at 187.433422s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88803e896000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff88803e896000, ffff88803e896400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x3e890
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 19133, tgid 19132 (syz.1.943), ts 176749895727, free_ts 176705055762
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ mi_init+0x76/0xe0 fs/ntfs3/record.c:105
+ ntfs_read_mft fs/ntfs3/inode.c:55 [inline]
+ ntfs_iget5+0x36a/0x38e0 fs/ntfs3/inode.c:542
+ ntfs_fill_super+0x2333/0x4580 fs/ntfs3/super.c:1315
+ get_tree_bdev_flags+0x41c/0x4e0 fs/super.c:1694
+ vfs_get_tree+0x8f/0x290 fs/super.c:1754
+ fc_mount fs/namespace.c:1193 [inline]
+ do_new_mount_fc fs/namespace.c:3758 [inline]
+ do_new_mount+0x341/0xd80 fs/namespace.c:3834
+ do_mount fs/namespace.c:4167 [inline]
+ __do_sys_mount fs/namespace.c:4383 [inline]
+ __se_sys_mount+0x30c/0x410 fs/namespace.c:4360
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 876 tgid 876 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ __kmalloc_cache_noprof+0x202/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ drm_atomic_state_alloc+0xa9/0x100 drivers/gpu/drm/drm_atomic.c:178
+ drm_atomic_helper_dirtyfb+0xf5/0xf20 drivers/gpu/drm/drm_damage_helper.c:128
+ drm_fbdev_shmem_helper_fb_dirty+0x15a/0x2d0 drivers/gpu/drm/drm_fbdev_shmem.c:117
+ drm_fb_helper_fb_dirty drivers/gpu/drm/drm_fb_helper.c:249 [inline]
+ drm_fb_helper_damage_work+0x2a2/0x740 drivers/gpu/drm/drm_fb_helper.c:275
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88803e895f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88803e896000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88803e896080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88803e896100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803e896180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888013041dc0 dead000000000100 dead000000000122
+head: 0000000000000000 0000000800100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 19133, tgid 19132 (syz.1.943), ts 176749895727, free_ts 176705055762
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ mi_init+0x76/0xe0
+ ntfs_iget5+0x36a/0x38e0
+ ntfs_fill_super+0x2333/0x4580
+ get_tree_bdev_flags+0x41c/0x4e0
+ vfs_get_tree+0x8f/0x290
+ do_new_mount+0x341/0xd80
+ __se_sys_mount+0x30c/0x410
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 876 tgid 876 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ __kmalloc_cache_noprof+0x202/0x560
+ drm_atomic_state_alloc+0xa9/0x100
+ drm_atomic_helper_dirtyfb+0xf5/0xf20
+ drm_fbdev_shmem_helper_fb_dirty+0x15a/0x2d0
+ drm_fb_helper_damage_work+0x2a2/0x740
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff88803e895f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88803e896000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88803e896080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88803e896100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803e896180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[8/8]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+Read of size 8 at addr ffff88812477d0a8 by task syz.5.410/15547
+
+CPU: 1 UID: 0 PID: 15547 Comm: syz.5.410 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ v4l2_ctrl_request_unbind+0x5b/0x2d0 drivers/media/v4l2-core/v4l2-ctrls-request.c:101
+ media_request_object_unbind+0x25a/0x530 drivers/media/mc/mc-request.c:474
+ media_request_clean+0x11b/0x480 drivers/media/mc/mc-request.c:49
+ media_request_release drivers/media/mc/mc-request.c:72 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ media_request_put+0x98/0x1e0 drivers/media/mc/mc-request.c:83
+ media_request_close+0x38/0x50 drivers/media/mc/mc-request.c:91
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7fc81a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc94c3ba68 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007ffc94c3bb38 RCX: 00007f7fc81a778d
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: 00007f7fc8437da0 R08: 0000000000000001 R09: 0000001e00000000
+R10: 0000001b31920000 R11: 0000000000000246 R12: 00007f7fc8435fac
+R13: 00007f7fc8435fa0 R14: 000000000001d931 R15: 000000000001d8b8
+ </TASK>
+
+Allocated by task 15548 on cpu 1 at 121.113922s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ vim2m_open+0xb0/0x660 drivers/media/test-drivers/vim2m.c:1368
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 15547 on cpu 1 at 121.125079s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ vim2m_release+0xe6/0x140 drivers/media/test-drivers/vim2m.c:1442
+ v4l2_release+0x1ad/0x370 drivers/media/v4l2-core/v4l2-dev.c:468
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88812477d000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff88812477d000, ffff88812477d400)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88812477e800 pfn:0x124778
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000240 ffff888013041dc0 ffffea0004c41c10 ffffea0004261e10
+raw: ffff88812477e800 000000080010000f 00000000f5000000 0000000000000000
+head: 057ff00000000240 ffff888013041dc0 ffffea0004c41c10 ffffea0004261e10
+head: ffff88812477e800 000000080010000f 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 12076, tgid 12075 (syz.2.50), ts 79647988035, free_ts 76662299269
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_noprof+0x3ac/0x670 mm/slub.c:5308
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ ieee802_11_parse_elems_full+0x14a/0x29f0 net/mac80211/parse.c:1058
+ ieee802_11_parse_elems net/mac80211/ieee80211_i.h:2518 [inline]
+ ieee80211_inform_bss+0x161/0x1160 net/mac80211/scan.c:79
+ rdev_inform_bss net/wireless/rdev-ops.h:418 [inline]
+ cfg80211_inform_single_bss_data+0xc94/0x1820 net/wireless/scan.c:2372
+ cfg80211_inform_bss_data+0x266/0x39f0 net/wireless/scan.c:3229
+ cfg80211_inform_bss_frame_data+0x34f/0x650 net/wireless/scan.c:3320
+ ieee80211_bss_info_update+0x56a/0x7b0 net/mac80211/scan.c:230
+ ieee80211_scan_rx+0x4d3/0x7e0 net/mac80211/scan.c:364
+ __ieee80211_rx_handle_packet net/mac80211/rx.c:5357 [inline]
+ ieee80211_rx_list+0x3462/0x4320 net/mac80211/rx.c:5642
+ ieee80211_rx_napi+0xeb/0x290 net/mac80211/rx.c:5665
+page last free pid 2230 tgid 2230 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ vfree+0x1c0/0x2d0 mm/vmalloc.c:3472
+ delayed_vfree_work+0x55/0x80 mm/vmalloc.c:3392
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88812477cf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88812477d000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88812477d080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88812477d100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88812477d180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 168 bytes inside of
+ freed 1024-byte region [ffff88812477d000, ffff88812477d400)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88812477e800 pfn:0x124778
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x57ff00000000240(workingset|head|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000240 ffff888013041dc0 ffffea0004c41c10 ffffea0004261e10
+raw: ffff88812477e800 000000080010000f 00000000f5000000 0000000000000000
+head: 057ff00000000240 ffff888013041dc0 ffffea0004c41c10 ffffea0004261e10
+head: ffff88812477e800 000000080010000f 00000000f5000000 0000000000000000
+head: 057ff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 12076, tgid 12075 (syz.2.50), ts 79647988035, free_ts 76662299269
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_noprof+0x3ac/0x670
+ ieee802_11_parse_elems_full+0x14a/0x29f0
+ ieee80211_inform_bss+0x161/0x1160
+ cfg80211_inform_single_bss_data+0xc94/0x1820
+ cfg80211_inform_bss_data+0x266/0x39f0
+ cfg80211_inform_bss_frame_data+0x34f/0x650
+ ieee80211_bss_info_update+0x56a/0x7b0
+ ieee80211_scan_rx+0x4d3/0x7e0
+ ieee80211_rx_list+0x3462/0x4320
+ ieee80211_rx_napi+0xeb/0x290
+page last free pid 2230 tgid 2230 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ vfree+0x1c0/0x2d0
+ delayed_vfree_work+0x55/0x80
+ process_scheduled_works+0x881/0x1170
+ worker_thread+0x988/0xde0
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Memory state around the buggy address:
+ ffff88812477cf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88812477d000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88812477d080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88812477d100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88812477d180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

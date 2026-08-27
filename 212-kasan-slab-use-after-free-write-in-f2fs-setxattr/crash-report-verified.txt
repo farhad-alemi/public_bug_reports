@@ -1,0 +1,228 @@
+Recovered console capture for 212-kasan-slab-use-after-free-write-in-f2fs-setxattr
+Reproduced on the REPORTING kernel v7.1-rc5 (Linux e7ae89a0c97c), built from
+poly_morph/kernel_mainline with the campaign's own fuzzing config
+(configs/kernel_UpstreamAppArmorKASAN.config + configs/kernel_Ammend.config,
+i.e. KASAN + KASAN_EXTRA_INFO, lockdep off), using the reproducer.c shipped in
+this directory. Captured after the harness marker, so boot noise is excluded.
+Matched to this entry because: same crash class (KASAN slab-use-after-free
+Write), same crash site (down_write reached from f2fs_setxattr), identical
+fault call trace down to __x64_sys_lsetxattr, and the same object attribution
+("cache ocfs2_inode_cache of size 2016", "located 56 bytes inside of freed
+2016-byte region").
+Source log: console_212-final-715.log
+The original crash-report.txt records the FIRST observation, during fuzzing;
+this records a reproduction. Both are kept.
+======================================================================
+
+[   37.318581][ T9390] (repro,9390,0):ocfs2_initialize_super:2198 ERROR: status = -12
+[   37.319447][ T9390] (repro,9390,0):ocfs2_fill_super:1177 ERROR: status = -12
+[   37.352268][ T9390] F2FS-fs (loop0): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+[   37.353632][ T9390] F2FS-fs (loop0): Mounted with checkpoint version = 48b305f8
+[   37.354602][ T9390] ==================================================================
+[   37.355492][ T9390] BUG: KASAN: slab-use-after-free in down_write+0x82/0x140
+[   37.356300][ T9390] Write of size 8 at addr ffff888018095538 by task repro/9390
+[   37.357122][ T9390] 
+[   37.357394][ T9390] CPU: 0 UID: 0 PID: 9390 Comm: repro Not tainted 7.1.0-rc5 #1 PREEMPT(full) 
+[   37.357404][ T9390] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   37.357413][ T9390] Call Trace:
+[   37.357417][ T9390]  <TASK>
+[   37.357420][ T9390]  dump_stack_lvl+0x97/0xe0
+[   37.357445][ T9390]  print_report+0x139/0x4ad
+[   37.357457][ T9390]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[   37.357467][ T9390]  ? __virt_addr_valid+0x20a/0x370
+[   37.357478][ T9390]  kasan_report+0xda/0x110
+[   37.357489][ T9390]  ? down_write+0x82/0x140
+[   37.357501][ T9390]  ? down_write+0x82/0x140
+[   37.357514][ T9390]  kasan_check_range+0x125/0x200
+[   37.357526][ T9390]  down_write+0x82/0x140
+[   37.357539][ T9390]  ? __pfx_down_write+0x10/0x10
+[   37.357552][ T9390]  f2fs_setxattr+0x2d0/0x1380
+[   37.357562][ T9390]  ? lockref_put_return+0x126/0x1c0
+[   37.357573][ T9390]  ? __pfx_lockref_put_return+0x10/0x10
+[   37.357584][ T9390]  ? __pfx_d_alloc_parallel+0x10/0x10
+[   37.357593][ T9390]  ? __pfx_f2fs_setxattr+0x10/0x10
+[   37.357601][ T9390]  ? __lookup_slow+0x219/0x3d0
+[   37.357614][ T9390]  f2fs_xattr_generic_set+0x11d/0x160
+[   37.357623][ T9390]  ? __pfx_f2fs_xattr_generic_set+0x10/0x10
+[   37.357632][ T9390]  __vfs_setxattr+0x172/0x1d0
+[   37.357641][ T9390]  ? __pfx___vfs_setxattr+0x10/0x10
+[   37.357649][ T9390]  ? __pfx_make_vfsgid+0x10/0x10
+[   37.357663][ T9390]  __vfs_setxattr_noperm+0x125/0x660
+[   37.357673][ T9390]  __vfs_setxattr_locked+0x127/0x2b0
+[   37.357683][ T9390]  vfs_setxattr+0x147/0x380
+[   37.357692][ T9390]  ? __pfx_vfs_setxattr+0x10/0x10
+[   37.357702][ T9390]  do_setxattr+0x145/0x180
+[   37.357711][ T9390]  filename_setxattr+0x163/0x1c0
+[   37.357720][ T9390]  ? __pfx_filename_setxattr+0x10/0x10
+[   37.357730][ T9390]  ? do_getname+0x18d/0x390
+[   37.357741][ T9390]  path_setxattrat+0x210/0x3c0
+[   37.357751][ T9390]  ? __pfx_path_setxattrat+0x10/0x10
+[   37.357762][ T9390]  ? xfd_validate_state+0x128/0x190
+[   37.357773][ T9390]  __x64_sys_lsetxattr+0xc8/0x160
+[   37.357783][ T9390]  do_syscall_64+0xec/0x750
+[   37.357795][ T9390]  ? clear_bhb_loop+0x40/0x90
+[   37.357804][ T9390]  ? clear_bhb_loop+0x40/0x90
+[   37.357813][ T9390]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   37.357822][ T9390] RIP: 0033:0x42755d
+[   37.357832][ T9390] Code: 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 f0 ff ff ff f7 d8 64 89 01 48
+[   37.357841][ T9390] RSP: 002b:00007ffd0a5408d8 EFLAGS: 00000207 ORIG_RAX: 00000000000000bd
+[   37.357851][ T9390] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000042755d
+[   37.357857][ T9390] RDX: 000000000048ace8 RSI: 000000000048acf9 RDI: 00007ffd0a540a70
+[   37.357862][ T9390] RBP: 00007ffd0a540c80 R08: 0000000000000000 R09: 0000000000000000
+[   37.357867][ T9390] R10: 0000000000000010 R11: 0000000000000207 R12: 00007ffd0a540da8
+[   37.357872][ T9390] R13: 00007ffd0a540db8 R14: 0000000000000002 R15: 00000000004b17e0
+[   37.357879][ T9390]  </TASK>
+[   37.357884][ T9390] 
+[   37.391693][ T9390] Allocated by task 9390 on cpu 0 at 37.049777s:
+[   37.392464][ T9390]  kasan_save_stack+0x30/0x50
+[   37.393023][ T9390]  kasan_save_track+0x17/0x60
+[   37.393589][ T9390]  __kasan_slab_alloc+0x7e/0x90
+[   37.394167][ T9390]  kmem_cache_alloc_lru_noprof+0x28b/0x590
+[   37.394862][ T9390]  ocfs2_alloc_inode+0x26/0xf0
+[   37.395440][ T9390]  alloc_inode+0x68/0x250
+[   37.395966][ T9390]  iget5_locked+0x5f/0xa0
+[   37.396494][ T9390]  ocfs2_iget+0x166/0x990
+[   37.397018][ T9390]  ocfs2_initialize_super.isra.0+0x19c0/0x3110
+[   37.397759][ T9390]  ocfs2_fill_super+0x784/0x2800
+[   37.398350][ T9390]  get_tree_bdev_flags+0x370/0x5f0
+[   37.399062][ T9390]  vfs_get_tree+0x8d/0x300
+[   37.399604][ T9390]  path_mount+0x9d3/0x2240
+[   37.400141][ T9390]  __x64_sys_mount+0x291/0x310
+[   37.400718][ T9390]  do_syscall_64+0xec/0x750
+[   37.401260][ T9390]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   37.402021][ T9390] 
+[   37.402312][ T9390] Freed by task 5054 on cpu 0 at 37.091552s:
+[   37.403051][ T9390]  kasan_save_stack+0x30/0x50
+[   37.403619][ T9390]  kasan_save_track+0x17/0x60
+[   37.404187][ T9390]  kasan_save_free_info+0x3b/0x70
+[   37.404792][ T9390]  __kasan_slab_free+0x6b/0x90
+[   37.405361][ T9390]  kmem_cache_free+0xfe/0x570
+[   37.405921][ T9390]  i_callback+0x46/0x80
+[   37.406415][ T9390]  rcu_core+0x8bc/0xfb0
+[   37.406911][ T9390]  handle_softirqs+0x1d1/0x680
+[   37.407487][ T9390]  __irq_exit_rcu+0x11a/0x1b0
+[   37.408053][ T9390]  sysvec_apic_timer_interrupt+0xa3/0xc0
+[   37.408815][ T9390]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[   37.409536][ T9390] 
+[   37.409830][ T9390] Last potentially related work creation:
+[   37.410503][ T9390]  kasan_save_stack+0x30/0x50
+[   37.411068][ T9390]  kasan_record_aux_stack+0xb0/0xc0
+[   37.411710][ T9390]  __call_rcu_common.constprop.0+0xa4/0x9b0
+[   37.412410][ T9390]  destroy_inode+0x134/0x1c0
+[   37.412972][ T9390]  evict+0x562/0x8b0
+[   37.413439][ T9390]  iput+0x4bf/0xad0
+[   37.413905][ T9390]  ocfs2_iget+0x78f/0x990
+[   37.414422][ T9390]  ocfs2_initialize_super.isra.0+0x19c0/0x3110
+[   37.415158][ T9390]  ocfs2_fill_super+0x784/0x2800
+[   37.415755][ T9390]  get_tree_bdev_flags+0x370/0x5f0
+[   37.416363][ T9390]  vfs_get_tree+0x8d/0x300
+[   37.416901][ T9390]  path_mount+0x9d3/0x2240
+[   37.417425][ T9390]  __x64_sys_mount+0x291/0x310
+[   37.417999][ T9390]  do_syscall_64+0xec/0x750
+[   37.418632][ T9390]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   37.419346][ T9390] 
+[   37.419651][ T9390] The buggy address belongs to the object at ffff888018095500
+[   37.419651][ T9390]  which belongs to the cache ocfs2_inode_cache of size 2016
+[   37.421370][ T9390] The buggy address is located 56 bytes inside of
+[   37.421370][ T9390]  freed 2016-byte region [ffff888018095500, ffff888018095ce0)
+[   37.422997][ T9390] 
+[   37.423276][ T9390] The buggy address belongs to the physical page:
+[   37.424052][ T9390] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888018096600 pfn:0x18090
+[   37.425245][ T9390] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   37.426239][ T9390] memcg:ffff888018097f81
+[   37.426755][ T9390] flags: 0xfff00000000240(workingset|head|node=0|zone=1|lastcpupid=0x7ff)
+[   37.427754][ T9390] page_type: f5(slab)
+[   37.428224][ T9390] raw: 00fff00000000240 ffff888106323280 ffff888017396510 ffff888017396510
+[   37.429315][ T9390] raw: ffff888018096600 00000008000f000c 00000000f5000000 ffff888018097f81
+[   37.430322][ T9390] head: 00fff00000000240 ffff888106323280 ffff888017396510 ffff888017396510
+[   37.431340][ T9390] head: ffff888018096600 00000008000f000c 00000000f5000000 ffff888018097f81
+[   37.432359][ T9390] head: 00fff00000000003 fffffffffffffe01 00000000ffffffff 00000000ffffffff
+[   37.433374][ T9390] head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+[   37.434399][ T9390] page dumped because: kasan: bad access detected
+[   37.435157][ T9390] page_owner tracks the page as allocated
+[   37.435861][ T9390] page last allocated via order 3, migratetype Reclaimable, gfp_mask 0xd2050(__GFP_RECLAIMABLE|__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9390, tgid 9390 (repro), ts 37049679735, free_ts 0
+[   37.438338][ T9390]  post_alloc_hook+0xfe/0x140
+[   37.439018][ T9390]  get_page_from_freelist+0x1059/0x3530
+[   37.439705][ T9390]  __alloc_frozen_pages_noprof+0x25d/0x2990
+[   37.440458][ T9390]  new_slab+0xa6/0x670
+[   37.440954][ T9390]  refill_objects+0x25e/0x350
+[   37.441533][ T9390]  __pcs_replace_empty_main+0x23b/0x3c0
+[   37.442212][ T9390]  kmem_cache_alloc_lru_noprof+0x4b2/0x590
+[   37.442950][ T9390]  ocfs2_alloc_inode+0x26/0xf0
+[   37.443530][ T9390]  alloc_inode+0x68/0x250
+[   37.444046][ T9390]  iget5_locked+0x5f/0xa0
+[   37.444561][ T9390]  ocfs2_iget+0x166/0x990
+[   37.445074][ T9390]  ocfs2_initialize_super.isra.0+0x1948/0x3110
+[   37.445807][ T9390]  ocfs2_fill_super+0x784/0x2800
+[   37.446402][ T9390]  get_tree_bdev_flags+0x370/0x5f0
+[   37.447014][ T9390]  vfs_get_tree+0x8d/0x300
+[   37.447579][ T9390]  path_mount+0x9d3/0x2240
+[   37.448132][ T9390] page_owner free stack trace missing
+[   37.448866][ T9390] 
+[   37.449151][ T9390] Memory state around the buggy address:
+[   37.449826][ T9390]  ffff888018095400: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+[   37.450783][ T9390]  ffff888018095480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   37.451742][ T9390] >ffff888018095500: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   37.452695][ T9390]                                         ^
+[   37.453397][ T9390]  ffff888018095580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   37.454356][ T9390]  ffff888018095600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   37.455301][ T9390] ==================================================================
+[   37.456384][ T9390] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   37.457238][ T9390] CPU: 0 UID: 0 PID: 9390 Comm: repro Not tainted 7.1.0-rc5 #1 PREEMPT(full) 
+[   37.458277][ T9390] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1ubuntu1 04/01/2014
+[   37.459632][ T9390] Call Trace:
+[   37.460026][ T9390]  <TASK>
+[   37.460383][ T9390]  dump_stack_lvl+0x97/0xe0
+[   37.460936][ T9390]  vpanic+0x514/0x950
+[   37.461407][ T9390]  ? __pfx_vpanic+0x10/0x10
+[   37.461954][ T9390]  ? __pfx_vprintk_emit+0x10/0x10
+[   37.462561][ T9390]  panic+0xd0/0xd0
+[   37.463013][ T9390]  ? __pfx_panic+0x10/0x10
+[   37.463572][ T9390]  ? check_panic_on_warn+0x1f/0x90
+[   37.464204][ T9390]  ? check_panic_on_warn+0x1f/0x90
+[   37.464823][ T9390]  check_panic_on_warn.cold+0x19/0x34
+[   37.465494][ T9390]  end_report.cold+0x33/0x78
+[   37.466047][ T9390]  kasan_report+0xeb/0x110
+[   37.466589][ T9390]  ? down_write+0x82/0x140
+[   37.467134][ T9390]  ? down_write+0x82/0x140
+[   37.467679][ T9390]  kasan_check_range+0x125/0x200
+[   37.468274][ T9390]  down_write+0x82/0x140
+[   37.468857][ T9390]  ? __pfx_down_write+0x10/0x10
+[   37.469450][ T9390]  f2fs_setxattr+0x2d0/0x1380
+[   37.470046][ T9390]  ? lockref_put_return+0x126/0x1c0
+[   37.470727][ T9390]  ? __pfx_lockref_put_return+0x10/0x10
+[   37.471474][ T9390]  ? __pfx_d_alloc_parallel+0x10/0x10
+[   37.472180][ T9390]  ? __pfx_f2fs_setxattr+0x10/0x10
+[   37.472839][ T9390]  ? __lookup_slow+0x219/0x3d0
+[   37.473416][ T9390]  f2fs_xattr_generic_set+0x11d/0x160
+[   37.474066][ T9390]  ? __pfx_f2fs_xattr_generic_set+0x10/0x10
+[   37.474771][ T9390]  __vfs_setxattr+0x172/0x1d0
+[   37.475336][ T9390]  ? __pfx___vfs_setxattr+0x10/0x10
+[   37.475986][ T9390]  ? __pfx_make_vfsgid+0x10/0x10
+[   37.476610][ T9390]  __vfs_setxattr_noperm+0x125/0x660
+[   37.477251][ T9390]  __vfs_setxattr_locked+0x127/0x2b0
+[   37.477894][ T9390]  vfs_setxattr+0x147/0x380
+[   37.478447][ T9390]  ? __pfx_vfs_setxattr+0x10/0x10
+[   37.479115][ T9390]  do_setxattr+0x145/0x180
+[   37.479657][ T9390]  filename_setxattr+0x163/0x1c0
+[   37.480248][ T9390]  ? __pfx_filename_setxattr+0x10/0x10
+[   37.480906][ T9390]  ? do_getname+0x18d/0x390
+[   37.481464][ T9390]  path_setxattrat+0x210/0x3c0
+[   37.482044][ T9390]  ? __pfx_path_setxattrat+0x10/0x10
+[   37.482682][ T9390]  ? xfd_validate_state+0x128/0x190
+[   37.483305][ T9390]  __x64_sys_lsetxattr+0xc8/0x160
+[   37.483907][ T9390]  do_syscall_64+0xec/0x750
+[   37.484455][ T9390]  ? clear_bhb_loop+0x40/0x90
+[   37.485025][ T9390]  ? clear_bhb_loop+0x40/0x90
+[   37.485593][ T9390]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   37.486298][ T9390] RIP: 0033:0x42755d
+[   37.486762][ T9390] Code: 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 f0 ff ff ff f7 d8 64 89 01 48
+[   37.489107][ T9390] RSP: 002b:00007ffd0a5408d8 EFLAGS: 00000207 ORIG_RAX: 00000000000000bd
+[   37.490108][ T9390] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000042755d
+[   37.491044][ T9390] RDX: 000000000048ace8 RSI: 000000000048acf9 RDI: 00007ffd0a540a70
+[   37.491982][ T9390] RBP: 00007ffd0a540c80 R08: 0000000000000000 R09: 0000000000000000
+[   37.492917][ T9390] R10: 0000000000000010 R11: 0000000000000207 R12: 00007ffd0a540da8
+[   37.493859][ T9390] R13: 00007ffd0a540db8 R14: 0000000000000002 R15: 00000000004b17e0
+[   37.494797][ T9390]  </TASK>
+[   37.495442][ T9390] Kernel Offset: disabled
+[   37.496122][ T9390] Rebooting in 86400 seconds..

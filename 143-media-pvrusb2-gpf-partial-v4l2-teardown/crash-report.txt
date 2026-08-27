@@ -1,0 +1,2109 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+26 distinct call traces, each reproduced once.
+
+======================================================================
+[1/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff88812f7f5000
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 14144 Comm: syz.2.172 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc900024ef800 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff9200049df04 RCX: ffff888117028000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888107bf0000
+RBP: ffffc900024ef908 R08: 00000000733ba419 R09: 00000000f4624602
+R10: 000000000000000f R11: ffffffff81aac100 R12: ffff888107bf0000
+R13: ffff88810dc8e480 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055f9c28093c0 CR3: 0000000108e17000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb7f01a734d
+Code: Unable to access opcode bytes at 0x7fb7f01a7323.
+RSP: 002b:00007fb7f10c7f30 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: fffffffffffffffc RBX: 0000000000000004 RCX: 00007fb7f01a734d
+RDX: 00007fb7f10c8fc0 RSI: 0000000080085502 RDI: 0000000000000004
+RBP: 00007fb7f10c7f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fb7f0436360 R15: 00007fff291b0dc0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[2/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 2416 Comm: pvrusb2-context Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc9000972fb80 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff920012e5f74 RCX: ffff88810e0fd100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888023f94000
+RBP: ffffc9000972fc88 R08: ffffc9000972fc67 R09: 1ffff920012e5f8c
+R10: dffffc0000000000 R11: ffffffff8814eb60 R12: ffff888023f94000
+R13: ffff888023945450 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc247653000 CR3: 000000010c076000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_internal_check+0x2d5/0x450 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:882
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[3/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff888114487000
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 14074 Comm: syz.3.107 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc90006ba7bc0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff92000d74f7c RCX: 0000000000080000
+RDX: ffffc90027a6b000 RSI: 000000000003f764 RDI: 000000000003f765
+RBP: ffffc90006ba7cc8 R08: 00000000032c2aaa R09: 0000000058e2138d
+R10: 000000000000000b R11: ffffffff81aac100 R12: ffff88802b37b000
+R13: ffff888011f45e80 R14: dffffc0000000000 R15: 0000000000000000
+FS:  00007f9398c5d6c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb859ff9598 CR3: 000000010a1a8000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9397da778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9398c5d018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: 0000000000000000 RBX: 00007f9398036450 RCX: 00007f9397da778d
+RDX: 0000000000000000 RSI: 0000000000005646 RDI: 0000000000000005
+RBP: 00007f9397e4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f93980364e8 R14: 00007f9398036450 R15: 00007fffc0e8e4a0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[4/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 20477 Comm: v4l_id Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc90002a3fc00 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff92000547f84 RCX: ffff88801a851b00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff88810ea8e000
+RBP: ffffc90002a3fd08 R08: 00000000492fac07 R09: 00000000ac5ce8ea
+R10: 000000000000000b R11: ffffffff81aac100 R12: ffff88810ea8e000
+R13: ffff888105d84300 R14: dffffc0000000000 R15: 0000000000000000
+FS:  00007f183d07e9c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f183d5e4700 CR3: 000000002c1c5000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f183d29b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffd18460590 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f183d07e9c0 RCX: 00007f183d29b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f183d07e850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffd184607c0 R14: 00007f183d903000 R15: 000055c2f72e8c58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[5/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 16010 Comm: syz.2.388 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0000:ffffc90003da7800 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff920007b4f04 RCX: ffff88801a2b1b00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff88803be00000
+RBP: ffffc90003da7908 R08: ffffffff81a8b378 R09: ffffffff8b6cb309
+R10: ffffffff8b6cb309 R11: ffffffff81000130 R12: ffff88803be00000
+R13: ffff88803bbf6800 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f749453e000 CR3: 000000003a6a9000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f47b35a778d
+Code: Unable to access opcode bytes at 0x7f47b35a7763.
+RSP: 002b:00007f47b43a50d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007f47b3836458 RCX: 00007f47b35a778d
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f47b3836458
+RBP: 00007f47b3836450 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f47b38364e8 R14: 000000000000006e R15: 00007ffe2b6478c0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[6/26]
+======================================================================
+
+pvrusb2: Clearing driver error status
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 12598 Comm: syz.0.90 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc90005a9f9a0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff92000b53f38 RCX: 0000000000080000
+RDX: ffffc90022123000 RSI: 0000000000001d2e RDI: 0000000000001d2f
+RBP: ffffc90005a9faa8 R08: ffffffff81000130 R09: ffffffff81000130
+R10: ffffffff81a8b378 R11: ffffffff8b6cb309 R12: ffff8880166ac000
+R13: ffff888019d24c00 R14: dffffc0000000000 R15: 0000000000000000
+FS:  00007f639952f6c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fece53e4700 CR3: 000000003278e000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ get_signal+0x1218/0x1410 kernel/signal.c:2809
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f63985a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f639952f018 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: fffffffffffffe00 RBX: 00007f6398835fa0 RCX: 00007f63985a778d
+RDX: 00000000fffffd5f RSI: 0000200000002000 RDI: 0000000000000007
+RBP: 00007f639864eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6398836038 R14: 00007f6398835fa0 R15: 00007ffce1f65390
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[7/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff88810d86b400
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 12565 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc9002133fc00 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff92004267f84 RCX: ffff888105f20000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8881222ec000
+RBP: ffffc9002133fd08 R08: ffffffff82365efe R09: ffffffff8b6cb1f6
+R10: ffffffff8b6cb1f6 R11: ffffffff81000130 R12: ffff8881222ec000
+R13: ffff88810bc2e900 R14: dffffc0000000000 R15: 0000000000000000
+FS:  00007fc81724f9c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32863fff CR3: 000000001e167000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc816c9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffd7c8d3b80 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007fc81724f9c0 RCX: 00007fc816c9b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007fc81724f850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffd7c8d3db0 R14: 00007fc817414000 R15: 000056469ffc5c58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[8/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 22459 Comm: syz.1.1309 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc900052ef800 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff92000a5df04 RCX: ffff888110b95100
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888026e25000
+RBP: ffffc900052ef908 R08: ffffffff81a8b378 R09: ffffffff8b6cb309
+R10: ffffffff8b6cb309 R11: ffffffff81000130 R12: ffff888026e25000
+R13: ffff88804427dc00 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f23bdbf9000 CR3: 0000000032397000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc8529a778d
+Code: Unable to access opcode bytes at 0x7fc8529a7763.
+RSP: 002b:00007fc8537f9018 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: 0000000000000006 RBX: 00007fc852c36450 RCX: 00007fc8529a778d
+RDX: 0000000000000002 RSI: 00002000000004c0 RDI: ffffffffffffff9c
+RBP: 00007fc852a4eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fc852c364e8 R14: 00007fc852c36450 R15: 00007fff76e59cf0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[9/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 12047 Comm: syz.4.82 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc90007c0f780 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff92000f81ef4 RCX: ffff88801183b600
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888011873000
+RBP: ffffc90007c0f888 R08: ffffffff8225f9bf R09: ffffffff82262a66
+R10: ffffffff82262a66 R11: ffffffff8225fe5c R12: ffff888011873000
+R13: ffff888019167500 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c34d1b6 CR3: 000000001a673000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ ret_from_fork+0x3b6/0x940 arch/x86/kernel/process.c:167
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[10/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 12616 Comm: syz.4.165 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc9002055f800 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff920040abf04 RCX: ffff88801948b600
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880371e2000
+RBP: ffffc9002055f908 R08: ffffffff81a8b378 R09: ffffffff8b6cb309
+R10: ffffffff8b6cb309 R11: ffffffff81000130 R12: ffff8880371e2000
+R13: ffff888020acf780 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8ac898e280 CR3: 000000002534c000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5b9bc012df
+Code: Unable to access opcode bytes at 0x7f5b9bc012b5.
+RSP: 002b:00007ffc3a7734d0 EFLAGS: 00000293 ORIG_RAX: 00000000000000e6
+RAX: fffffffffffffdfc RBX: 00007f5b9be35fa0 RCX: 00007f5b9bc012df
+RDX: 00007ffc3a773560 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007ffc3a773540 R08: 0000000000000000 R09: 3fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffc3a773560
+R13: 0000000000000000 R14: 000000000000fb01 R15: 0000000000000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[11/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff888019c8bc00
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 11293 Comm: syz.0.1 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_dev_destroy+0xb5/0x320 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:805
+Code: 24 a0 04 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 30 00 74 08 4c 89 ff e8 8a e0 10 fa 4c 89 7c 24 18 4d 8b 3f 4c 89 f8 48 c1 e8 03 <42> 80 3c 30 00 74 08 4c 89 ff e8 6c e0 10 fa 4d 8b 3f 49 83 c7 30
+RSP: 0018:ffffc900035df800 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff920006bbf04 RCX: ffff88810b3a3600
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888034407000
+RBP: ffffc900035df908 R08: 00000000733ba419 R09: 00000000f4624602
+R10: 000000000000000f R11: ffffffff81aac100 R12: ffff888034407000
+R13: ffff88801c95c480 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055db34aefda0 CR3: 000000001b57a000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ pvr2_v4l2_destroy_no_lock drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:846 [inline]
+ pvr2_v4l2_release+0x3c3/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:918
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f29cafa734d
+Code: Unable to access opcode bytes at 0x7f29cafa7323.
+RSP: 002b:00007f29cbf48f30 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: fffffffffffffffc RBX: 0000000000000003 RCX: 00007f29cafa734d
+RDX: 00007f29cbf49fc0 RSI: 0000000080085502 RDI: 0000000000000003
+RBP: 00007f29cbf48f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f29cb235fa0 R15: 00007ffe07f609e0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[12/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff888113838800
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 1 UID: 0 PID: 45978 Comm: v4l_id Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:list_empty include/linux/list.h:404 [inline]
+RIP: 0010:pvr2_v4l2_release+0x2ea/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:915
+Code: bd 00 00 00 00 00 fc ff df 41 80 3c 2f 00 74 08 48 89 df e8 a8 28 11 fa 4c 8b 23 4d 8d b4 24 50 04 00 00 4c 89 f0 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 f7 e8 88 28 11 fa 49 8b 06 4c 39 f0 74 14
+RSP: 0018:ffffc90004977d18 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff88810e929538 RCX: 0000000000000000
+RDX: ffff88810bc8b600 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: 00000000492fac07 R09: 00000000ac5ce8ea
+R10: 000000000000000b R11: ffffffff81aac100 R12: 0000000000000000
+R13: ffff88810e929500 R14: 0000000000000450 R15: 1ffff11021d252a7
+FS:  00007f5fd243b9c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000010d368000 CR4: 0000000000752ff0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5fd269b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007fff389a48d0 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f5fd243b9c0 RCX: 00007f5fd269b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f5fd243b850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007fff389a4b00 R14: 00007f5fd2d59000 R15: 000055b917ec0c58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[13/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 1 UID: 0 PID: 13700 Comm: syz.1.230 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:list_empty include/linux/list.h:404 [inline]
+RIP: 0010:pvr2_v4l2_release+0x2ea/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:915
+Code: bd 00 00 00 00 00 fc ff df 41 80 3c 2f 00 74 08 48 89 df e8 a8 28 11 fa 4c 8b 23 4d 8d b4 24 50 04 00 00 4c 89 f0 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 f7 e8 88 28 11 fa 49 8b 06 4c 39 f0 74 14
+RSP: 0000:ffffc9000708f918 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff8880398a53b8 RCX: 0000000000000000
+RDX: ffff8880196f0000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff81a8b378 R09: ffffffff8b6cb309
+R10: ffffffff8b6cb309 R11: ffffffff81000130 R12: 0000000000000000
+R13: ffff8880398a5380 R14: 0000000000000450 R15: 1ffff11007314a77
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f45b7b04000 CR3: 000000001df1e000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd6c0fa734d
+Code: Unable to access opcode bytes at 0x7fd6c0fa7323.
+RSP: 002b:00007fd6c1ec1f30 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: fffffffffffffffc RBX: 0000000000000005 RCX: 00007fd6c0fa734d
+RDX: 00007fd6c1ec2fc0 RSI: 0000000080085502 RDI: 0000000000000005
+RBP: 00007fd6c1ec1f80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000005 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fd6c1236180 R15: 00007fff6e1e1a00
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[14/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 0 UID: 0 PID: 20009 Comm: v4l_id Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:list_empty include/linux/list.h:404 [inline]
+RIP: 0010:pvr2_v4l2_release+0x2ea/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:915
+Code: bd 00 00 00 00 00 fc ff df 41 80 3c 2f 00 74 08 48 89 df e8 a8 28 11 fa 4c 8b 23 4d 8d b4 24 50 04 00 00 4c 89 f0 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 f7 e8 88 28 11 fa 49 8b 06 4c 39 f0 74 14
+RSP: 0018:ffffc90003ec7d18 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff888018dc1a38 RCX: 0000000000000000
+RDX: ffff8880206c9b00 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff8225f9bf R09: ffffffff82262a66
+R10: ffffffff82262a66 R11: ffffffff8225fe5c R12: 0000000000000000
+R13: ffff888018dc1a00 R14: 0000000000000450 R15: 1ffff110031b8347
+FS:  00007fd76ce829c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd76d3e4700 CR3: 000000004b949000 CR4: 0000000000752ef0
+DR0: 0000000000000000 DR1: 0000000000003000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd76d09b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffe38935670 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007fd76ce829c0 RCX: 00007fd76d09b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007fd76ce82850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffe389358a0 R14: 00007fd76d7f8000 R15: 000055822e439c58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[15/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff888111f4ac00
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 0 UID: 0 PID: 12283 Comm: syz.4.76 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:list_empty include/linux/list.h:404 [inline]
+RIP: 0010:pvr2_v4l2_release+0x2ea/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:915
+Code: bd 00 00 00 00 00 fc ff df 41 80 3c 2f 00 74 08 48 89 df e8 a8 28 11 fa 4c 8b 23 4d 8d b4 24 50 04 00 00 4c 89 f0 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 f7 e8 88 28 11 fa 49 8b 06 4c 39 f0 74 14
+RSP: 0018:ffffc9000948f918 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff8880262d9938 RCX: 0000000000000000
+RDX: ffff888101bc8000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff81a8b378 R09: ffffffff8b6cb309
+R10: ffffffff8b6cb309 R11: ffffffff81000130 R12: 0000000000000000
+R13: ffff8880262d9900 R14: 0000000000000450 R15: 1ffff11004c5b327
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdeede56000 CR3: 00000000296c7000 CR4: 0000000000752ef0
+DR0: 0000000000000000 DR1: 000000000000000d DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f115f9a62d5
+Code: Unable to access opcode bytes at 0x7f115f9a62ab.
+RSP: 002b:00007f116090fb40 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+RAX: 000000000000000a RBX: 0000000000000802 RCX: 00007f115f9a62d5
+RDX: 0000000000000802 RSI: 00007f116090fbe0 RDI: 00000000ffffff9c
+RBP: 00007f116090fbb0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f116090fbe0
+R13: 00007f115fc36038 R14: 00007f115fc35fa0 R15: 00007ffe573af790
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[16/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff88812e920800
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 1 UID: 0 PID: 14580 Comm: syz.0.252 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:list_empty include/linux/list.h:404 [inline]
+RIP: 0010:pvr2_v4l2_release+0x2ea/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:915
+Code: bd 00 00 00 00 00 fc ff df 41 80 3c 2f 00 74 08 48 89 df e8 a8 28 11 fa 4c 8b 23 4d 8d b4 24 50 04 00 00 4c 89 f0 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 f7 e8 88 28 11 fa 49 8b 06 4c 39 f0 74 14
+RSP: 0018:ffffc90004227cd8 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff888024efa238 RCX: 0000000000000002
+RDX: ffff88812d74d100 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff81a8b3d0 R09: ffffffff8b6cb309
+R10: ffffffff8b6cb309 R11: ffffffff81000130 R12: 0000000000000000
+R13: ffff888024efa200 R14: 0000000000000450 R15: 1ffff110049df447
+FS:  00007feb4e3b56c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c31f932 CR3: 0000000124e2c000 CR4: 0000000000752ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7feb4d5a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007feb4e3b5018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: 0000000000000000 RBX: 00007feb4d836450 RCX: 00007feb4d5a778d
+RDX: 0000000000000000 RSI: 0000000000005646 RDI: 0000000000000006
+RBP: 00007feb4d64eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007feb4d8364e8 R14: 00007feb4d836450 R15: 00007fffa7ae8120
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[17/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 18987 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_release+0x27b/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Code: 3c 2b 00 74 08 4c 89 ff e8 12 2a 11 fa 49 c7 07 00 00 00 00 eb 05 e8 14 bf a9 f9 4c 89 f7 e8 cc 09 06 fa 4c 89 e8 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 ef e8 f7 28 11 fa 4d 8b 75 00 49 83 c6 68
+RSP: 0018:ffffc900032efd18 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff110060bce1f RCX: ffff888021b32ab0
+RDX: ffff8880305e7000 RSI: ffffffff8be156c0 RDI: ffffffff8be15680
+RBP: dffffc0000000000 R08: ffffffff82365efe R09: ffffffff8b6cb1f6
+R10: ffffffff8b6cb1f6 R11: ffffffff81000130 R12: ffff888021b32ab0
+R13: 0000000000000000 R14: ffff8880305e7000 R15: ffff8880305e70f8
+FS:  00007fc9498479c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc949de4700 CR3: 000000002d700000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc949a9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffe5347cc40 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007fc9498479c0 RCX: 00007fc949a9b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007fc949847850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000013
+R13: 00007ffe5347ce70 R14: 00007fc94a095000 R15: 000055e401f0bc58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[18/26]
+======================================================================
+
+pvrusb2: Destroying pvr_v4l2_fh id=ffff888016b11400
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 15583 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_release+0x27b/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Code: 3c 2b 00 74 08 4c 89 ff e8 12 2a 11 fa 49 c7 07 00 00 00 00 eb 05 e8 14 bf a9 f9 4c 89 f7 e8 cc 09 06 fa 4c 89 e8 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 ef e8 f7 28 11 fa 4d 8b 75 00 49 83 c6 68
+RSP: 0018:ffffc900076c7d18 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 1ffff11002d6229f RCX: ffff8881313b9f90
+RDX: ffff888016b11400 RSI: ffffffff8be156c0 RDI: ffffffff8be15680
+RBP: dffffc0000000000 R08: ffffffff82365efe R09: ffffffff8b6cb1f6
+R10: ffffffff8b6cb1f6 R11: ffffffff81000130 R12: ffff8881313b9f90
+R13: 0000000000000000 R14: ffff888016b11400 R15: ffff888016b114f8
+FS:  00007f870a6509c0(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f870a3e4700 CR3: 000000004ab3b000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f870a09b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007fff1eaaadc0 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f870a6509c0 RCX: 00007f870a09b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f870a650850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000013
+R13: 00007fff1eaaaff0 R14: 00007f870a815000 R15: 000055ed4192cc58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[19/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Read of size 8 at addr ffff88801eaf3480 by task v4l_id/20539
+
+CPU: 0 UID: 0 PID: 20539 Comm: v4l_id Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f2e3e49b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffd7a4f8470 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f2e3ea4e9c0 RCX: 00007f2e3e49b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f2e3ea4e850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffd7a4f86a0 R14: 00007f2e3eb2d000 R15: 0000563a89a60c58
+ </TASK>
+
+Allocated by task 2420 on cpu 0 at 139.536402s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2420 on cpu 0 at 141.717353s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff88801eaf3480
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88801eaf3480, ffff88801eaf34e0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88801eaf3b80 pfn:0x1eaf3
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff888013041280 ffffea00007cbb10 ffffea0000685610
+raw: ffff88801eaf3b80 000000080020000b 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 29, tgid 29 (kworker/u9:1), ts 10696873050, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_node_noprof+0x39d/0x5d0 mm/slub.c:5428
+ kmalloc_node_noprof include/linux/slab.h:1077 [inline]
+ __get_vm_area_node+0x13f/0x300 mm/vmalloc.c:3215
+ __vmalloc_node_range_noprof+0x36a/0x1750 mm/vmalloc.c:4024
+ __vmalloc_node_noprof+0xc2/0x100 mm/vmalloc.c:4124
+ alloc_thread_stack_node kernel/fork.c:357 [inline]
+ dup_task_struct+0x298/0x840 kernel/fork.c:926
+ copy_process+0x797/0x3ba0 kernel/fork.c:2090
+ kernel_clone+0x269/0x880 kernel/fork.c:2721
+ user_mode_thread+0x110/0x180 kernel/fork.c:2797
+ call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff88801eaf3380: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88801eaf3400: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>ffff88801eaf3480: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88801eaf3500: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88801eaf3580: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Freed by task 2420 on cpu 0 at 141.717353s:
+ kasan_save_track+0x3f/0xa0
+ kasan_save_free_info+0x46/0x50
+ __kasan_slab_free+0x5c/0x80
+ kfree+0x18a/0x4d0
+ pvr2_context_thread_func+0x366/0xb00
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+The buggy address belongs to the object at ffff88801eaf3480
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88801eaf3480, ffff88801eaf34e0)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88801eaf3b80 pfn:0x1eaf3
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff888013041280 ffffea00007cbb10 ffffea0000685610
+raw: ffff88801eaf3b80 000000080020000b 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 29, tgid 29 (kworker/u9:1), ts 10696873050, free_ts 0
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_node_noprof+0x39d/0x5d0
+ __get_vm_area_node+0x13f/0x300
+ __vmalloc_node_range_noprof+0x36a/0x1750
+ __vmalloc_node_noprof+0xc2/0x100
+ dup_task_struct+0x298/0x840
+ copy_process+0x797/0x3ba0
+ kernel_clone+0x269/0x880
+ user_mode_thread+0x110/0x180
+ call_usermodehelper_exec_work+0x5c/0x230
+ process_scheduled_works+0x881/0x1170
+page_owner free stack trace missing
+Memory state around the buggy address:
+ ffff88801eaf3380: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88801eaf3400: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>ffff88801eaf3480: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88801eaf3500: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88801eaf3580: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[20/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Read of size 8 at addr ffff88803b018e80 by task v4l_id/12762
+
+CPU: 0 UID: 0 PID: 12762 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc4c509b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffc408d60f0 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007fc4c4e629c0 RCX: 00007fc4c509b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007fc4c4e62850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffc408d6320 R14: 00007fc4c56e9000 R15: 000055bb4a170c58
+ </TASK>
+
+Allocated by task 2420 on cpu 0 at 79.127047s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2420 on cpu 0 at 82.289171s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff88803b018e80
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88803b018e80, ffff88803b018ee0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88803b018c00 pfn:0x3b018
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff888013041280 ffffea00007dbe90 ffff888013040110
+raw: ffff88803b018c00 000000080020001e 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x252800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP|__GFP_THISNODE), pid 12622, tgid 12622 ((udev-worker)), ts 78905139977, free_ts 78324847901
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ ___slab_alloc+0x156/0x640 mm/slub.c:4445
+ __slab_alloc_node mm/slub.c:4511 [inline]
+ slab_alloc_node mm/slub.c:4887 [inline]
+ __do_kmalloc_node mm/slub.c:5295 [inline]
+ __kmalloc_node_noprof+0x307/0x710 mm/slub.c:5302
+ kmalloc_node_noprof include/linux/slab.h:1081 [inline]
+ alloc_slab_obj_exts+0xbf/0x250 mm/slub.c:2171
+ __memcg_slab_post_alloc_hook+0x5c0/0xeb0 mm/memcontrol.c:3475
+ memcg_slab_post_alloc_hook mm/slub.c:2461 [inline]
+ slab_post_alloc_hook mm/slub.c:4581 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ kmem_cache_alloc_node_noprof+0x351/0x5c0 mm/slub.c:4951
+ __alloc_skb+0x1cd/0x7d0 net/core/skbuff.c:702
+ alloc_skb include/linux/skbuff.h:1383 [inline]
+ alloc_skb_with_frags+0xc8/0x760 net/core/skbuff.c:6743
+ sock_alloc_send_pskb+0x878/0x990 net/core/sock.c:2998
+ unix_dgram_sendmsg+0x445/0x1b90 net/unix/af_unix.c:2141
+ sock_sendmsg_nosec net/socket.c:787 [inline]
+ __sock_sendmsg net/socket.c:802 [inline]
+ sock_write_iter+0x49b/0x4f0 net/socket.c:1254
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x6f3/0xda0 fs/read_write.c:688
+ ksys_write+0x14d/0x260 fs/read_write.c:740
+page last free pid 10 tgid 10 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ vfree+0x1c0/0x2d0 mm/vmalloc.c:3472
+ delayed_vfree_work+0x55/0x80 mm/vmalloc.c:3392
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88803b018d80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88803b018e00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>ffff88803b018e80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88803b018f00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88803b018f80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to send rpc
+fd=3 want=56 sent=0 n=-1 (errno 32: Broken pipe)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[21/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Read of size 8 at addr ffff88810f207080 by task v4l_id/17495
+
+CPU: 1 UID: 0 PID: 17495 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ fput_close_sync+0x11f/0x240 fs/file_table.c:615
+ __do_sys_close fs/open.c:1507 [inline]
+ __se_sys_close fs/open.c:1492 [inline]
+ __x64_sys_close+0x7e/0x110 fs/open.c:1492
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4371a9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffeec4677c0 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f43718699c0 RCX: 00007f4371a9b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f4371869850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffeec4679f0 R14: 00007f43721a9000 R15: 000055fcae064c58
+ </TASK>
+
+Allocated by task 2420 on cpu 1 at 112.571104s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2420 on cpu 1 at 114.475555s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff88810f207080
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88810f207080, ffff88810f2070e0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88810f207900 pfn:0x10f207
+flags: 0x57ff00000000200(workingset|node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000200 ffff888013041280 ffffea0004156310 ffffea00043eff10
+raw: ffff88810f207900 0000000800200017 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 11429262469, free_ts 11428951871
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ lookup_or_create_module_kobject+0x75/0x170 kernel/params.c:759
+ module_add_driver+0x79/0x320 drivers/base/module.c:46
+ bus_add_driver+0x38b/0x660 drivers/base/bus.c:760
+ driver_register+0x23a/0x320 drivers/base/driver.c:249
+ __hid_register_driver+0x125/0x180 drivers/hid/hid-core.c:3135
+ do_one_initcall+0x1d9/0x6f0 init/main.c:1392
+ do_initcall_level+0x10a/0x230 init/main.c:1454
+ do_initcalls+0x59/0xa0 init/main.c:1470
+ kernel_init_freeable+0x1e5/0x2f0 init/main.c:1703
+page last free pid 46 tgid 46 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ vfree+0x1c0/0x2d0 mm/vmalloc.c:3472
+ delayed_vfree_work+0x55/0x80 mm/vmalloc.c:3392
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff88810f206f80: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+ ffff88810f207000: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+>ffff88810f207080: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88810f207100: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+ ffff88810f207180: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 1 UID: 0 PID: 17494 Comm: v4l_id Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:pvr2_v4l2_release+0x2ea/0x550
+Code: bd 00 00 00 00 00 fc ff df 41 80 3c 2f 00 74 08 48 89 df e8 a8 28 11 fa 4c 8b 23 4d 8d b4 24 50 04 00 00 4c 89 f0 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 f7 e8 88 28 11 fa 49 8b 06 4c 39 f0 74 14
+RSP: 0018:ffffc900021afd18 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff88810f2070b8 RCX: ffffffff88150918
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88810f2070b8
+RBP: dffffc0000000000 R08: 00000000492fac07 R09: 00000000ac5ce8ea
+R10: 000000000000000b R11: ffffffff81aac100 R12: 0000000000000000
+R13: ffff88810f207080 R14: 0000000000000450 R15: 1ffff11021e40e17
+FS:  00007f7f750439c0(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdcb4d8abc8 CR3: 0000000110c85000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ v4l2_release+0x24e/0x370
+ __fput+0x435/0xa40
+ fput_close_sync+0x11f/0x240
+ __x64_sys_close+0x7e/0x110
+ do_syscall_64+0x146/0x480
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7f74a9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffe8c576860 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f7f750439c0 RCX: 00007f7f74a9b687
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f7f75043850 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+R13: 00007ffe8c576a90 R14: 00007f7f751f2000 R15: 00005647d59ecc58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[22/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Read of size 8 at addr ffff88801e665a00 by task syz.0.526/16034
+
+CPU: 0 UID: 0 PID: 16034 Comm: syz.0.526 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0xe0/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4e8e5a778d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4e8f409018 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: 0000000000000000 RBX: 00007f4e8e836450 RCX: 00007f4e8e5a778d
+RDX: 0000000000000000 RSI: 0000000000005646 RDI: 0000000000000005
+RBP: 00007f4e8e64eb3d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f4e8e8364e8 R14: 00007f4e8e836450 R15: 00007ffe6e580fa0
+ </TASK>
+
+Allocated by task 2421 on cpu 0 at 124.791012s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2421 on cpu 0 at 126.360893s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff88801e665a00
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88801e665a00, ffff88801e665a60)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1e665
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff888013041280 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 12132117906, free_ts 12129260545
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ lookup_or_create_module_kobject+0x75/0x170 kernel/params.c:759
+ module_add_driver+0x79/0x320 drivers/base/module.c:46
+ bus_add_driver+0x38b/0x660 drivers/base/bus.c:760
+ driver_register+0x23a/0x320 drivers/base/driver.c:249
+ usb_register_driver+0x1e4/0x390 drivers/usb/core/driver.c:1078
+ do_one_initcall+0x1d9/0x6f0 init/main.c:1392
+ do_initcall_level+0x10a/0x230 init/main.c:1454
+ do_initcalls+0x59/0xa0 init/main.c:1470
+ kernel_init_freeable+0x1e5/0x2f0 init/main.c:1703
+page last free pid 1 tgid 1 stack trace:
+ create_dummy_stack mm/page_owner.c:103 [inline]
+ register_failure_stack+0x98/0x100 mm/page_owner.c:114
+ init_page_owner+0x33/0x5f0 mm/page_owner.c:128
+ invoke_init_callbacks mm/page_ext.c:152 [inline]
+ page_ext_init+0x3c7/0x400 mm/page_ext.c:490
+ mm_core_init+0x92/0xb0 mm/mm_init.c:2738
+
+Memory state around the buggy address:
+ ffff88801e665900: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88801e665980: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+>ffff88801e665a00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88801e665a80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+ ffff88801e665b00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ kasan_save_track+0x3f/0xa0
+ kasan_save_free_info+0x46/0x50
+ __kasan_slab_free+0x5c/0x80
+ kfree+0x18a/0x4d0
+ pvr2_context_thread_func+0x366/0xb00
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+The buggy address belongs to the object at ffff88801e665a00
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88801e665a00, ffff88801e665a60)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1e665
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff888013041280 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 12132117906, free_ts 12129260545
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_noprof+0x2c3/0x560
+ lookup_or_create_module_kobject+0x75/0x170
+ module_add_driver+0x79/0x320
+ bus_add_driver+0x38b/0x660
+ driver_register+0x23a/0x320
+ usb_register_driver+0x1e4/0x390
+ do_one_initcall+0x1d9/0x6f0
+ do_initcall_level+0x10a/0x230
+ do_initcalls+0x59/0xa0
+ kernel_init_freeable+0x1e5/0x2f0
+page last free pid 1 tgid 1 stack trace:
+ register_failure_stack+0x98/0x100
+ init_page_owner+0x33/0x5f0
+ page_ext_init+0x3c7/0x400
+ mm_core_init+0x92/0xb0
+Memory state around the buggy address:
+ ffff88801e665900: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88801e665980: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+>ffff88801e665a00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88801e665a80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+ ffff88801e665b00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[23/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Read of size 8 at addr ffff88802877e580 by task syz.4.968/19850
+
+CPU: 1 UID: 0 PID: 19850 Comm: syz.4.968 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc4bf3a778d
+Code: Unable to access opcode bytes at 0x7fc4bf3a7763.
+RSP: 002b:00007fc4c02a70d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007fc4bf636458 RCX: 00007fc4bf3a778d
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007fc4bf636458
+RBP: 00007fc4bf636450 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fc4bf6364e8 R14: 000000000000006e R15: 00007ffddc3878a0
+ </TASK>
+
+Allocated by task 2418 on cpu 0 at 161.022899s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2418 on cpu 0 at 163.730401s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff88802877e580
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff88802877e580, ffff88802877e5e0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2877e
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff888013041280 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9456, tgid 9456 (syz-executor), ts 65694999327, free_ts 65195205658
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_noprof+0x2c3/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ nsim_fib_event_schedule_work drivers/net/netdevsim/fib.c:990 [inline]
+ nsim_fib_event_nb+0x190/0x1210 drivers/net/netdevsim/fib.c:1043
+ notifier_call_chain+0x12e/0x320 kernel/notifier.c:85
+ atomic_notifier_call_chain+0x36/0x50 kernel/notifier.c:223
+ call_fib_notifiers+0x82/0xc0 net/core/fib_notifier.c:36
+ call_fib6_entry_notifiers net/ipv6/ip6_fib.c:412 [inline]
+ fib6_add_rt2node+0x1108/0x2e70 net/ipv6/ip6_fib.c:1260
+ fib6_add+0x86b/0x1790 net/ipv6/ip6_fib.c:1536
+ __ip6_ins_rt net/ipv6/route.c:1352 [inline]
+ ip6_ins_rt+0xd6/0x140 net/ipv6/route.c:1362
+ __ipv6_ifa_notify+0x50f/0xee0 net/ipv6/addrconf.c:6295
+ ipv6_ifa_notify net/ipv6/addrconf.c:6334 [inline]
+ add_addr+0x1b3/0x2d0 net/ipv6/addrconf.c:3207
+page last free pid 9455 tgid 9455 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ __slab_free+0x239/0x280 mm/slub.c:5613
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x99/0x110 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:350
+ kasan_slab_alloc include/linux/kasan.h:253 [inline]
+ slab_post_alloc_hook mm/slub.c:4570 [inline]
+ slab_alloc_node mm/slub.c:4899 [inline]
+ __kmalloc_cache_noprof+0x202/0x560 mm/slub.c:5415
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ __netdev_adjacent_dev_insert+0x15b/0x960 net/core/dev.c:8751
+ __netdev_adjacent_dev_link_lists net/core/dev.c:8843 [inline]
+ __netdev_adjacent_dev_link_neighbour net/core/dev.c:8872 [inline]
+ __netdev_upper_dev_link+0xaa1/0xd20 net/core/dev.c:8932
+ netdev_master_upper_dev_link+0xbc/0x110 net/core/dev.c:9007
+ hsr_portdev_setup net/hsr/hsr_slave.c:165 [inline]
+ hsr_add_port+0x678/0xa30 net/hsr/hsr_slave.c:213
+ hsr_dev_finalize+0x66a/0xac0 net/hsr/hsr_device.c:790
+ hsr_newlink+0x7e5/0x960 net/hsr/hsr_netlink.c:128
+ rtnl_newlink_create+0x31a/0xb30 net/core/rtnetlink.c:3864
+ __rtnl_newlink net/core/rtnetlink.c:3995 [inline]
+ rtnl_newlink+0x1761/0x1ce0 net/core/rtnetlink.c:4110
+ rtnetlink_rcv_msg+0x830/0xa10 net/core/rtnetlink.c:6997
+ netlink_rcv_skb+0x232/0x4b0 net/netlink/af_netlink.c:2550
+
+Memory state around the buggy address:
+ ffff88802877e480: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff88802877e500: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>ffff88802877e580: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88802877e600: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88802877e680: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2877e
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff888013041280 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9456, tgid 9456 (syz-executor), ts 65694999327, free_ts 65195205658
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_noprof+0x2c3/0x560
+ nsim_fib_event_nb+0x190/0x1210
+ notifier_call_chain+0x12e/0x320
+ atomic_notifier_call_chain+0x36/0x50
+ call_fib_notifiers+0x82/0xc0
+ fib6_add_rt2node+0x1108/0x2e70
+ fib6_add+0x86b/0x1790
+ ip6_ins_rt+0xd6/0x140
+ __ipv6_ifa_notify+0x50f/0xee0
+ add_addr+0x1b3/0x2d0
+page last free pid 9455 tgid 9455 stack trace:
+ __free_frozen_pages+0xc72/0xdf0
+ __slab_free+0x239/0x280
+ qlist_free_all+0x99/0x110
+ kasan_quarantine_reduce+0x14f/0x160
+ __kasan_slab_alloc+0x22/0x80
+ __kmalloc_cache_noprof+0x202/0x560
+ __netdev_adjacent_dev_insert+0x15b/0x960
+ __netdev_upper_dev_link+0xaa1/0xd20
+ netdev_master_upper_dev_link+0xbc/0x110
+ hsr_add_port+0x678/0xa30
+ hsr_dev_finalize+0x66a/0xac0
+ hsr_newlink+0x7e5/0x960
+ rtnl_newlink_create+0x31a/0xb30
+ rtnl_newlink+0x1761/0x1ce0
+ rtnetlink_rcv_msg+0x830/0xa10
+ netlink_rcv_skb+0x232/0x4b0
+Memory state around the buggy address:
+ ffff88802877e480: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff88802877e500: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>ffff88802877e580: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff88802877e600: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88802877e680: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[24/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+Read of size 8 at addr ffff888016376c00 by task syz.4.53/11888
+
+CPU: 0 UID: 0 PID: 11888 Comm: syz.4.53 Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_release+0x289/0x550 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:914
+ v4l2_release+0x24e/0x370 drivers/media/v4l2-core/v4l2-dev.c:471
+ __fput+0x435/0xa40 fs/file_table.c:510
+ task_work_run+0x1d5/0x250 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ee/0x2360 kernel/exit.c:976
+ do_group_exit+0x20c/0x2c0 kernel/exit.c:1119
+ get_signal+0x12b2/0x1410 kernel/signal.c:3037
+ arch_do_signal_or_restart+0xbc/0x840 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop+0x88/0x4c0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x259/0x480 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f639f5a778d
+Code: Unable to access opcode bytes at 0x7f639f5a7763.
+RSP: 002b:00007f63a04c30d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007f639f836188 RCX: 00007f639f5a778d
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f639f836188
+RBP: 00007f639f836180 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f639f836218 R14: 000000000000006e R15: 00007ffeffceb310
+ </TASK>
+
+Allocated by task 2418 on cpu 0 at 77.512091s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2418 on cpu 0 at 79.626037s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff888016376c00
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff888016376c00, ffff888016376c60)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888016376800 pfn:0x16376
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff888013041280 ffffea0000617550 ffffea0000773190
+raw: ffff888016376800 000000080020001d 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 26, tgid 26 (kworker/u9:0), ts 2945568179, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_node_noprof+0x39d/0x5d0 mm/slub.c:5428
+ kmalloc_node_noprof include/linux/slab.h:1077 [inline]
+ __get_vm_area_node+0x13f/0x300 mm/vmalloc.c:3215
+ __vmalloc_node_range_noprof+0x36a/0x1750 mm/vmalloc.c:4024
+ __vmalloc_node_noprof+0xc2/0x100 mm/vmalloc.c:4124
+ alloc_thread_stack_node kernel/fork.c:357 [inline]
+ dup_task_struct+0x298/0x840 kernel/fork.c:926
+ copy_process+0x797/0x3ba0 kernel/fork.c:2090
+ kernel_clone+0x269/0x880 kernel/fork.c:2721
+ user_mode_thread+0x110/0x180 kernel/fork.c:2797
+ call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888016376b00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff888016376b80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+>ffff888016376c00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff888016376c80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff888016376d00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+Freed by task 2418 on cpu 0 at 79.626037s:
+ kasan_save_track+0x3f/0xa0
+ kasan_save_free_info+0x46/0x50
+ __kasan_slab_free+0x5c/0x80
+ kfree+0x18a/0x4d0
+ pvr2_context_thread_func+0x366/0xb00
+ kthread+0x333/0x420
+ ret_from_fork+0x351/0x940
+ ret_from_fork_asm+0x1a/0x30
+The buggy address belongs to the object at ffff888016376c00
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff888016376c00, ffff888016376c60)
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888016376800 pfn:0x16376
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff888013041280 ffffea0000617550 ffffea0000773190
+raw: ffff888016376800 000000080020001d 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 26, tgid 26 (kworker/u9:0), ts 2945568179, free_ts 0
+ post_alloc_hook+0x22d/0x280
+ get_page_from_freelist+0x2771/0x2890
+ __alloc_frozen_pages_noprof+0x278/0x460
+ allocate_slab+0x77/0x660
+ refill_objects+0x352/0x3e0
+ __pcs_replace_empty_main+0x252/0x540
+ __kmalloc_cache_node_noprof+0x39d/0x5d0
+ __get_vm_area_node+0x13f/0x300
+ __vmalloc_node_range_noprof+0x36a/0x1750
+ __vmalloc_node_noprof+0xc2/0x100
+ dup_task_struct+0x298/0x840
+ copy_process+0x797/0x3ba0
+ kernel_clone+0x269/0x880
+ user_mode_thread+0x110/0x180
+ call_usermodehelper_exec_work+0x5c/0x230
+ process_scheduled_works+0x881/0x1170
+page_owner free stack trace missing
+Memory state around the buggy address:
+ ffff888016376b00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff888016376b80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+>ffff888016376c00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff888016376c80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff888016376d00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+==================================================================
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+
+======================================================================
+[25/26]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000008a: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000450-0x0000000000000457]
+CPU: 0 UID: 0 PID: 2420 Comm: pvrusb2-context Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:list_empty include/linux/list.h:404 [inline]
+RIP: 0010:pvr2_v4l2_internal_check+0x20b/0x450 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:875
+Code: 00 00 fc ff df 48 8b 44 24 08 80 3c 28 00 74 08 4c 89 f7 e8 67 44 11 fa 4d 8b 26 4d 8d ac 24 50 04 00 00 4c 89 e8 48 c1 e8 03 <80> 3c 28 00 74 08 4c 89 ef e8 47 44 11 fa 49 8b 45 00 4c 39 e8 74
+RSP: 0018:ffffc9000a14fc98 EFLAGS: 00010202
+RAX: 000000000000008a RBX: ffff888024844c40 RCX: ffff88810a43b600
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffc9000a14fc67 R09: 1ffff92001429f8c
+R10: dffffc0000000000 R11: ffffffff8814eb60 R12: 0000000000000000
+R13: 0000000000000450 R14: ffff888024844c38 R15: 1ffff11004908988
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2d316ff8 CR3: 0000000026c43000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+======================================================================
+[26/26]
+======================================================================
+
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_v4l2_open+0x1b8/0x720 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:957
+Read of size 8 at addr ffff8881125dbc00 by task v4l_id/26354
+
+CPU: 0 UID: 0 PID: 26354 Comm: v4l_id Tainted: G             L      7.1.0-rc5 #1 PREEMPT(full)
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
+ print_address_description+0x55/0x1e0 mm/kasan/report.c:378
+ print_report+0x58/0x70 mm/kasan/report.c:482
+ kasan_report+0x130/0x170 mm/kasan/report.c:595
+ pvr2_v4l2_open+0x1b8/0x720 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:957
+ v4l2_open+0x1bd/0x3a0 drivers/media/v4l2-core/v4l2-dev.c:433
+ chrdev_open+0x4cd/0x5e0 fs/char_dev.c:411
+ do_dentry_open+0x771/0x14d0 fs/open.c:947
+ vfs_open+0x38/0x340 fs/open.c:1079
+ do_open fs/namei.c:4699 [inline]
+ path_openat+0x2e26/0x37c0 fs/namei.c:4858
+ do_file_open+0x23e/0x4a0 fs/namei.c:4887
+ do_sys_openat2+0x113/0x200 fs/open.c:1364
+ do_sys_open fs/open.c:1370 [inline]
+ __do_sys_openat fs/open.c:1386 [inline]
+ __se_sys_openat fs/open.c:1381 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1381
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x146/0x480 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0bcaa9b687
+Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+RSP: 002b:00007ffdcc62a3a0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f0bcb04b9c0 RCX: 00007f0bcaa9b687
+RDX: 0000000000080100 RSI: 00007ffdcc62bf07 RDI: ffffffffffffff9c
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffdcc62a440
+R13: 00007ffdcc62a5f0 R14: 00007f0bcb12a000 R15: 000055b147a17c58
+ </TASK>
+
+Allocated by task 2417 on cpu 0 at 213.163323s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x250/0x560 mm/slub.c:5420
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ pvr2_v4l2_create+0x53/0x420 drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1239
+ pvr_setup_attach+0x15/0x30 drivers/media/usb/pvrusb2/pvrusb2-main.c:40
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:117 [inline]
+ pvr2_context_thread_func+0x502/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 2417 on cpu 0 at 214.745810s:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3f/0xa0 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2689 [inline]
+ slab_free mm/slub.c:6251 [inline]
+ kfree+0x18a/0x4d0 mm/slub.c:6566
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:132 [inline]
+ pvr2_context_thread_func+0x366/0xb00 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8881125dbc00
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ freed 96-byte region [ffff8881125dbc00, ffff8881125dbc60)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1125db
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000000 ffff888013041280 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000800200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 11127550259, free_ts 11127514288
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x22d/0x280 mm/page_alloc.c:1858
+ prep_new_page mm/page_alloc.c:1866 [inline]
+ get_page_from_freelist+0x2771/0x2890 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x278/0x460 mm/page_alloc.c:5226
+ alloc_slab_page mm/slub.c:3278 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3467
+ new_slab mm/slub.c:3525 [inline]
+ refill_objects+0x352/0x3e0 mm/slub.c:7272
+ refill_sheaf mm/slub.c:2816 [inline]
+ __pcs_replace_empty_main+0x252/0x540 mm/slub.c:4652
+ alloc_from_pcs mm/slub.c:4750 [inline]
+ slab_alloc_node mm/slub.c:4884 [inline]
+ __kmalloc_cache_node_noprof+0x39d/0x5d0 mm/slub.c:5428
+ kmalloc_node_noprof include/linux/slab.h:1077 [inline]
+ __get_vm_area_node+0x13f/0x300 mm/vmalloc.c:3215
+ __vmalloc_node_range_noprof+0x36a/0x1750 mm/vmalloc.c:4024
+ __vmalloc_node_noprof mm/vmalloc.c:4124 [inline]
+ vzalloc_noprof+0xb2/0xe0 mm/vmalloc.c:4202
+ tpg_alloc+0x224/0x870 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:149
+ vivid_create_instance drivers/media/test-drivers/vivid/vivid-core.c:1857 [inline]
+ vivid_probe+0x1bc6/0x7270 drivers/media/test-drivers/vivid/vivid-core.c:2095
+ platform_probe+0xf9/0x190 drivers/base/platform.c:1432
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+page last free pid 1 tgid 1 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1402 [inline]
+ __free_frozen_pages+0xc72/0xdf0 mm/page_alloc.c:2943
+ ___free_pages_bulk mm/kasan/shadow.c:333 [inline]
+ __kasan_populate_vmalloc_do mm/kasan/shadow.c:385 [inline]
+ __kasan_populate_vmalloc+0x137/0x1d0 mm/kasan/shadow.c:424
+ kasan_populate_vmalloc include/linux/kasan.h:580 [inline]
+ alloc_vmap_area+0xc21/0x1330 mm/vmalloc.c:2123
+ __get_vm_area_node+0x1f8/0x300 mm/vmalloc.c:3226
+ __vmalloc_node_range_noprof+0x36a/0x1750 mm/vmalloc.c:4024
+ __vmalloc_node_noprof mm/vmalloc.c:4124 [inline]
+ vzalloc_noprof+0xb2/0xe0 mm/vmalloc.c:4202
+ tpg_alloc+0x1d3/0x870 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:143
+ vivid_create_instance drivers/media/test-drivers/vivid/vivid-core.c:1857 [inline]
+ vivid_probe+0x1bc6/0x7270 drivers/media/test-drivers/vivid/vivid-core.c:2095
+ platform_probe+0xf9/0x190 drivers/base/platform.c:1432
+ really_probe+0x267/0xaf0 drivers/base/dd.c:709
+ __driver_probe_device+0x1ef/0x380 drivers/base/dd.c:871
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:901
+ __driver_attach+0x346/0x640 drivers/base/dd.c:1295
+ bus_for_each_dev+0x23a/0x2c0 drivers/base/bus.c:383
+ bus_add_driver+0x33f/0x660 drivers/base/bus.c:756
+ driver_register+0x23a/0x320 drivers/base/driver.c:249
+
+Memory state around the buggy address:
+ ffff8881125dbb00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+ ffff8881125dbb80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+>ffff8881125dbc00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                   ^
+ ffff8881125dbc80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff8881125dbd00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+SYZFAIL: failed to recv rpc
+fd=3 want=4 recv=0 n=0 (errno 9: Bad file descriptor)
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+Kernel panic - not syncing: KASAN: panic_on_warn set ...
+

@@ -1,0 +1,38 @@
+Linux 7.1.0-rc5, x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
+CPU: 1 UID: 0 PID: 866 Comm: kworker/1:2 Not tainted 7.1.0-rc5 #1 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: events dostream
+RIP: 0010:dostream+0xac/0x990 drivers/media/usb/gspca/finepix.c:79
+Code: ff 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 07 fb 3c fa 48 8b 03 48 89 44 24 40 48 8d 58 60 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 df e8 e5 fa 3c fa 4c 8b 3b 43 c6 44 26
+RSP: 0018:ffffc9000570faa0 EFLAGS: 00010206
+RAX: 000000000000000c RBX: 0000000000000060 RCX: ffff888108435100
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881095de8b8
+RBP: ffffc9000570fbd8 R08: ffff8881095de8bf R09: 1ffff110212bbd17
+R10: dffffc0000000000 R11: ffffffff87e93620 R12: dffffc0000000000
+R13: ffff8881095de8b8 R14: 1ffff92000ae1f68 R15: ffff888105439f48
+FS:  0000000000000000(0000) GS:ffff8881db2dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb9a91abfe8 CR3: 0000000115526000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
