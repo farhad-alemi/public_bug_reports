@@ -1,0 +1,98 @@
+Linux 7.1-rc5 (v7.1-rc5, e7ae89a0c97c), x86_64, QEMU Q35 with KVM.
+KASAN + UBSAN enabled, panic_on_warn=1. Unmodified upstream tree.
+
+1 distinct call trace.
+
+======================================================================
+[1/1]
+======================================================================
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000000b: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000058-0x000000000000005f]
+CPU: 0 UID: 0 PID: 1117 Comm: kworker/u9:5 Not tainted 7.1.0-rc5 #1 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:process_io_rsp drivers/infiniband/ulp/rtrs/rtrs-clt.c:502 [inline]
+RIP: 0010:rtrs_clt_rdma_done+0x732/0x1450 drivers/infiniband/ulp/rtrs/rtrs-clt.c:637
+Code: d7 87 f9 41 c1 ed 13 49 8b 17 48 69 f3 98 00 00 00 48 8d 1c 32 48 83 c3 58 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 14 49 89 d6 48 89 df 49 89 f7 e8 ca d6 87 f9 4c 89
+RSP: 0000:ffffc90000007cc0 EFLAGS: 00010202
+RAX: 000000000000000b RBX: 0000000000000058 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000008
+RBP: ffffc90000007e28 R08: ffff88801949d100 R09: 0000000000000004
+R10: 0000000000000009 R11: 0000000000000100 R12: 0000000000000001
+R13: 0000000000000200 R14: 0000000000000008 R15: ffff88803d15a318
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3006ae8540 CR3: 000000003e68d000 CR4: 0000000000752ef0
+PKRU: 55555554
+Call Trace:
+ <IRQ>
+ __ib_process_cq+0x149/0x440 drivers/infiniband/core/cq.c:110
+ ib_poll_handler+0x78/0x280 drivers/infiniband/core/cq.c:157
+ irq_poll_softirq+0x1ea/0x500 lib/irq_poll.c:110
+ handle_softirqs+0x191/0x5a0 kernel/softirq.c:622
+ __do_softirq kernel/softirq.c:656 [inline]
+ invoke_softirq kernel/softirq.c:496 [inline]
+ __irq_exit_rcu+0x79/0x180 kernel/softirq.c:735
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1061 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1061
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:697
+RIP: 0010:check_kcov_mode kernel/kcov.c:185 [inline]
+RIP: 0010:write_comp_data kernel/kcov.c:246 [inline]
+RIP: 0010:__sanitizer_cov_trace_switch+0xb2/0x130 kernel/kcov.c:351
+Code: 77 4e 8b 54 ce 10 65 44 8b 1d 5a 72 d5 10 41 81 e3 00 01 ff 00 74 13 41 81 fb 00 01 00 00 75 d9 41 83 b8 44 0c 00 00 00 74 cf <45> 8b 98 20 0c 00 00 41 83 fb 03 75 c2 4d 8b 98 28 0c 00 00 45 8b
+RSP: 0000:ffffc90005c375f8 EFLAGS: 00000246
+RAX: 0000000000000021 RBX: 0000000000000a02 RCX: 0000000000000005
+RDX: ffffffff889fddb4 RSI: ffffffff8f39fd10 RDI: 0000000000000005
+RBP: ffffc90005c37b60 R08: ffff88801949d100 R09: 0000000000000004
+R10: 0000000000000005 R11: 0000000000000000 R12: 0000000000000005
+R13: dffffc0000000000 R14: 0000000000000006 R15: ffff8880274177c0
+ rxe_receiver+0x1224/0xc940 drivers/infiniband/sw/rxe/rxe_resp.c:1567
+ do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+ do_work+0x1aa/0x720 drivers/infiniband/sw/rxe/rxe_task.c:191
+ process_one_work kernel/workqueue.c:3314 [inline]
+ process_scheduled_works+0x881/0x1170 kernel/workqueue.c:3397
+ worker_thread+0x988/0xde0 kernel/workqueue.c:3478
+ kthread+0x333/0x420 kernel/kthread.c:436
+ ret_from_fork+0x351/0x940 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:process_io_rsp drivers/infiniband/ulp/rtrs/rtrs-clt.c:502 [inline]
+RIP: 0010:rtrs_clt_rdma_done+0x732/0x1450 drivers/infiniband/ulp/rtrs/rtrs-clt.c:637
+Code: d7 87 f9 41 c1 ed 13 49 8b 17 48 69 f3 98 00 00 00 48 8d 1c 32 48 83 c3 58 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 14 49 89 d6 48 89 df 49 89 f7 e8 ca d6 87 f9 4c 89
+RSP: 0000:ffffc90000007cc0 EFLAGS: 00010202
+RAX: 000000000000000b RBX: 0000000000000058 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000008
+RBP: ffffc90000007e28 R08: ffff88801949d100 R09: 0000000000000004
+R10: 0000000000000009 R11: 0000000000000100 R12: 0000000000000001
+R13: 0000000000000200 R14: 0000000000000008 R15: ffff88803d15a318
+FS:  0000000000000000(0000) GS:ffff8880d90dc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3006ae8540 CR3: 000000003e68d000 CR4: 0000000000752ef0
+PKRU: 55555554
+----------------
+Code disassembly (best guess):
+   0:	d7                   	xlat   %ds:(%rbx)
+   1:	87 f9                	xchg   %edi,%ecx
+   3:	41 c1 ed 13          	shr    $0x13,%r13d
+   7:	49 8b 17             	mov    (%r15),%rdx
+   a:	48 69 f3 98 00 00 00 	imul   $0x98,%rbx,%rsi
+  11:	48 8d 1c 32          	lea    (%rdx,%rsi,1),%rbx
+  15:	48 83 c3 58          	add    $0x58,%rbx
+  19:	48 89 d8             	mov    %rbx,%rax
+  1c:	48 c1 e8 03          	shr    $0x3,%rax
+  20:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx
+  27:	fc ff df
+* 2a:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1) <-- trapping instruction
+  2e:	74 14                	je     0x44
+  30:	49 89 d6             	mov    %rdx,%r14
+  33:	48 89 df             	mov    %rbx,%rdi
+  36:	49 89 f7             	mov    %rsi,%r15
+  39:	e8 ca d6 87 f9       	call   0xf987d708
+  3e:	4c                   	rex.WR
+  3f:	89                   	.byte 0x89
+Kernel panic - not syncing: Fatal exception in interrupt

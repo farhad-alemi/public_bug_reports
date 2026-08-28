@@ -3,8 +3,8 @@ Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
 directory; captured after the harness marker, so boot noise and any earlier
 run are excluded. Matched to this entry because: log names refill_stock, which the entry name carries.
 Source log: console_try-145-memcg-vm_warn-refill_stock-root-cgro-cand1.log
-The original crash-report.txt records the FIRST observation, on the reporting
-kernel; this records a reproduction. Both are kept.
+This records a reproduction on current mainline. The entry's original
+first-observation record was a signature-only summary, superseded by this capture.
 ======================================================================
 
 [   54.170636][ T9490] Adding 524284k swap on /swapfile.145.  Priority:-1 extents:3 across:598012k 

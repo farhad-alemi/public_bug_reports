@@ -3,8 +3,8 @@ Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
 directory; captured after the harness marker, so boot noise and any earlier
 run are excluded. Matched to this entry because: same crash class (WARNING) and same crash site: __vb2_queue_cancel at videobuf2-core.c:2210.
 Source log: console_try-settle-159-media-go7007-stop_streaming-b-reproducer.log
-The original crash-report.txt records the FIRST observation, on the reporting
-kernel; this records a reproduction. Both are kept.
+This records a reproduction on current mainline. The entry's original
+first-observation record was a signature-only summary, superseded by this capture.
 ======================================================================
 
 [   52.618060][    C1] go7007 3-1:1.0: error in audio pipe: -2

@@ -3,8 +3,8 @@ Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
 directory; captured after the harness marker, so boot noise and any earlier
 run are excluded. Matched to this entry because: same crash class (page/bug); no function to compare.
 Source log: console_try-128-ecryptfs-i_new-inode-leak-lookup-fai-cand3.log
-The original crash-report.txt records the FIRST observation, on the reporting
-kernel; this records a reproduction. Both are kept.
+This records a reproduction on current mainline. The entry's original
+first-observation record was a signature-only summary, superseded by this capture.
 ======================================================================
 
 [   51.888558][ T9494] Error opening lower file for lower_dentry [0xffff888029df18f8] and lower_mnt [0xffff888027159c20]; rc = [-26]

@@ -3,8 +3,8 @@ Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
 directory; captured after the harness marker, so boot noise and any earlier
 run are excluded. Matched to this entry because: log names range, a crash site of the entry.
 Source log: console_try-141-gspca-ov534_9-strlen-null-sd_init-cand1.log
-The original crash-report.txt records the FIRST observation, on the reporting
-kernel; this records a reproduction. Both are kept.
+This records a reproduction on current mainline. The entry's original
+first-observation record was a signature-only summary, superseded by this capture.
 ======================================================================
 
 [   51.158281][   T10] usb 3-1: new high-speed USB device number 2 using dummy_hcd

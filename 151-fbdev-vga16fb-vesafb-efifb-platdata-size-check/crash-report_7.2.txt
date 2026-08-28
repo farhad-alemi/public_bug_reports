@@ -3,8 +3,8 @@ Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in
 directory; captured after the harness marker, so boot noise and any earlier
 run are excluded. Matched to this entry because: log names vga16fb_probe, a crash site of the entry.
 Source log: console_try-151-fbdev-vga16fb-vesafb-efifb-platdata--cand4.log
-The original crash-report.txt records the FIRST observation, on the reporting
-kernel; this records a reproduction. Both are kept.
+This records a reproduction on current mainline. The entry's original
+first-observation record was a signature-only summary, superseded by this capture.
 ======================================================================
 
 [   50.726562][ T9494] ==================================================================

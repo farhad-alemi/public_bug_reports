@@ -1,4 +1,4 @@
-Recovered console capture for 144-media-cx231xx-vbi-node-published-before-alloc
+Recovered console capture for 144-media-cx231xx-audio-init-null-uif
 Reproduced on mainline v7.2-12252-g388b607d107c with the reproducer.c shipped in this
 directory; captured after the harness marker, so boot noise and any earlier
 run are excluded. Matched to this entry because: same crash class (gpf/kasan null-ptr-deref) and same crash site: cx231xx_audio_init.
